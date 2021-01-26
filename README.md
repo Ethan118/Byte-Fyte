@@ -16,7 +16,7 @@ is a platformer-style fighting game intended for audiences of all ages.
 ### Competition
 ***
 
-##Set-up
+## Set-up
 ***
 ### Cloning
 Clone the GitHub Repo to your local machine by copying the [URL](https://github.com/Ethan118/Byte-Fyte.git).
