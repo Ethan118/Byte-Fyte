@@ -9,12 +9,15 @@ is a platformer-style fighting game intended for audiences of all ages.
 
 ### Action
 ***
+The objective of the game is to win your fight by launching your opponent of the screen. As you deal damage to your opponent, they become increasingly weaker, getting knocked back further when hit. Once a character is knocked back far enough off the screen they will lose a life. The winner is determined based on who is the last one standing.
 
 ### Adventure
 ***
+The story mode, is available for those that crave some adventure. In the story mode, the user will have to fight their way through a multi-level experience, fighting unique minions and bosses in a variety of locations. The user will try to reach the end of each stage while taking as little damage as possible. They will progress along a single “world”, completing smaller stages along the way, until they reach the boss of that world. At that point, the user must fight some of the greatest video game villains of all time. The user will be able to unlock multiple playable characters as they progress along the story mode, which they can then use to either continue the story mode with or use in any of the other game modes.
 
 ### Competition
 ***
+One other significant feature we plan to incorporate into our game is online leaderboards. They will, first off, add a competitive aspect to the game. By allowing players with an active Byte Fyte account to share their records in story mode, as well as their fighter statistics during local play, we add an extra layer of competition. This can also add a feeling of success to a player when they are able to defeat someone with better statistics than them. The accounts will store information such as story progression, achievements in all modes, a ranking system, and other user statistics.
 
 ## Set-up
 ***
