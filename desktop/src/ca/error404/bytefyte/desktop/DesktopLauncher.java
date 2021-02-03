@@ -12,7 +12,7 @@ public class DesktopLauncher {
 		config.width = 1280;
 		config.height = 720;
 		config.title = "Byte Fyte";
-		config.resizable = false;
+		config.resizable = true;
 		config.addIcon("icons/mac.png", Files.FileType.Internal);
 		config.addIcon("icons/windows + linux.png", Files.FileType.Internal);
 		config.addIcon("icons/windows old.png", Files.FileType.Internal);
