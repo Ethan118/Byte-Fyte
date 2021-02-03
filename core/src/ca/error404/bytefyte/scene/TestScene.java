@@ -30,7 +30,7 @@ public class TestScene implements Screen {
         this.main = main;
         cam = new OrthographicCamera();
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
-        world = new World(new Vector2(0, -10), true);
+        world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
         player = new TestChar(this);
