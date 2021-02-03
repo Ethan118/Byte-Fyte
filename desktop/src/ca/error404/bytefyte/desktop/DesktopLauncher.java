@@ -9,10 +9,10 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.forceExit = false;
-		config.width = 1280;
-		config.height = 720;
+		config.width = 1920;
+		config.height = 1080;
 		config.title = "Byte Fyte";
-		config.resizable = true;
+		config.resizable = false;
 		config.addIcon("icons/mac.png", Files.FileType.Internal);
 		config.addIcon("icons/windows + linux.png", Files.FileType.Internal);
 		config.addIcon("icons/windows old.png", Files.FileType.Internal);
