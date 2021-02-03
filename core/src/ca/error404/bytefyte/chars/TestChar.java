@@ -25,6 +25,9 @@ public class TestChar extends Sprite {
     public Body b2body;
 
     public int walkSpeed = 2;
+    public int jumpSpeed = 2;
+
+    public int friction = 1;
 
     public TestChar(TestScene screen) {
         this.world = screen.getWorld();
@@ -32,7 +35,6 @@ public class TestChar extends Sprite {
         prevState = State.IDLE;
         
         defineChar();
-        b2body.setLinearDamping(5);
     }
     
     public void defineChar() {
@@ -58,16 +60,32 @@ public class TestChar extends Sprite {
     }
 
     public void update(float deltaTime) {
+        prevVel = vel;
+
         if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) && b2body.getLinearVelocity().x <= walkSpeed) {
-            b2body.applyLinearImpulse(new Vector2(0.1f, 0), b2body.getWorldCenter(), true);
+            vel.x += walkSpeed * deltaTime;
         }
 
         if (Gdx.input.isKeyPressed(Keys.MOVE_LEFT) && b2body.getLinearVelocity().x >= -walkSpeed) {
-            b2body.applyLinearImpulse(new Vector2(-0.1f, 0), b2body.getWorldCenter(), true);
+            vel.x -= walkSpeed * deltaTime;
         }
 
         if ((Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE))) {
-            b2body.applyLinearImpulse(new Vector2(0, 5f), b2body.getWorldCenter(), true);
+            vel.y = jumpSpeed;
         }
+
+        applyFriction(deltaTime);
+
+        b2body.setLinearVelocity(vel);
+    }
+
+    public void applyFriction(float deltaTime) {
+        if (vel.x > 0) {
+            vel.x -= friction * deltaTime;
+        } else if (vel.x < 0) {
+            vel.x += friction * deltaTime;
+        }
+
+        vel.y -= friction * deltaTime;
     }
 }
