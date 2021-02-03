@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.video.VideoPlayer;
+import com.badlogic.gdx.video.VideoPlayerCreator;
 
 public class TestScene implements Screen {
     private Main main;
@@ -25,6 +27,7 @@ public class TestScene implements Screen {
     private TestChar player;
 
     Texture icon;
+    VideoPlayer videoPlayer = VideoPlayerCreator.createVideoPlayer();
 
     public TestScene(Main main) {
         this.main = main;
@@ -46,6 +49,7 @@ public class TestScene implements Screen {
         PolygonShape shape = new PolygonShape();
 
         shape.setAsBox(100 / Main.PPM,10 / Main.PPM);
+        fdef.friction = 0;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
@@ -64,14 +68,30 @@ public class TestScene implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         main.batch.setProjectionMatrix(cam.combined);
         main.batch.begin();
-        //main.batch.draw(icon, 0, 0);
+        if (videoPlayer.isPlaying()) {
+            System.out.println(videoPlayer.getCurrentTimestamp());
+            main.batch.draw(videoPlayer.getTexture(), (-Main.WIDTH / 2) / Main.PPM, (-Main.HEIGHT / 2) / Main.PPM, Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM);
+            videoPlayer.update();
+        }
         main.batch.end();
 
-        b2dr.render(world, cam.combined);
+        if (!videoPlayer.isPlaying()) {
+            b2dr.render(world, cam.combined);
+        }
     }
 
     public void update(float deltaTime) {
         player.update(deltaTime);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            try {
+                videoPlayer.play(Gdx.files.internal("test.webm"));
+                videoPlayer.update();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
 
         world.step(1 / 120f, 6, 2);
     }

@@ -9,6 +9,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.video.VideoPlayer;
+import com.badlogic.gdx.video.VideoPlayerCreator;
 
 public class TestChar extends Sprite {
     public enum State {IDLE, WALK, RUN, JUMP, FALL}
@@ -25,7 +27,7 @@ public class TestChar extends Sprite {
     public Body b2body;
 
     public int walkSpeed = 2;
-    public int jumpSpeed = 2;
+    public int jumpSpeed = 1;
 
     public int friction = 1;
 
@@ -49,6 +51,7 @@ public class TestChar extends Sprite {
         shape.setAsBox(10 / Main.PPM,10 / Main.PPM);
 
         fdef.shape = shape;
+        fdef.friction = 0;
         b2body.createFixture(fdef);
 
         EdgeShape feet = new EdgeShape();
@@ -62,11 +65,11 @@ public class TestChar extends Sprite {
     public void update(float deltaTime) {
         prevVel = vel;
 
-        if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) && b2body.getLinearVelocity().x <= walkSpeed) {
+        if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) && vel.x <= walkSpeed) {
             vel.x += walkSpeed * deltaTime;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.MOVE_LEFT) && b2body.getLinearVelocity().x >= -walkSpeed) {
+        if (Gdx.input.isKeyPressed(Keys.MOVE_LEFT) && vel.x >= -walkSpeed) {
             vel.x -= walkSpeed * deltaTime;
         }
 
