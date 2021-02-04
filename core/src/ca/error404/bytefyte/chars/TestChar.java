@@ -26,10 +26,11 @@ public class TestChar extends Sprite {
     public World world;
     public Body b2body;
 
-    public int walkSpeed = 2;
+    public int walkSpeed = 1;
     public int jumpSpeed = 1;
 
-    public int friction = 1;
+    public int friction = 3;
+    public int gravity = 2;
 
     public TestChar(TestScene screen) {
         this.world = screen.getWorld();
@@ -66,15 +67,27 @@ public class TestChar extends Sprite {
         prevVel = vel;
 
         if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) && vel.x <= walkSpeed) {
-            vel.x += walkSpeed * deltaTime;
+            if (vel.x < 0) {
+                vel.x += walkSpeed * deltaTime * 2;
+            } else {
+                vel.x = walkSpeed;
+            }
         }
 
         if (Gdx.input.isKeyPressed(Keys.MOVE_LEFT) && vel.x >= -walkSpeed) {
-            vel.x -= walkSpeed * deltaTime;
+            if (vel.x > 0) {
+                vel.x -= walkSpeed * deltaTime * 2;
+            } else {
+                vel.x = -walkSpeed;
+            }
         }
 
         if ((Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE))) {
-            vel.y = jumpSpeed;
+            if (vel.y <= 0) {
+                vel.y = jumpSpeed;
+            } else {
+                vel.y += jumpSpeed;
+            }
         }
 
         applyFriction(deltaTime);
@@ -83,12 +96,14 @@ public class TestChar extends Sprite {
     }
 
     public void applyFriction(float deltaTime) {
-        if (vel.x > 0) {
+        if (vel.x > 0.1) {
             vel.x -= friction * deltaTime;
-        } else if (vel.x < 0) {
+        } else if (vel.x < -0.1) {
             vel.x += friction * deltaTime;
+        } else {
+            vel.x = 0;
         }
 
-        vel.y -= friction * deltaTime;
+        vel.y -= gravity * deltaTime;
     }
 }

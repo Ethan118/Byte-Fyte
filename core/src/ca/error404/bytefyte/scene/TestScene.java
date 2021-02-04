@@ -1,5 +1,6 @@
 package ca.error404.bytefyte.scene;
 
+import ca.error404.bytefyte.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.TestChar;
 import com.badlogic.gdx.Gdx;
@@ -16,8 +17,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.video.VideoPlayer;
 import com.badlogic.gdx.video.VideoPlayerCreator;
 
-import java.io.File;
-
 public class TestScene implements Screen {
     private Main main;
     private OrthographicCamera cam;
@@ -30,7 +29,7 @@ public class TestScene implements Screen {
     private TestChar player;
 
     Texture icon;
-    VideoPlayer videoPlayer = VideoPlayerCreator.createVideoPlayer();
+    CutscenePlayer videoPlayer = new CutscenePlayer("waddle dee");
 
     public TestScene(Main main) {
         this.main = main;
@@ -72,8 +71,7 @@ public class TestScene implements Screen {
         main.batch.setProjectionMatrix(cam.combined);
         main.batch.begin();
         if (videoPlayer.isPlaying()) {
-            main.batch.draw(videoPlayer.getTexture(), (-Main.WIDTH / 2) / Main.PPM, (-Main.HEIGHT / 2) / Main.PPM, Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM);
-            videoPlayer.update();
+            videoPlayer.draw(main.batch);
         }
         main.batch.end();
 
@@ -83,20 +81,12 @@ public class TestScene implements Screen {
     }
 
     public void update(float deltaTime) {
-        player.update(deltaTime);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            try {
-                FileHandle file = Gdx.files.internal("waddle dee.webm");
-                videoPlayer.play(file);
-                videoPlayer.update();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
+            videoPlayer.play();
+        } else {
+            player.update(deltaTime);
+            world.step(1 / 60f, 6, 2);
         }
-
-
-        world.step(1 / 120f, 6, 2);
     }
 
     @Override
