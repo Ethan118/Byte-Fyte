@@ -5,6 +5,7 @@ import ca.error404.bytefyte.chars.TestChar;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.video.VideoPlayer;
 import com.badlogic.gdx.video.VideoPlayerCreator;
+
+import java.io.File;
 
 public class TestScene implements Screen {
     private Main main;
@@ -69,7 +72,6 @@ public class TestScene implements Screen {
         main.batch.setProjectionMatrix(cam.combined);
         main.batch.begin();
         if (videoPlayer.isPlaying()) {
-            System.out.println(videoPlayer.getCurrentTimestamp());
             main.batch.draw(videoPlayer.getTexture(), (-Main.WIDTH / 2) / Main.PPM, (-Main.HEIGHT / 2) / Main.PPM, Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM);
             videoPlayer.update();
         }
@@ -85,7 +87,8 @@ public class TestScene implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             try {
-                videoPlayer.play(Gdx.files.internal("test.webm"));
+                FileHandle file = Gdx.files.internal("waddle dee.webm");
+                videoPlayer.play(file);
                 videoPlayer.update();
             } catch (Exception e) {
                 e.printStackTrace();
