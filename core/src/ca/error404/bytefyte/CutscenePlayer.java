@@ -21,15 +21,19 @@ public class CutscenePlayer {
     public void play() {
         try {
             videoPlayer.play(file);
-            videoPlayer.update();
         } catch (Exception e) {
             // Do not
         }
+
+        while (!videoPlayer.isBuffered()) {
+            // Wait
+        }
+
+        videoPlayer.update();
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, float deltaTime) {
         videoPlayer.update();
-        System.out.println(videoPlayer.getCurrentTimestamp());
         batch.draw(videoPlayer.getTexture(), (-Main.WIDTH / 2) / Main.PPM, (-Main.HEIGHT / 2) / Main.PPM, Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM);
     }
 

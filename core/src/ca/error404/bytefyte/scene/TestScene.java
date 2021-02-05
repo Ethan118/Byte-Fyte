@@ -71,7 +71,7 @@ public class TestScene implements Screen {
         main.batch.setProjectionMatrix(cam.combined);
         main.batch.begin();
         if (videoPlayer.isPlaying()) {
-            videoPlayer.draw(main.batch);
+            videoPlayer.draw(main.batch, deltaTime);
         }
         main.batch.end();
 
