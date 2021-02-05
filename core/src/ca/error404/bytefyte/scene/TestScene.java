@@ -29,7 +29,7 @@ public class TestScene implements Screen {
     private TestChar player;
 
     Texture icon;
-    CutscenePlayer videoPlayer = new CutscenePlayer("preview mario galaxy skyrim");
+    CutscenePlayer videoPlayer = new CutscenePlayer("mario galaxy skyrim");
 
     public TestScene(Main main) {
         this.main = main;
@@ -66,14 +66,16 @@ public class TestScene implements Screen {
     public void render(float deltaTime) {
         update(deltaTime);
 
+        viewport.apply();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         main.batch.setProjectionMatrix(cam.combined);
         main.batch.begin();
         if (videoPlayer.isPlaying()) {
-            videoPlayer.draw(main.batch, deltaTime);
+            videoPlayer.draw(main.batch);
         }
         main.batch.end();
+
 
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
