@@ -29,7 +29,7 @@ public class TestScene implements Screen {
     private TestChar player;
 
     Texture icon;
-    CutscenePlayer videoPlayer = new CutscenePlayer("mario galaxy skyrim");
+    CutscenePlayer videoPlayer = new CutscenePlayer("test");
 
     public TestScene(Main main) {
         this.main = main;
@@ -83,9 +83,13 @@ public class TestScene implements Screen {
     }
 
     public void update(float deltaTime) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            videoPlayer.stop();
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
-        } else {
+        } else if (!videoPlayer.isPlaying()) {
             player.update(deltaTime);
             world.step(1 / 60f, 6, 2);
         }

@@ -27,10 +27,14 @@ public class TestChar extends Sprite {
     public Body b2body;
 
     public int walkSpeed = 1;
-    public int jumpSpeed = 1;
+    public int jumpSpeed = 2;
 
     public int friction = 3;
-    public int gravity = 2;
+    public int upGravity = 5;
+    public int fallGravity = 6;
+
+    public float turnCooldown = 0;
+    public float maxTurnCooldown = 0.1f;
 
     public TestChar(TestScene screen) {
         this.world = screen.getWorld();
@@ -65,24 +69,18 @@ public class TestChar extends Sprite {
 
     public void update(float deltaTime) {
         prevVel = vel;
+        Vector2 moveVector = Main.leftStick();
 
-        if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) && vel.x <= walkSpeed) {
-            if (vel.x < 0) {
-                vel.x += walkSpeed * deltaTime * 2;
+        if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed) {
+            if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
+                vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
             } else {
-                vel.x = walkSpeed;
+                vel.x = walkSpeed * moveVector.x;
             }
+            turnCooldown += moveVector.x * deltaTime;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.MOVE_LEFT) && vel.x >= -walkSpeed) {
-            if (vel.x > 0) {
-                vel.x -= walkSpeed * deltaTime * 2;
-            } else {
-                vel.x = -walkSpeed;
-            }
-        }
-
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE))) {
+        if (Gdx.input.isKeyJustPressed(Keys.JUMP)) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {
@@ -104,6 +102,10 @@ public class TestChar extends Sprite {
             vel.x = 0;
         }
 
-        vel.y -= gravity * deltaTime;
+        if (vel.y > 0) {
+            vel.y -= upGravity * deltaTime ;
+        } else if (vel.y <= 0) {
+            vel.y -= fallGravity * deltaTime;
+        }
     }
 }

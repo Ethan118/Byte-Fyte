@@ -10,8 +10,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.video.VideoPlayer;
 import com.badlogic.gdx.video.VideoPlayerCreator;
 
-import java.io.FileNotFoundException;
-
 public class CutscenePlayer implements Disposable {
 
     VideoPlayer videoPlayer = VideoPlayerCreator.createVideoPlayer();
@@ -45,5 +43,12 @@ public class CutscenePlayer implements Disposable {
     @Override
     public void dispose() {
         videoPlayer.dispose();
+    }
+
+    public void stop() {
+        if (videoPlayer.isPlaying()) {
+            videoPlayer.stop();
+            dispose();
+        }
     }
 }
