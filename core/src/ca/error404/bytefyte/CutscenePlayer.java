@@ -12,9 +12,10 @@ public class CutscenePlayer {
 
     VideoPlayer videoPlayer = VideoPlayerCreator.createVideoPlayer();
     FileHandle file;
+    float currentFrame = 0;
 
     public CutscenePlayer(String filename) {
-        file = Gdx.files.internal( "movies/" + filename + ".webm");
+        file = Gdx.files.internal( "movies/" + filename + ".ogv");
     }
 
     public void play() {
@@ -27,8 +28,9 @@ public class CutscenePlayer {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(videoPlayer.getTexture(), (-Main.WIDTH / 2) / Main.PPM, (-Main.HEIGHT / 2) / Main.PPM, Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM);
         videoPlayer.update();
+        System.out.println(videoPlayer.getCurrentTimestamp());
+        batch.draw(videoPlayer.getTexture(), (-Main.WIDTH / 2) / Main.PPM, (-Main.HEIGHT / 2) / Main.PPM, Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM);
     }
 
     public boolean isPlaying() {

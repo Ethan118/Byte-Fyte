@@ -29,7 +29,7 @@ public class TestScene implements Screen {
     private TestChar player;
 
     Texture icon;
-    CutscenePlayer videoPlayer = new CutscenePlayer("waddle dee");
+    CutscenePlayer videoPlayer = new CutscenePlayer("preview mario galaxy skyrim");
 
     public TestScene(Main main) {
         this.main = main;
