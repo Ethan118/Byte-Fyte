@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
@@ -80,7 +81,7 @@ public class TestChar extends Sprite {
             turnCooldown += moveVector.x * deltaTime;
         }
 
-        if (Gdx.input.isKeyJustPressed(Keys.JUMP)) {
+        if (Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtonsP1, ControllerButtons.X) || Main.contains(Main.recentButtonsP1, ControllerButtons.Y)) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {

@@ -6,6 +6,7 @@ import ca.error404.bytefyte.chars.TestChar;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,7 +19,7 @@ import com.badlogic.gdx.video.VideoPlayer;
 import com.badlogic.gdx.video.VideoPlayerCreator;
 
 public class TestScene implements Screen {
-    private Main main;
+    private Main game;
     private OrthographicCamera cam;
     private Viewport viewport;
 
@@ -28,11 +29,13 @@ public class TestScene implements Screen {
 
     private TestChar player;
 
+    private Music music;
+
     Texture icon;
     CutscenePlayer videoPlayer = new CutscenePlayer("test");
 
-    public TestScene(Main main) {
-        this.main = main;
+    public TestScene(Main game) {
+        this.game = game;
         cam = new OrthographicCamera();
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
         world = new World(new Vector2(0, 0), true);
@@ -55,6 +58,11 @@ public class TestScene implements Screen {
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
+
+        music = Main.manager.get("audio/music/" + Main.songName + ".wav", Music.class);
+        game.newSong(Main.songName);
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
@@ -69,12 +77,12 @@ public class TestScene implements Screen {
         viewport.apply();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        main.batch.setProjectionMatrix(cam.combined);
-        main.batch.begin();
+        game.batch.setProjectionMatrix(cam.combined);
+        game.batch.begin();
         if (videoPlayer.isPlaying()) {
-            videoPlayer.draw(main.batch);
+            videoPlayer.draw(game.batch);
         }
-        main.batch.end();
+        game.batch.end();
 
 
         if (!videoPlayer.isPlaying()) {
@@ -83,16 +91,29 @@ public class TestScene implements Screen {
     }
 
     public void update(float deltaTime) {
+        if (music.getPosition() >= game.songLoopEnd) {
+            music.setPosition((float) (music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             videoPlayer.stop();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
+            music.pause();
         } else if (!videoPlayer.isPlaying()) {
             player.update(deltaTime);
             world.step(1 / 60f, 6, 2);
+            if (!music.isPlaying()) {
+                music.play();
+            }
         }
+
+        Main.recentButtonsP1.clear();
+        Main.recentButtonsP2.clear();
+        Main.recentButtonsP3.clear();
+        Main.recentButtonsP4.clear();
     }
 
     @Override
