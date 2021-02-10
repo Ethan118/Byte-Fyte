@@ -52,6 +52,7 @@ public class TestChar extends Sprite {
     }
     
     public void defineChar() {
+        // loads collision box
         BodyDef bdef = new BodyDef();
         bdef.position.set(0, 0);
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -75,6 +76,7 @@ public class TestChar extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
     }
 
+    // grounds the player
     public void ground() {
         vel.y = 0;
         jumpsLeft = maxJumps;
@@ -82,12 +84,14 @@ public class TestChar extends Sprite {
     }
 
     public void update(float deltaTime) {
+        // set variables
         prevVel = vel;
         prevPos = new Vector2(pos.x, pos.y);
         pos = b2body.getPosition();
 
         Vector2 moveVector = Main.leftStick();
 
+        // horizontal movement
         if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed) {
             if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
                 vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
@@ -97,6 +101,7 @@ public class TestChar extends Sprite {
             turnCooldown += moveVector.x * deltaTime;
         }
 
+        // the biggest if statement you have ever seen. checks if jump button is pressed
         if ((Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y)) && jumpsLeft > 0) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
@@ -108,6 +113,7 @@ public class TestChar extends Sprite {
             grounded = false;
         }
 
+        // fast fall if down is held
         if (moveVector.y < -0.9f && !grounded) {
             if (vel.y > 0) {
                 vel.y = 0;
@@ -117,14 +123,17 @@ public class TestChar extends Sprite {
 
         applyFriction(deltaTime);
         if (grounded) vel.y = 0;
+
+        // grounds player if y position hasn't changed in a while because sometimes
+        // the game doesn't register the player landing on the ground
         if (pos.y == prevPos.y && vel.y <= -10) {
             ground();
-            System.out.println("Euf");
         }
 
         b2body.setLinearVelocity(vel);
     }
 
+    // friction + gravity
     public void applyFriction(float deltaTime) {
         if (vel.x > 0.1) {
             vel.x -= friction * deltaTime;

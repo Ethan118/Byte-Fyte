@@ -24,7 +24,6 @@ public class Main extends Game {
 	public static final int WIDTH = 384;
 	public static final int HEIGHT = 216;
 	public static final float PPM = 100;
-	public static final float FRICTION = 100;
 
 	public SpriteBatch batch;
 
@@ -76,7 +75,7 @@ public class Main extends Game {
 		String oneData = "";
 		int i = 0;
 
-		// Loops through CSV
+		// Loops through CSV and loads songs
 		try {
 			while ((oneData = br.readLine()) != null) {
 				String[] data = oneData.split(",");
@@ -103,7 +102,7 @@ public class Main extends Game {
 		int i = 0;
 		boolean keepLooping = true;
 
-		// Loops through CSV
+		// Loops through CSV and changes song info if criteria met
 		try {
 			while ((oneData = br.readLine()) != null && keepLooping) {
 				String[] data = oneData.split(",");
@@ -142,7 +141,7 @@ public class Main extends Game {
 		Array<Double> start = new Array<>();
 		Array<Double> end = new Array<>();
 
-		// Loops through CSV
+		// Loops through CSV and adds info to lists if requirements met
 		try {
 			Random rand = new Random();
 			while ((oneData = br.readLine()) != null) {
@@ -157,6 +156,7 @@ public class Main extends Game {
 				i++;
 			}
 
+			// keep looping until a random song is picked
 			boolean choose = false;
 			while (!choose) {
 				for (i=0; i < names.size; i++) {
@@ -194,7 +194,7 @@ public class Main extends Game {
 		Array<Double> start = new Array<>();
 		Array<Double> end = new Array<>();
 
-		// Loops through CSV
+		// Loops through CSV and adds all songs to data
 		try {
 			Random rand = new Random();
 			while ((oneData = br.readLine()) != null) {
@@ -209,6 +209,7 @@ public class Main extends Game {
 				i++;
 			}
 
+			// loops through all songs until one is chosen
 			boolean choose = false;
 			while (!choose) {
 				for (i=0; i < names.size; i++) {
@@ -230,11 +231,13 @@ public class Main extends Game {
 		}
 	}
 
+	// calls default render method
 	@Override
 	public void render () {
 		super.render();
 	}
 
+	// this is bad code that should be replaced later
 	public static Vector2 leftStick() {
 		Vector2 moveVector = new Vector2();
 
@@ -251,6 +254,7 @@ public class Main extends Game {
 		return moveVector;
 	}
 
+	// checks if element is in list
 	public static boolean contains(Array<Integer> array, final int num) {
 
 		boolean result = false;

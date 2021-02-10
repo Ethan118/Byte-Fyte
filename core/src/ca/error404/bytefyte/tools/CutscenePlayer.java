@@ -15,13 +15,13 @@ public class CutscenePlayer implements Disposable {
 
     VideoPlayer videoPlayer = VideoPlayerCreator.createVideoPlayer();
     FileHandle file;
-    public Viewport viewport;
 
+    // loads video file
     public CutscenePlayer(String filename) {
         file = Gdx.files.internal( "movies/" + filename + ".ogv");
-        viewport = new FitViewport(1920, 1080, new OrthographicCamera());
     }
 
+    // starts playing video file
     public void play() {
         try {
             videoPlayer.play(file);
@@ -32,6 +32,7 @@ public class CutscenePlayer implements Disposable {
         videoPlayer.update();
     }
 
+    // draws current frame to screen
     public void draw(SpriteBatch batch) {
         batch.draw(videoPlayer.getTexture(), (-Main.WIDTH / 2) / Main.PPM, (-Main.HEIGHT / 2) / Main.PPM, Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM);
         videoPlayer.update();
@@ -46,6 +47,7 @@ public class CutscenePlayer implements Disposable {
         videoPlayer.dispose();
     }
 
+    // stops playing and clears from memory
     public void stop() {
         if (videoPlayer.isPlaying()) {
             videoPlayer.stop();

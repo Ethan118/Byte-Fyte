@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -38,6 +37,7 @@ public class TestScene implements Screen {
     CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
 
     public TestScene(Main game) {
+        // sets up variables
         this.game = game;
         cam = new OrthographicCamera();
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
@@ -50,6 +50,7 @@ public class TestScene implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
+        // creates rectangle for player to stand on (TEMP)
         BodyDef bdef = new BodyDef();
         bdef.position.set(0, -30 / Main.PPM);
         bdef.type = BodyDef.BodyType.StaticBody;
@@ -64,6 +65,7 @@ public class TestScene implements Screen {
         fdef.shape = shape;
         b2body.createFixture(fdef);
 
+        // plays a song so I can hear things
         game.songFromSeries("friday night funkin'");
         music = game.manager.get("audio/music/" + Main.songName + ".wav", Music.class);
         music.setLooping(true);
@@ -79,6 +81,7 @@ public class TestScene implements Screen {
     public void render(float deltaTime) {
         update(deltaTime);
 
+        // draw everything to the screen
         viewport.apply();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -96,18 +99,22 @@ public class TestScene implements Screen {
     }
 
     public void update(float deltaTime) {
+        // music looping
         if (music.getPosition() >= game.songLoopEnd) {
             music.setPosition((float) (music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
         }
 
+        // stop video if playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             videoPlayer.stop();
         }
 
+        // start video if not playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
             music.pause();
         } else if (!videoPlayer.isPlaying()) {
+            // update all objects and physics objects
             player.update(deltaTime);
             world.step(1 / 60f, 6, 2);
             if (!music.isPlaying()) {
@@ -115,6 +122,7 @@ public class TestScene implements Screen {
             }
         }
 
+        // clear all controller inputs
         Set<Controller> keys = Main.recentButtons.keySet();
         for (Controller key : keys) {
             Main.recentButtons.get(key).clear();
