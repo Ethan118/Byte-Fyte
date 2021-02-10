@@ -53,8 +53,3 @@ To update the main branch create a pull request in the GitHub Repository. This w
 
 #### IntelliJ UI
 [Add Info]
-
-
-### Video Playback
-***
-When adding a video for use of playback, make sure that the file type is webm, and all audio is delayed by 1/3 of a second (20 frames if 60fps, 10 if 30, etc).

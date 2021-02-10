@@ -1,12 +1,14 @@
 package ca.error404.bytefyte.scene;
 
-import ca.error404.bytefyte.CutscenePlayer;
+import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.TestChar;
+import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,11 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.video.VideoPlayer;
-import com.badlogic.gdx.video.VideoPlayerCreator;
 
 public class TestScene implements Screen {
-    private Main main;
+    private Main game;
     private OrthographicCamera cam;
     private Viewport viewport;
 
@@ -28,11 +28,13 @@ public class TestScene implements Screen {
 
     private TestChar player;
 
-    Texture icon;
-    CutscenePlayer videoPlayer = new CutscenePlayer("waddle dee");
+    private Music music;
 
-    public TestScene(Main main) {
-        this.main = main;
+    Texture icon;
+    CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
+
+    public TestScene(Main game) {
+        this.game = game;
         cam = new OrthographicCamera();
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
         world = new World(new Vector2(0, 0), true);
@@ -41,6 +43,8 @@ public class TestScene implements Screen {
         player = new TestChar(this);
 
         icon = new Texture("icons/mac.png");
+
+        world.setContactListener(new WorldContactListener());
 
         BodyDef bdef = new BodyDef();
         bdef.position.set(0, -30 / Main.PPM);
@@ -52,9 +56,14 @@ public class TestScene implements Screen {
 
         shape.setAsBox(100 / Main.PPM,10 / Main.PPM);
         fdef.friction = 0;
-
+        fdef.filter.categoryBits = Tags.GROUND_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef);
+
+        game.songFromSeries("undertale");
+        music = Main.manager.get("audio/music/" + Main.songName + ".wav", Music.class);
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
@@ -66,14 +75,16 @@ public class TestScene implements Screen {
     public void render(float deltaTime) {
         update(deltaTime);
 
+        viewport.apply();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        main.batch.setProjectionMatrix(cam.combined);
-        main.batch.begin();
+        game.batch.setProjectionMatrix(cam.combined);
+        game.batch.begin();
         if (videoPlayer.isPlaying()) {
-            videoPlayer.draw(main.batch);
+            videoPlayer.draw(game.batch);
         }
-        main.batch.end();
+        game.batch.end();
+
 
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
@@ -81,12 +92,29 @@ public class TestScene implements Screen {
     }
 
     public void update(float deltaTime) {
+        if (music.getPosition() >= game.songLoopEnd) {
+            music.setPosition((float) (music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            videoPlayer.stop();
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
-        } else {
+            music.pause();
+        } else if (!videoPlayer.isPlaying()) {
             player.update(deltaTime);
             world.step(1 / 60f, 6, 2);
+            if (!music.isPlaying()) {
+                music.play();
+            }
         }
+
+        Main.recentButtonsP1.clear();
+        Main.recentButtonsP2.clear();
+        Main.recentButtonsP3.clear();
+        Main.recentButtonsP4.clear();
     }
 
     @Override

@@ -1,7 +1,9 @@
 package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
+import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -27,10 +29,16 @@ public class TestChar extends Sprite {
     public Body b2body;
 
     public int walkSpeed = 1;
-    public int jumpSpeed = 1;
+    public int jumpSpeed = 2;
 
     public int friction = 3;
-    public int gravity = 2;
+    public int upGravity = 5;
+    public int fallGravity = 6;
+
+    public float turnCooldown = 0;
+    public float maxTurnCooldown = 0.1f;
+
+    public boolean grounded = false;
 
     public TestChar(TestScene screen) {
         this.world = screen.getWorld();
@@ -52,45 +60,45 @@ public class TestChar extends Sprite {
         shape.setAsBox(10 / Main.PPM,10 / Main.PPM);
 
         fdef.shape = shape;
+        fdef.filter.categoryBits = Tags.GROUND_BIT;
         fdef.friction = 0;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
 
         EdgeShape feet = new EdgeShape();
-        feet.set(new Vector2(-10 / Main.PPM, -12 / Main.PPM), new Vector2(10 / Main.PPM, -12 / Main.PPM));
+        feet.set(new Vector2(-9 / Main.PPM, -12 / Main.PPM), new Vector2(9 / Main.PPM, -12 / Main.PPM));
         fdef.isSensor = true;
-
         fdef.shape = feet;
-        b2body.createFixture(fdef).setUserData("feet");
+        fdef.filter.categoryBits = Tags.PLAYER_FEET_BIT;
+        b2body.createFixture(fdef).setUserData(this);
     }
 
     public void update(float deltaTime) {
         prevVel = vel;
+        Vector2 moveVector = Main.leftStick();
 
-        if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) && vel.x <= walkSpeed) {
-            if (vel.x < 0) {
-                vel.x += walkSpeed * deltaTime * 2;
+        if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed) {
+            if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
+                vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
             } else {
-                vel.x = walkSpeed;
+                vel.x = walkSpeed * moveVector.x;
             }
+            turnCooldown += moveVector.x * deltaTime;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.MOVE_LEFT) && vel.x >= -walkSpeed) {
-            if (vel.x > 0) {
-                vel.x -= walkSpeed * deltaTime * 2;
-            } else {
-                vel.x = -walkSpeed;
-            }
-        }
-
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE))) {
+        if (Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtonsP1, ControllerButtons.X) || Main.contains(Main.recentButtonsP1, ControllerButtons.Y)) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {
                 vel.y += jumpSpeed;
             }
+
+            grounded = false;
         }
 
         applyFriction(deltaTime);
+        if (grounded) {
+            vel.y = 0;
+        }
 
         b2body.setLinearVelocity(vel);
     }
@@ -104,6 +112,10 @@ public class TestChar extends Sprite {
             vel.x = 0;
         }
 
-        vel.y -= gravity * deltaTime;
+        if (vel.y > 0) {
+            vel.y -= upGravity * deltaTime ;
+        } else if (vel.y <= 0) {
+            vel.y -= fallGravity * deltaTime;
+        }
     }
 }
