@@ -12,14 +12,11 @@ import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Hashtable;
 import java.util.Random;
 
 public class Main extends Game {
@@ -31,23 +28,14 @@ public class Main extends Game {
 
 	public SpriteBatch batch;
 
-	public static String songName = "spear of justice";
-	public double songLoopStart = 0;
-	public double songLoopEnd = 0;
+	public static String songName = "";
+	public double songLoopStart = Double.POSITIVE_INFINITY;
+	public double songLoopEnd = Double.POSITIVE_INFINITY;
 
-	public static AssetManager manager;
+	public AssetManager manager;
 
-	public static Controller controllerP1;
-	public static Array<Integer> recentButtonsP1 = new Array<>();
-
-	public static Controller controllerP2;
-	public static Array<Integer> recentButtonsP2 = new Array<>();
-
-	public static Controller controllerP3;
-	public static Array<Integer> recentButtonsP3 = new Array<>();
-
-	public static Controller controllerP4;
-	public static Array<Integer> recentButtonsP4 = new Array<>();
+	public static Array<Controller> controllers = new Array<>();
+	public static Hashtable<Controller, Array<Integer>> recentButtons = new Hashtable<>();
 
 	@Override
 	public void create () {
@@ -58,14 +46,18 @@ public class Main extends Game {
 		manager.finishLoading();
 
 		if (Controllers.getControllers().size > 0) {
-			controllerP1 = Controllers.getControllers().first();
-			controllerP1.addListener(new ControllerAdapter() {
-				@Override
-				public boolean buttonDown(Controller controller, int buttonIndex) {
-					recentButtonsP1.add(buttonIndex);
-					return false;
-				}
-			});
+			for (int i=0; i < Controllers.getControllers().size; i++) {
+				Controller cont = Controllers.getControllers().get(i);
+				controllers.add(cont);
+				recentButtons.put(cont, new Array<Integer>());
+				cont.addListener(new ControllerAdapter() {
+					@Override
+					public boolean buttonDown(Controller controller, int buttonIndex) {
+						recentButtons.get(controller).add(buttonIndex);
+						return false;
+					}
+				});
+			}
 		}
 
 		setScreen(new TestScene(this));
@@ -73,7 +65,7 @@ public class Main extends Game {
 
 	public void loadSongs() {
 		// Locate file
-		String fileName = "audio/music/songdata.csv";
+		String fileName = "songdata.csv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -99,7 +91,7 @@ public class Main extends Game {
 
 	public void newSong(String song) {
 		// Locate file
-		String fileName = "audio/music/songdata.csv";
+		String fileName = "songdata.csv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -118,8 +110,8 @@ public class Main extends Game {
 
 				if (i > 0 && data[0].equalsIgnoreCase(song)) {
 					songName = data[0];
-					songLoopStart = Double.parseDouble(data[1]);
-					songLoopEnd = Double.parseDouble(data[2]);
+					songLoopStart = Double.parseDouble(data[2]);
+					songLoopEnd = Double.parseDouble(data[3]);
 					keepLooping = false;
 				}
 
@@ -136,7 +128,7 @@ public class Main extends Game {
 
 	public void songFromSeries(String series) {
 		// Locate file
-		String fileName = "audio/music/songdata.csv";
+		String fileName = "songdata.csv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -156,10 +148,10 @@ public class Main extends Game {
 			while ((oneData = br.readLine()) != null) {
 				String[] data = oneData.split(",");
 
-				if (i > 0 && data[3].equalsIgnoreCase(series)) {
+				if (i > 0 && data[4].equalsIgnoreCase(series)) {
 					names.add(data[0]);
-					start.add(Double.parseDouble(data[1]));
-					end.add(Double.parseDouble(data[2]));
+					start.add(Double.parseDouble(data[2]));
+					end.add(Double.parseDouble(data[3]));
 				}
 
 				i++;
@@ -168,8 +160,59 @@ public class Main extends Game {
 			boolean choose = false;
 			while (!choose) {
 				for (i=0; i < names.size; i++) {
-					int next = rand.nextInt(100);
-					System.out.println(next);
+					int next = rand.nextInt(names.size * 2);
+					if (next == 0) {
+						songName = names.get(i);
+						songLoopStart = start.get(i);
+						songLoopEnd = end.get(i);
+						choose = true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (songLoopEnd == -1) {
+			songLoopEnd = Double.POSITIVE_INFINITY;
+		}
+	}
+
+	public void songFromSeries() {
+		// Locate file
+		String fileName = "songdata.csv";
+
+		ClassLoader classLoader = Main.class.getClassLoader();
+		InputStream inputStream = classLoader.getResourceAsStream(fileName);
+		InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+
+		BufferedReader br = new BufferedReader(streamReader);
+
+		String oneData = "";
+		int i = 0;
+		Array<String> names = new Array<>();
+		Array<Double> start = new Array<>();
+		Array<Double> end = new Array<>();
+
+		// Loops through CSV
+		try {
+			Random rand = new Random();
+			while ((oneData = br.readLine()) != null) {
+				String[] data = oneData.split(",");
+
+				if (i > 0) {
+					names.add(data[0]);
+					start.add(Double.parseDouble(data[2]));
+					end.add(Double.parseDouble(data[3]));
+				}
+
+				i++;
+			}
+
+			boolean choose = false;
+			while (!choose) {
+				for (i=0; i < names.size; i++) {
+					int next = rand.nextInt(names.size * 2);
 					if (next == 0) {
 						songName = names.get(i);
 						songLoopStart = start.get(i);
@@ -195,9 +238,9 @@ public class Main extends Game {
 	public static Vector2 leftStick() {
 		Vector2 moveVector = new Vector2();
 
-		if (controllerP1 != null) {
-			moveVector.x = Math.abs(controllerP1.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= 0.1f ? controllerP1.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
-			moveVector.y = Math.abs(controllerP1.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= 0.1f ? controllerP1.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
+		if (controllers != null) {
+			moveVector.x = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= 0.1f ? controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
+			moveVector.y = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= 0.1f ? -controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT)) moveVector.x += 1;

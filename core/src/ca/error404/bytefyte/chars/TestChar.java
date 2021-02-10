@@ -22,8 +22,8 @@ public class TestChar extends Sprite {
 
     public Vector2 pos = new Vector2();
     public Vector2 vel = new Vector2();
-    public Vector2 prevPos = new Vector2();
-    public Vector2 prevVel = new Vector2();
+    public Vector2 prevPos = Vector2.Zero;
+    public Vector2 prevVel = Vector2.Zero;
 
     public World world;
     public Body b2body;
@@ -34,9 +34,12 @@ public class TestChar extends Sprite {
     public int friction = 3;
     public int upGravity = 5;
     public int fallGravity = 6;
+    public int fastFall = 60;
 
     public float turnCooldown = 0;
     public float maxTurnCooldown = 0.1f;
+    public int maxJumps = 2;
+    public int jumpsLeft = 0;
 
     public boolean grounded = false;
 
@@ -72,8 +75,17 @@ public class TestChar extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
     }
 
+    public void ground() {
+        vel.y = 0;
+        jumpsLeft = maxJumps;
+        grounded = true;
+    }
+
     public void update(float deltaTime) {
         prevVel = vel;
+        prevPos = new Vector2(pos.x, pos.y);
+        pos = b2body.getPosition();
+
         Vector2 moveVector = Main.leftStick();
 
         if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed) {
@@ -85,19 +97,29 @@ public class TestChar extends Sprite {
             turnCooldown += moveVector.x * deltaTime;
         }
 
-        if (Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtonsP1, ControllerButtons.X) || Main.contains(Main.recentButtonsP1, ControllerButtons.Y)) {
+        if ((Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y)) && jumpsLeft > 0) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {
                 vel.y += jumpSpeed;
             }
 
+            jumpsLeft -= 1;
             grounded = false;
         }
 
+        if (moveVector.y < -0.9f && !grounded) {
+            if (vel.y > 0) {
+                vel.y = 0;
+            }
+            vel.y -= fastFall * deltaTime;
+        }
+
         applyFriction(deltaTime);
-        if (grounded) {
-            vel.y = 0;
+        if (grounded) vel.y = 0;
+        if (pos.y == prevPos.y && vel.y <= -10) {
+            ground();
+            System.out.println("Euf");
         }
 
         b2body.setLinearVelocity(vel);

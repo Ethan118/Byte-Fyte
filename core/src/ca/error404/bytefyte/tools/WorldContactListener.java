@@ -21,7 +21,7 @@ public class WorldContactListener implements ContactListener {
                     chara = ((TestChar) fixB.getUserData());
                 }
 
-                chara.grounded = true;
+                chara.ground();
         }
     }
 
