@@ -31,7 +31,7 @@ public class Main extends Game {
 
 	public SpriteBatch batch;
 
-	public static String songName = "spear of justice";
+	public static String songName = "MEGALOVANIA";
 	public double songLoopStart = 0;
 	public double songLoopEnd = 0;
 
@@ -118,8 +118,8 @@ public class Main extends Game {
 
 				if (i > 0 && data[0].equalsIgnoreCase(song)) {
 					songName = data[0];
-					songLoopStart = Double.parseDouble(data[1]);
-					songLoopEnd = Double.parseDouble(data[2]);
+					songLoopStart = Double.parseDouble(data[2]);
+					songLoopEnd = Double.parseDouble(data[3]);
 					keepLooping = false;
 				}
 
@@ -156,10 +156,10 @@ public class Main extends Game {
 			while ((oneData = br.readLine()) != null) {
 				String[] data = oneData.split(",");
 
-				if (i > 0 && data[3].equalsIgnoreCase(series)) {
+				if (i > 0 && data[4].equalsIgnoreCase(series)) {
 					names.add(data[0]);
-					start.add(Double.parseDouble(data[1]));
-					end.add(Double.parseDouble(data[2]));
+					start.add(Double.parseDouble(data[2]));
+					end.add(Double.parseDouble(data[3]));
 				}
 
 				i++;

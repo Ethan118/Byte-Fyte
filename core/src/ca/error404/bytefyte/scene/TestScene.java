@@ -60,7 +60,7 @@ public class TestScene implements Screen {
         fdef.shape = shape;
         b2body.createFixture(fdef);
 
-        game.songFromSeries("undertale");
+        game.newSong("sephiroth remake");
         music = Main.manager.get("audio/music/" + Main.songName + ".wav", Music.class);
         music.setLooping(true);
         music.play();

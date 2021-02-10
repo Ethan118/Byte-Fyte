@@ -37,6 +37,8 @@ public class TestChar extends Sprite {
 
     public float turnCooldown = 0;
     public float maxTurnCooldown = 0.1f;
+    public int maxJumps = 2;
+    public int jumpsLeft = 0;
 
     public boolean grounded = false;
 
@@ -85,19 +87,21 @@ public class TestChar extends Sprite {
             turnCooldown += moveVector.x * deltaTime;
         }
 
-        if (Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtonsP1, ControllerButtons.X) || Main.contains(Main.recentButtonsP1, ControllerButtons.Y)) {
+        if ((Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtonsP1, ControllerButtons.X) || Main.contains(Main.recentButtonsP1, ControllerButtons.Y)) && jumpsLeft > 0) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {
                 vel.y += jumpSpeed;
             }
 
+            jumpsLeft -= 1;
             grounded = false;
         }
 
         applyFriction(deltaTime);
         if (grounded) {
             vel.y = 0;
+            jumpsLeft = maxJumps;
         }
 
         b2body.setLinearVelocity(vel);
