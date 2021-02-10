@@ -9,13 +9,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.Set;
 
 public class TestScene implements Screen {
     private Main game;
@@ -111,10 +115,10 @@ public class TestScene implements Screen {
             }
         }
 
-        Main.recentButtonsP1.clear();
-        Main.recentButtonsP2.clear();
-        Main.recentButtonsP3.clear();
-        Main.recentButtonsP4.clear();
+        Set<Controller> keys = Main.recentButtons.keySet();
+        for (Controller key : keys) {
+            Main.recentButtons.get(key).clear();
+        }
     }
 
     @Override
