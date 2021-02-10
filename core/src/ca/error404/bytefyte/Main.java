@@ -28,9 +28,9 @@ public class Main extends Game {
 
 	public SpriteBatch batch;
 
-	public static String songName = "MEGALOVANIA";
-	public double songLoopStart = 0;
-	public double songLoopEnd = 0;
+	public static String songName = "";
+	public double songLoopStart = Double.POSITIVE_INFINITY;
+	public double songLoopEnd = Double.POSITIVE_INFINITY;
 
 	public AssetManager manager;
 
