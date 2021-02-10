@@ -8,6 +8,7 @@ import ca.error404.bytefyte.Main;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		// Window settings
 		config.forceExit = false;
 		config.width = 1920;
 		config.height = 1080;

@@ -2,6 +2,7 @@ package ca.error404.bytefyte.constants;
 
 import com.badlogic.gdx.controllers.Controller;
 
+// default ps4 controller buttons
 public class ControllerButtons
 {
     // Buttons
