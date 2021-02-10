@@ -1,13 +1,14 @@
 package ca.error404.bytefyte.scene;
 
-import ca.error404.bytefyte.CutscenePlayer;
+import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.TestChar;
+import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,8 +16,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.video.VideoPlayer;
-import com.badlogic.gdx.video.VideoPlayerCreator;
 
 public class TestScene implements Screen {
     private Main game;
@@ -32,7 +31,7 @@ public class TestScene implements Screen {
     private Music music;
 
     Texture icon;
-    CutscenePlayer videoPlayer = new CutscenePlayer("test");
+    CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
 
     public TestScene(Main game) {
         this.game = game;
@@ -45,6 +44,8 @@ public class TestScene implements Screen {
 
         icon = new Texture("icons/mac.png");
 
+        world.setContactListener(new WorldContactListener());
+
         BodyDef bdef = new BodyDef();
         bdef.position.set(0, -30 / Main.PPM);
         bdef.type = BodyDef.BodyType.StaticBody;
@@ -55,12 +56,12 @@ public class TestScene implements Screen {
 
         shape.setAsBox(100 / Main.PPM,10 / Main.PPM);
         fdef.friction = 0;
-
+        fdef.filter.categoryBits = Tags.GROUND_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef);
 
+        game.songFromSeries("undertale");
         music = Main.manager.get("audio/music/" + Main.songName + ".wav", Music.class);
-        game.newSong(Main.songName);
         music.setLooping(true);
         music.play();
     }

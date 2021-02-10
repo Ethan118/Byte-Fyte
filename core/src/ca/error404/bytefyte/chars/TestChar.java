@@ -3,6 +3,7 @@ package ca.error404.bytefyte.chars;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
+import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -37,6 +38,8 @@ public class TestChar extends Sprite {
     public float turnCooldown = 0;
     public float maxTurnCooldown = 0.1f;
 
+    public boolean grounded = false;
+
     public TestChar(TestScene screen) {
         this.world = screen.getWorld();
         currentState = State.IDLE;
@@ -57,15 +60,16 @@ public class TestChar extends Sprite {
         shape.setAsBox(10 / Main.PPM,10 / Main.PPM);
 
         fdef.shape = shape;
+        fdef.filter.categoryBits = Tags.GROUND_BIT;
         fdef.friction = 0;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
 
         EdgeShape feet = new EdgeShape();
-        feet.set(new Vector2(-10 / Main.PPM, -12 / Main.PPM), new Vector2(10 / Main.PPM, -12 / Main.PPM));
+        feet.set(new Vector2(-9 / Main.PPM, -12 / Main.PPM), new Vector2(9 / Main.PPM, -12 / Main.PPM));
         fdef.isSensor = true;
-
         fdef.shape = feet;
-        b2body.createFixture(fdef).setUserData("feet");
+        fdef.filter.categoryBits = Tags.PLAYER_FEET_BIT;
+        b2body.createFixture(fdef).setUserData(this);
     }
 
     public void update(float deltaTime) {
@@ -87,9 +91,14 @@ public class TestChar extends Sprite {
             } else {
                 vel.y += jumpSpeed;
             }
+
+            grounded = false;
         }
 
         applyFriction(deltaTime);
+        if (grounded) {
+            vel.y = 0;
+        }
 
         b2body.setLinearVelocity(vel);
     }
