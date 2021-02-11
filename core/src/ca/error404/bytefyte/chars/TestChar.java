@@ -89,20 +89,27 @@ public class TestChar extends Sprite {
         prevPos = new Vector2(pos.x, pos.y);
         pos = b2body.getPosition();
 
+        boolean controllerJump = false;
+        if (Main.controllers.size > 0) controllerJump = Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y);
+
         Vector2 moveVector = Main.leftStick();
 
         // horizontal movement
         if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed) {
-            if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
-                vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
+            if (grounded) {
+                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
+                    vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
+                } else {
+                    vel.x = walkSpeed * moveVector.x;
+                }
+                turnCooldown += moveVector.x * deltaTime;
             } else {
-                vel.x = walkSpeed * moveVector.x;
+                vel.x += walkSpeed * deltaTime * 10 * moveVector.x;
             }
-            turnCooldown += moveVector.x * deltaTime;
         }
 
-        // the biggest if statement you have ever seen. checks if jump button is pressed
-        if ((Gdx.input.isKeyJustPressed(Keys.JUMP) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y)) && jumpsLeft > 0) {
+        // jumping
+        if ((Gdx.input.isKeyJustPressed(Keys.JUMP) || controllerJump) && jumpsLeft > 0) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {

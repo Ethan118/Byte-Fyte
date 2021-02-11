@@ -66,9 +66,7 @@ public class TestScene implements Screen {
         b2body.createFixture(fdef);
 
         // plays a song so I can hear things
-        game.songFromSeries();
-        music = game.manager.get("audio/music/" + Main.songName + ".wav", Music.class);
-        music.setLooping(true);
+        music = game.songFromSeries();
         music.play();
     }
 
