@@ -88,7 +88,7 @@ public class Main extends Game {
 		}
 	}
 
-	public void newSong(String song) {
+	public Music newSong(String song) {
 		// Locate file
 		String fileName = "songdata.csv";
 
@@ -123,9 +123,13 @@ public class Main extends Game {
 		if (songLoopEnd == -1) {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
+
+		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
+		music.setLooping(true);
+		return music;
 	}
 
-	public void songFromSeries(String series) {
+	public Music songFromSeries(String series) {
 		// Locate file
 		String fileName = "songdata.csv";
 
@@ -176,9 +180,13 @@ public class Main extends Game {
 		if (songLoopEnd == -1) {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
+
+		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
+		music.setLooping(true);
+		return music;
 	}
 
-	public void songFromSeries() {
+	public Music songFromSeries() {
 		// Locate file
 		String fileName = "songdata.csv";
 
@@ -229,6 +237,10 @@ public class Main extends Game {
 		if (songLoopEnd == -1) {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
+
+		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
+		music.setLooping(true);
+		return music;
 	}
 
 	// calls default render method
@@ -241,7 +253,7 @@ public class Main extends Game {
 	public static Vector2 leftStick() {
 		Vector2 moveVector = new Vector2();
 
-		if (controllers != null) {
+		if (controllers.size > 0) {
 			moveVector.x = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= 0.1f ? controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
 			moveVector.y = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= 0.1f ? -controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
 		}
