@@ -10,13 +10,13 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		// Window settings
 		config.forceExit = false;
-		config.width = 1920;
-		config.height = 1080;
+		config.width = 1280;
+		config.height = 720;
 		config.title = "Byte Fyte";
 		config.resizable = false;
-		config.addIcon("icons/mac.png", Files.FileType.Internal);
 		config.addIcon("icons/windows + linux.png", Files.FileType.Internal);
 		config.addIcon("icons/windows old.png", Files.FileType.Internal);
+		config.addIcon("icons/mac.png", Files.FileType.Internal);
 		new LwjglApplication(new Main(), config);
 	}
 }

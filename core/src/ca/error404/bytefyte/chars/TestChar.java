@@ -38,7 +38,7 @@ public class TestChar extends Sprite {
 
     public float turnCooldown = 0;
     public float maxTurnCooldown = 0.1f;
-    public int maxJumps = 2;
+    public int maxJumps = 1;
     public int jumpsLeft = 0;
 
     public boolean grounded = false;
@@ -116,7 +116,7 @@ public class TestChar extends Sprite {
                 vel.y += jumpSpeed;
             }
 
-            jumpsLeft -= 1;
+            if (!grounded) jumpsLeft -= 1;
             grounded = false;
         }
 

@@ -107,6 +107,23 @@ public class TestScene implements Screen {
             videoPlayer.stop();
         }
 
+        // Set music volume
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            Main.musicVolume = Main.musicVolume < 10 ? Main.musicVolume + 1 : 10;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            Main.musicVolume = Main.musicVolume > 0 ? Main.musicVolume - 1 : 0;
+        }
+
+        music.setVolume(Main.musicVolume / 10f);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            if (Gdx.graphics.isFullscreen()) {
+                Gdx.graphics.setWindowedMode(1280, 720);
+            } else {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            }
+        }
+
         // start video if not playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();

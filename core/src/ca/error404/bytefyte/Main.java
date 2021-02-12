@@ -25,6 +25,9 @@ public class Main extends Game {
 	public static final int HEIGHT = 216;
 	public static final float PPM = 100;
 
+	public static int musicVolume = 5;
+	public static int sfxVolume = 5;
+
 	public SpriteBatch batch;
 
 	public static String songName = "";
@@ -160,19 +163,12 @@ public class Main extends Game {
 				i++;
 			}
 
-			// keep looping until a random song is picked
-			boolean choose = false;
-			while (!choose) {
-				for (i=0; i < names.size; i++) {
-					int next = rand.nextInt(names.size * 2);
-					if (next == 0) {
-						songName = names.get(i);
-						songLoopStart = start.get(i);
-						songLoopEnd = end.get(i);
-						choose = true;
-					}
-				}
-			}
+			// randomly selects song in list
+			i = rand.nextInt(names.size);
+
+			songName = names.get(i);
+			songLoopStart = start.get(i);
+			songLoopEnd = end.get(i);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -217,19 +213,12 @@ public class Main extends Game {
 				i++;
 			}
 
-			// loops through all songs until one is chosen
-			boolean choose = false;
-			while (!choose) {
-				for (i=0; i < names.size; i++) {
-					int next = rand.nextInt(names.size * 2);
-					if (next == 0) {
-						songName = names.get(i);
-						songLoopStart = start.get(i);
-						songLoopEnd = end.get(i);
-						choose = true;
-					}
-				}
-			}
+			// randomly selects song in list
+			i = rand.nextInt(names.size);
+
+			songName = names.get(i);
+			songLoopStart = start.get(i);
+			songLoopEnd = end.get(i);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

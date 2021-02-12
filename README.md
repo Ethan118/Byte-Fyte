@@ -19,6 +19,22 @@ The story mode, is available for those that crave some adventure. In the story m
 ***
 One other significant feature we plan to incorporate into our game is online leaderboards. They will, first off, add a competitive aspect to the game. By allowing players with an active Byte Fyte account to share their records in story mode, as well as their fighter statistics during local play, we add an extra layer of competition. This can also add a feeling of success to a player when they are able to defeat someone with better statistics than them. The accounts will store information such as story progression, achievements in all modes, a ranking system, and other user statistics.
 
+### Controls
+***
+**Keyboard Controls:**
+
+**AD** - Move Horizontal
+
+**S (In Air)** - Fast Fall
+
+**SPACE** - Jump
+
+**T** - Toggle Fullscreen
+
+**Up and Down Arrow Keys** - Change Volume Level
+
+**P** - Playback Test Video
+
 ## Set-up
 ***
 ### Cloning

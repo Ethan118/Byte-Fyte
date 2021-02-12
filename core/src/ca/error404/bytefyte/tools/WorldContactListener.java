@@ -22,7 +22,7 @@ public class WorldContactListener implements ContactListener {
                     chara = ((TestChar) fixB.getUserData());
                 }
 
-                chara.ground();
+                if (chara.vel.y <= 0) chara.ground();
         }
     }
 
