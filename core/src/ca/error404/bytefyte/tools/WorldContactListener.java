@@ -13,7 +13,7 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
         switch (cDef) {
-            // if player is contacting the ground, call the grounded function
+            // if a player is contacting the ground, call the grounded function
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
                 TestChar chara;
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
@@ -23,6 +23,7 @@ public class WorldContactListener implements ContactListener {
                 }
 
                 if (chara.vel.y <= 0) chara.ground();
+                break;
         }
     }
 

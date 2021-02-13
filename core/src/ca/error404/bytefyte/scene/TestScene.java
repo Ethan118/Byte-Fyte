@@ -21,15 +21,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.Set;
 
 public class TestScene implements Screen {
-    private Main game;
-    private OrthographicCamera cam;
-    private Viewport viewport;
+    private final Main game;
+    private final OrthographicCamera cam;
+    private final Viewport viewport;
 
-    private World world;
-    private Box2DDebugRenderer b2dr;
-    private Body b2body;
+    private final World world;
+    private final Box2DDebugRenderer b2dr;
 
-    private TestChar player;
+    private final TestChar player;
 
     private Music music;
 
@@ -54,7 +53,7 @@ public class TestScene implements Screen {
         BodyDef bdef = new BodyDef();
         bdef.position.set(0, -30 / Main.PPM);
         bdef.type = BodyDef.BodyType.StaticBody;
-        b2body = world.createBody(bdef);
+        Body b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
@@ -66,7 +65,7 @@ public class TestScene implements Screen {
         b2body.createFixture(fdef);
 
         // plays a song so I can hear things
-        music = game.songFromSeries();
+        music = game.newSong("zomboss remix");
         music.play();
     }
 

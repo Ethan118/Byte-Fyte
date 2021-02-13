@@ -1,10 +1,11 @@
-Internal Title,Display Title,Intro Point,Loop Point,Internal Series,Display Series
-sammer kingdom,Sammer's Kingdom,12.566,74.783,mario,Mario
-badeline fight,Confronting Myself,16.306,132.701,celeste,Celeste
-MEGALOVANIA,MEGALOVANIA,0,-1,undertale,UNDERTALE
-spear of justice,Spear of Justice,0,-1,undertale,UNDERTALE
-sephiroth remake,One-Winged Angel Rebirth,11.097,611.5,other,Final Fantasy
-zomboss,Brainiac Maniac,0,-1,pvz,Plants VS Zombies
-dadbattle,Dad Battle,10.673,74.682,other,Friday Night Funkin'
-kamek battle,Malevolent Magikoopa,11.882,91.903,mario,Mario
-zen,Zen Ball Master,0,-1,other,Kung Fu Panda
+Internal Title,Display Title,Intro Point,Loop Point,Internal Series,Display Series,Weight
+sammer kingdom,Sammer's Kingdom,12.566,74.783,mario,Paper Mario,1
+badeline fight,Confronting Myself,16.306,132.701,celeste,Celeste,1
+MEGALOVANIA,MEGALOVANIA,0,-1,undertale,UNDERTALE,1
+spear of justice,Spear of Justice,0,-1,undertale,UNDERTALE,1
+sephiroth,One-Winged Angel Rebirth,11.108,611.591,other,Final Fantasy,1
+zomboss,Brainiac Maniac,0,-1,pvz,Plants VS Zombies,1
+dadbattle,Dad Battle,10.673,74.682,other,Friday Night Funkin',1
+kamek battle,Malevolent Magikoopa,11.882,91.903,mario,Paper Mario,1
+zen,Zen Ball Master,0,-1,other,Kung Fu Panda,1
+zomboss remix,Braniac Maniac,6.844,168.128,pvz,Plants VS Zombies,1

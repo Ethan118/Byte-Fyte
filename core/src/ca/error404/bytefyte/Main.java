@@ -27,6 +27,7 @@ public class Main extends Game {
 
 	public static int musicVolume = 5;
 	public static int sfxVolume = 5;
+	public static int cutsceneVolume = 5;
 
 	public SpriteBatch batch;
 
@@ -155,9 +156,11 @@ public class Main extends Game {
 				String[] data = oneData.split(",");
 
 				if (i > 0 && data[4].equalsIgnoreCase(series)) {
-					names.add(data[0]);
-					start.add(Double.parseDouble(data[2]));
-					end.add(Double.parseDouble(data[3]));
+					for (int j=0; j < Integer.parseInt(data[6]); j++) {
+						names.add(data[0]);
+						start.add(Double.parseDouble(data[2]));
+						end.add(Double.parseDouble(data[3]));
+					}
 				}
 
 				i++;
@@ -205,9 +208,11 @@ public class Main extends Game {
 				String[] data = oneData.split(",");
 
 				if (i > 0) {
-					names.add(data[0]);
-					start.add(Double.parseDouble(data[2]));
-					end.add(Double.parseDouble(data[3]));
+					for (int j=0; j < Integer.parseInt(data[6]); j++) {
+						names.add(data[0]);
+						start.add(Double.parseDouble(data[2]));
+						end.add(Double.parseDouble(data[3]));
+					}
 				}
 
 				i++;
