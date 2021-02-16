@@ -32,8 +32,7 @@ public class TestScene implements Screen {
 
     private Music music;
 
-    Texture icon;
-    CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
+    CutscenePlayer videoPlayer = new CutscenePlayer("test");
 
     public TestScene(Main game) {
         // sets up variables
@@ -44,8 +43,6 @@ public class TestScene implements Screen {
         b2dr = new Box2DDebugRenderer();
 
         player = new TestChar(this);
-
-        icon = new Texture("icons/mac.png");
 
         world.setContactListener(new WorldContactListener());
 
@@ -65,7 +62,7 @@ public class TestScene implements Screen {
         b2body.createFixture(fdef);
 
         // plays a song so I can hear things
-        music = game.newSong("zomboss remix");
+        music = game.newSong("zen");
         music.play();
     }
 
@@ -144,9 +141,7 @@ public class TestScene implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
-    }
+    public void resize(int width, int height) { viewport.update(width, height); }
 
     @Override
     public void pause() {

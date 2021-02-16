@@ -2,6 +2,8 @@ package ca.error404.bytefyte.constants;
 
 import com.badlogic.gdx.controllers.Controller;
 
+import java.util.Locale;
+
 // default ps4 controller buttons
 public class ControllerButtons
 {
@@ -47,9 +49,9 @@ public class ControllerButtons
     public static final int R_STICK_HORIZONTAL_AXIS;
 
     static {
-            A = 2;
+            A = 0;
             B = 1;
-            X = 0;
+            X = 2;
             Y = 3;
             GUIDE = -1;
             L_BUMPER = 4;
@@ -59,10 +61,10 @@ public class ControllerButtons
             DPAD = 0;
             L_TRIGGER = 2; // postive value
             R_TRIGGER = 2; // negative value
-            L_STICK_VERTICAL_AXIS = 2; // Down = -1, up = 1
-            L_STICK_HORIZONTAL_AXIS = 3; // Left = -1, right = 1
-            R_STICK_VERTICAL_AXIS = 0; // Assume same story
-            R_STICK_HORIZONTAL_AXIS = 1;
+            L_STICK_VERTICAL_AXIS = 0; // Down = -1, up = 1
+            L_STICK_HORIZONTAL_AXIS = 1; // Left = -1, right = 1
+            R_STICK_VERTICAL_AXIS = 2; // Assume same story
+            R_STICK_HORIZONTAL_AXIS = 3;
             L3 = 8;
             R3 = 9;
     }
@@ -74,6 +76,7 @@ public class ControllerButtons
      * @return whether the {@link Controller} is an Xbox controller
      */
     public static boolean isXboxController(Controller controller) {
-        return controller.getName().matches("(.*)(X-?[Bb]ox|Microsoft PC-joystick)(.*)");
+        String name = controller.getName().toLowerCase(Locale.ROOT);
+        return name.contains("xbox");
     }
 }

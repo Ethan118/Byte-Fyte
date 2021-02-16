@@ -29,6 +29,8 @@ public class Main extends Game {
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
+	public static float deadZone = 0.1f;
+
 	public SpriteBatch batch;
 
 	public static String songName = "";
@@ -51,15 +53,18 @@ public class Main extends Game {
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
-				controllers.add(cont);
-				recentButtons.put(cont, new Array<Integer>());
-				cont.addListener(new ControllerAdapter() {
-					@Override
-					public boolean buttonDown(Controller controller, int buttonIndex) {
-						recentButtons.get(controller).add(buttonIndex);
-						return false;
-					}
-				});
+				if (ControllerButtons.isXboxController(cont)) {
+					controllers.add(cont);
+					recentButtons.put(cont, new Array<Integer>());
+					cont.addListener(new ControllerAdapter() {
+						@Override
+						public boolean buttonDown(Controller controller, int buttonIndex) {
+							System.out.println(buttonIndex);
+							recentButtons.get(controller).add(buttonIndex);
+							return false;
+						}
+					});
+				}
 			}
 		}
 
@@ -248,8 +253,8 @@ public class Main extends Game {
 		Vector2 moveVector = new Vector2();
 
 		if (controllers.size > 0) {
-			moveVector.x = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= 0.1f ? controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
-			moveVector.y = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= 0.1f ? -controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
+			moveVector.x = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadZone ? controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
+			moveVector.y = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadZone ? -controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT)) moveVector.x += 1;
