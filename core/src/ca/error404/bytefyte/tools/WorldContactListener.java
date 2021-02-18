@@ -1,5 +1,6 @@
 package ca.error404.bytefyte.tools;
 
+import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.TestChar;
 import ca.error404.bytefyte.constants.Tags;
 import com.badlogic.gdx.physics.box2d.*;
@@ -24,6 +25,15 @@ public class WorldContactListener implements ContactListener {
 
                 if (chara.vel.y <= 0) chara.ground();
                 break;
+            case Tags.PLAYER_BIT | Tags.DEATH_BARRIER_BIT:
+                DeathWall wall;
+                if (fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
+                    wall = ((DeathWall) fixA.getUserData());
+                } else {
+                    wall = ((DeathWall) fixB.getUserData());
+                }
+
+                wall.contact();
         }
     }
 

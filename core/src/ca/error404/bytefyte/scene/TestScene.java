@@ -1,5 +1,7 @@
 package ca.error404.bytefyte.scene;
 
+import ca.error404.bytefyte.chars.DeathWall;
+import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
@@ -28,7 +30,7 @@ public class TestScene implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
-    private final TestChar player;
+    public final TestChar player;
 
     private Music music;
 
@@ -46,23 +48,14 @@ public class TestScene implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
-        // creates rectangle for player to stand on (TEMP)
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(0, -30 / Main.PPM);
-        bdef.type = BodyDef.BodyType.StaticBody;
-        Body b2body = world.createBody(bdef);
-
-        FixtureDef fdef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-
-        shape.setAsBox(100 / Main.PPM,10 / Main.PPM);
-        fdef.friction = 0;
-        fdef.filter.categoryBits = Tags.GROUND_BIT;
-        fdef.shape = shape;
-        b2body.createFixture(fdef);
+        new Wall(0, -30, 100, 10, this);
+        new DeathWall(0, -200, 1000, 10, this);
+        new DeathWall(0, 200, 1000, 10, this);
+        new DeathWall(-225, 0, 10, 1000, this);
+        new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
-        music = game.newSong("zen");
+        music = game.newSong("cornered marvel");
         music.play();
     }
 
@@ -110,6 +103,14 @@ public class TestScene implements Screen {
             Main.musicVolume = Main.musicVolume > 0 ? Main.musicVolume - 1 : 0;
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            if (Gdx.graphics.getHeight() == 1080) {
+                Gdx.graphics.setWindowedMode(1280,720);
+            } else {
+                Gdx.graphics.setWindowedMode(1920, 1080);
+            }
+        }
+
         music.setVolume(Main.musicVolume / 10f);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
@@ -141,7 +142,10 @@ public class TestScene implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) { viewport.update(width, height); }
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+        cam.update();
+    }
 
     @Override
     public void pause() {

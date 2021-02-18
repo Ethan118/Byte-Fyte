@@ -60,7 +60,7 @@ public class TestChar extends Sprite {
         shape.setAsBox(10 / Main.PPM,10 / Main.PPM);
 
         fdef.shape = shape;
-        fdef.filter.categoryBits = Tags.GROUND_BIT;
+        fdef.filter.categoryBits = Tags.PLAYER_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -82,8 +82,12 @@ public class TestChar extends Sprite {
     public void update(float deltaTime) {
         // set variables
         prevVel = vel;
-        prevPos = new Vector2(pos.x, pos.y);
-        pos = b2body.getPosition();
+
+        // Teleport Player
+        if (prevPos != pos) {
+            b2body.setTransform(pos, 0f);
+        }
+        prevPos = pos;
 
         boolean controllerJump = false;
         if (Main.controllers.size > 0) controllerJump = Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y);
@@ -151,5 +155,9 @@ public class TestChar extends Sprite {
         } else if (vel.y <= 0) {
             vel.y -= fallGravity * deltaTime;
         }
+    }
+
+    public void setPos(int x, int y) {
+        pos = new Vector2(x / Main.PPM, y / Main.PPM);
     }
 }

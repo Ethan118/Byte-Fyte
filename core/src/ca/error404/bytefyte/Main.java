@@ -73,7 +73,7 @@ public class Main extends Game {
 
 	public void loadSongs() {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -87,7 +87,7 @@ public class Main extends Game {
 		// Loops through CSV and loads songs
 		try {
 			while ((oneData = br.readLine()) != null) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0) manager.load("audio/music/" + data[0] + ".wav", Music.class);
 				i++;
@@ -99,7 +99,7 @@ public class Main extends Game {
 
 	public Music newSong(String song) {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -114,7 +114,7 @@ public class Main extends Game {
 		// Loops through CSV and changes song info if criteria met
 		try {
 			while ((oneData = br.readLine()) != null && keepLooping) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0 && data[0].equalsIgnoreCase(song)) {
 					songName = data[0];
@@ -140,7 +140,7 @@ public class Main extends Game {
 
 	public Music songFromSeries(String series) {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -158,7 +158,7 @@ public class Main extends Game {
 		try {
 			Random rand = new Random();
 			while ((oneData = br.readLine()) != null) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0 && data[4].equalsIgnoreCase(series)) {
 					for (int j=0; j < Integer.parseInt(data[6]); j++) {
@@ -192,7 +192,7 @@ public class Main extends Game {
 
 	public Music songFromSeries() {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -210,7 +210,7 @@ public class Main extends Game {
 		try {
 			Random rand = new Random();
 			while ((oneData = br.readLine()) != null) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0) {
 					for (int j=0; j < Integer.parseInt(data[6]); j++) {
