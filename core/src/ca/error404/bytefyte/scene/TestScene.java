@@ -2,6 +2,8 @@ package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.Wall;
+import ca.error404.bytefyte.constants.Globals;
+import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.TestChar;
@@ -17,7 +19,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.ini4j.Wini;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 public class TestScene implements Screen {
@@ -53,7 +58,7 @@ public class TestScene implements Screen {
         new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
-        music = game.newSong("cornered marvel");
+        music = game.songFromSeries();
         music.play();
     }
 
@@ -102,10 +107,17 @@ public class TestScene implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (Gdx.graphics.getHeight() == 1080) {
-                Gdx.graphics.setWindowedMode(1280,720);
-            } else {
-                Gdx.graphics.setWindowedMode(1920, 1080);
+            ScreenSizes.screenSize = ScreenSizes.screenSize >= ScreenSizes.screenSizes.size() - 1 ? 0 : ScreenSizes.screenSize + 1;
+            Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
+
+            File settings = new File(Globals.workingDirectory + "settings.ini");
+
+            try {
+                Wini ini = new Wini(settings);
+                ini.add("Settings", "screen size", ScreenSizes.screenSize);
+                ini.store();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -113,7 +125,7 @@ public class TestScene implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             if (Gdx.graphics.isFullscreen()) {
-                Gdx.graphics.setWindowedMode(1280, 720);
+                Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
             } else {
                 Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
             }
