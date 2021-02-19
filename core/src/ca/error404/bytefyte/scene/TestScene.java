@@ -2,7 +2,6 @@ package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.Wall;
-import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.TestChar;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -34,7 +32,7 @@ public class TestScene implements Screen {
 
     private Music music;
 
-    CutscenePlayer videoPlayer = new CutscenePlayer("test");
+    CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
 
     public TestScene(Main game) {
         // sets up variables

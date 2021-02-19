@@ -31,6 +31,7 @@ public class TestChar extends Sprite {
     public int upGravity = 5;
     public int fallGravity = 6;
     public int fastFall = 60;
+    public float maxFastFall = -10f;
 
     public float turnCooldown = 0;
     public float maxTurnCooldown = 0.1f;
@@ -126,6 +127,7 @@ public class TestChar extends Sprite {
                 vel.y = 0;
             }
             vel.y -= fastFall * deltaTime;
+            vel.y = Math.max(vel.y, maxFastFall);
         }
 
         applyFriction(deltaTime);
@@ -133,7 +135,7 @@ public class TestChar extends Sprite {
 
         // grounds player if y position hasn't changed in a while because sometimes
         // the game doesn't register the player landing on the ground
-        if (pos.y == prevPos.y && vel.y <= -10) {
+        if (pos.y == prevPos.y && vel.y <= maxFastFall * 1.1) {
             ground();
         }
 

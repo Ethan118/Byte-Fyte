@@ -57,7 +57,6 @@ public class Main extends Game {
 					controllers.add(cont);
 					recentButtons.put(cont, new Array<Integer>());
 					cont.addListener(new ControllerAdapter() {
-						@Override
 						public boolean buttonDown(Controller controller, int buttonIndex) {
 							System.out.println(buttonIndex);
 							recentButtons.get(controller).add(buttonIndex);
