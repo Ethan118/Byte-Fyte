@@ -58,7 +58,7 @@ public class TestScene implements Screen {
         new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
-        music = game.songFromSeries();
+        music = game.newSong();
         music.play();
     }
 

@@ -190,7 +190,7 @@ public class Main extends Game {
 		return music;
 	}
 
-	public Music songFromSeries() {
+	public Music newSong() {
 		// Locate file
 		String fileName = "songdata.tsv";
 

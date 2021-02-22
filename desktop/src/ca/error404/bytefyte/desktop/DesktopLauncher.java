@@ -35,10 +35,14 @@ public class DesktopLauncher {
 			ScreenSizes.screenSize =  Integer.parseInt(ini.get("Settings", "screen size"));
 		}
 
-		config.width = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0);
-		config.height = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1);
+		if (Globals.OS.contains("WIN")) {
+			config.width = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0);
+			config.height = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1);
+		} else {
+			config.width = 1280;
+			config.height = 720;
+		}
 		config.title = "Byte Fyte";
-		config.resizable = false;
 		config.addIcon("icons/windows + linux.png", Files.FileType.Internal);
 		config.addIcon("icons/windows old.png", Files.FileType.Internal);
 		config.addIcon("icons/mac.png", Files.FileType.Internal);
