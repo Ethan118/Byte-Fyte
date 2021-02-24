@@ -15,6 +15,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -72,16 +74,15 @@ public class TestScene implements Screen {
         update(deltaTime);
 
         // draw everything to the screen
-        viewport.apply();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
+        player.draw(game.batch);
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
         game.batch.end();
-
 
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
@@ -137,8 +138,8 @@ public class TestScene implements Screen {
             music.pause();
         } else if (!videoPlayer.isPlaying()) {
             // update all objects and physics objects
-            player.update(deltaTime);
             world.step(1 / 60f, 6, 2);
+            player.update(deltaTime);
             if (!music.isPlaying()) {
                 music.play();
             }
