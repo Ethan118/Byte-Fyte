@@ -29,10 +29,12 @@ public class DesktopLauncher {
 
 			Wini ini = new Wini(settings);
 			ini.add("Settings", "screen size", ScreenSizes.screenSize);
+			ini.add("Settings", "music volume", Main.musicVolume);
 			ini.store();
 		} else {
 			Wini ini = new Wini(settings);
 			ScreenSizes.screenSize =  Integer.parseInt(ini.get("Settings", "screen size"));
+			Main.musicVolume =  Integer.parseInt(ini.get("Settings", "music volume"));
 		}
 
 		if (Globals.OS.contains("WIN")) {

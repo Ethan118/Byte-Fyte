@@ -17,10 +17,12 @@ public class TestChar extends Sprite {
     public State currentState;
     public State prevState;
 
-    public Vector2 pos = new Vector2();
+    public Vector2 goToPos = new Vector2();
     public Vector2 vel = new Vector2();
-    public Vector2 prevPos = Vector2.Zero;
+    public Vector2 pos = new Vector2();
+    public Vector2 prevGoToPos = Vector2.Zero;
     public Vector2 prevVel = Vector2.Zero;
+    public Vector2 prevPos = Vector2.Zero;
 
     public World world;
     public Body b2body;
@@ -49,16 +51,22 @@ public class TestChar extends Sprite {
     private float elapsedTime = 0f;
     private Animation idle;
     private Animation walk;
+    private Animation run;
+    private Animation jump;
+    private Animation fall;
 
     public TestChar(TestScene screen) {
         this.world = screen.getWorld();
         currentState = State.IDLE;
         prevState = State.IDLE;
 
-        textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/test.atlas"));
+        textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/shyguy.atlas"));
 
         idle = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
         walk = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
+        run = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
+        jump = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
+        fall = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
 
         TextureRegion sprite = (TextureRegion) idle.getKeyFrame(elapsedTime, true);
         setRegion(sprite);
@@ -104,30 +112,43 @@ public class TestChar extends Sprite {
     public void update(float deltaTime) {
         // set variables
         prevVel = vel;
+        prevPos = new Vector2(pos.x, pos.y);
+        pos = new Vector2(b2body.getPosition().x, b2body.getPosition().y);
 
         // Teleport Player
-        if (prevPos != pos) {
-            b2body.setTransform(pos, 0f);
+        if (prevGoToPos != goToPos) {
+            b2body.setTransform(goToPos, 0f);
         }
-        prevPos = pos;
+        prevGoToPos = goToPos;
 
         boolean controllerJump = false;
         if (Main.controllers.size > 0) controllerJump = Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y);
 
         Vector2 moveVector = Main.leftStick();
 
+        int running = (Gdx.input.isKeyPressed(Keys.RUN)) ? 2 : 1;
         // horizontal movement
-        if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed) {
+        if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed * running) {
             if (grounded) {
                 if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
                     vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
                 } else {
-                    vel.x = walkSpeed * moveVector.x;
+                    vel.x = walkSpeed * moveVector.x * running;
                 }
                 turnCooldown += moveVector.x * deltaTime;
             } else {
                 vel.x += walkSpeed * deltaTime * 10 * moveVector.x;
             }
+        }
+
+        // fast fall if down is held
+        if (moveVector.y < -0.9f && !grounded && vel.y < jumpSpeed) {
+            System.out.println(vel.y);
+            if (vel.y > 0) {
+                vel.y = 0;
+            }
+            vel.y -= fastFall * deltaTime;
+            vel.y = Math.max(vel.y, maxFastFall);
         }
 
         // jumping
@@ -142,28 +163,18 @@ public class TestChar extends Sprite {
             grounded = false;
         }
 
-        // fast fall if down is held
-        if (moveVector.y < -0.9f && !grounded) {
-            if (vel.y > 0) {
-                vel.y = 0;
-            }
-            vel.y -= fastFall * deltaTime;
-            vel.y = Math.max(vel.y, maxFastFall);
-        }
-
         applyFriction(deltaTime);
         if (grounded) vel.y = 0;
 
         // grounds player if y position hasn't changed in a while because sometimes
         // the game doesn't register the player landing on the ground
-        if (pos.y == prevPos.y && vel.y <= maxFastFall * 1.1) {
+        if (pos.y == prevPos.y && vel.y <= maxFastFall * 1.1 && !grounded) {
             ground();
         }
 
         b2body.setLinearVelocity(vel);
-        TextureRegion sprite = (TextureRegion) idle.getKeyFrame(elapsedTime, true);
-        setBounds(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getHeight() / 2), getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
         setRegion(getFrame(deltaTime));
+        setBounds(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getHeight() / 2), getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
     }
 
     // friction + gravity
@@ -184,7 +195,13 @@ public class TestChar extends Sprite {
     }
 
     public State getState() {
-        if (b2body.getLinearVelocity().x != 0) {
+        if (vel.y > 0 && !grounded) {
+            return State.JUMP;
+        } else if (vel.y <= 0 && !grounded) {
+            return State.FALL;
+        } else if (Math.abs(b2body.getLinearVelocity().x) > 0.1 && walkSpeed * 1.5f > Math.abs(b2body.getLinearVelocity().x)) {
+            return State.WALK;
+        } else if (Math.abs(b2body.getLinearVelocity().x) >= walkSpeed * 1.5) {
             return State.RUN;
         }
 
@@ -197,8 +214,17 @@ public class TestChar extends Sprite {
 
         TextureRegion region;
         switch (currentState) {
-            case RUN:
+            case WALK:
                 region = (TextureRegion) walk.getKeyFrame(elapsedTime, true);
+                break;
+            case RUN:
+                region = (TextureRegion) run.getKeyFrame(elapsedTime, true);
+                break;
+            case JUMP:
+                region = (TextureRegion) jump.getKeyFrame(elapsedTime, true);
+                break;
+            case FALL:
+                region = (TextureRegion) fall.getKeyFrame(elapsedTime, true);
                 break;
             case IDLE:
             default:
@@ -220,6 +246,6 @@ public class TestChar extends Sprite {
     }
 
     public void setPos(int x, int y) {
-        pos = new Vector2(x / Main.PPM, y / Main.PPM);
+        goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
     }
 }

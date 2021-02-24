@@ -4,7 +4,7 @@ import com.badlogic.gdx.controllers.Controller;
 
 import java.util.Locale;
 
-// default ps4 controller buttons
+// default xbox 360 controller buttons
 public class ControllerButtons
 {
     // Buttons

@@ -85,14 +85,16 @@ public class TestScene implements Screen {
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
-            b2dr.render(world, cam.combined);
+            //b2dr.render(world, cam.combined);
         }
     }
 
     public void update(float deltaTime) {
         // music looping
         if (music.getPosition() >= game.songLoopEnd) {
+            System.out.println(music.getPosition());
             music.setPosition((float) (music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
+            System.out.println(music.getPosition());
         }
 
         // stop video if playing
@@ -103,8 +105,28 @@ public class TestScene implements Screen {
         // Set music volume
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             Main.musicVolume = Main.musicVolume < 10 ? Main.musicVolume + 1 : 10;
+
+            File settings = new File(Globals.workingDirectory + "settings.ini");
+
+            try {
+                Wini ini = new Wini(settings);
+                ini.add("Settings", "music volume", Main.musicVolume);
+                ini.store();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             Main.musicVolume = Main.musicVolume > 0 ? Main.musicVolume - 1 : 0;
+
+            File settings = new File(Globals.workingDirectory + "settings.ini");
+
+            try {
+                Wini ini = new Wini(settings);
+                ini.add("Settings", "music volume", Main.musicVolume);
+                ini.store();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
