@@ -85,16 +85,14 @@ public class TestScene implements Screen {
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
-            //b2dr.render(world, cam.combined);
+            b2dr.render(world, cam.combined);
         }
     }
 
     public void update(float deltaTime) {
         // music looping
         if (music.getPosition() >= game.songLoopEnd) {
-            System.out.println(music.getPosition());
             music.setPosition((float) (music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
-            System.out.println(music.getPosition());
         }
 
         // stop video if playing
@@ -182,12 +180,12 @@ public class TestScene implements Screen {
 
     @Override
     public void pause() {
-
+        music.pause();
     }
 
     @Override
     public void resume() {
-
+        music.play();
     }
 
     @Override

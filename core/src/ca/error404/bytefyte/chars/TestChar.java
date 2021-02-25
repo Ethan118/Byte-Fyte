@@ -143,7 +143,6 @@ public class TestChar extends Sprite {
 
         // fast fall if down is held
         if (moveVector.y < -0.9f && !grounded && vel.y < jumpSpeed) {
-            System.out.println(vel.y);
             if (vel.y > 0) {
                 vel.y = 0;
             }
@@ -174,7 +173,7 @@ public class TestChar extends Sprite {
 
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getHeight() / 2), getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2, getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
     }
 
     // friction + gravity
