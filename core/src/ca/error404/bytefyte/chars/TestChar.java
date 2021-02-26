@@ -100,6 +100,13 @@ public class TestChar extends Sprite {
         fdef.shape = feet;
         fdef.filter.categoryBits = Tags.PLAYER_FEET_BIT;
         b2body.createFixture(fdef).setUserData(this);
+
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM), new Vector2(getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM));
+        fdef.isSensor = true;
+        fdef.shape = head;
+        fdef.filter.categoryBits = Tags.PLAYER_HEAD_BIT;
+        b2body.createFixture(fdef).setUserData(this);
     }
 
     // grounds the player
@@ -173,7 +180,7 @@ public class TestChar extends Sprite {
 
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2, getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
     }
 
     // friction + gravity
@@ -231,12 +238,20 @@ public class TestChar extends Sprite {
                 break;
         }
 
-        if ((b2body.getLinearVelocity().x > 0 || !facingRight) && !region.isFlipX()) {
-            region.flip(true, false);
-            facingRight = false;
-        } else if ((b2body.getLinearVelocity().x < 0 || facingRight) && region.isFlipX()) {
-            region.flip(true, false);
-            facingRight = true;
+        if (grounded) {
+            if ((b2body.getLinearVelocity().x > 0 || !facingRight) && !region.isFlipX()) {
+                region.flip(true, false);
+                facingRight = false;
+            } else if ((b2body.getLinearVelocity().x < 0 || facingRight) && region.isFlipX()) {
+                region.flip(true, false);
+                facingRight = true;
+            }
+        } else {
+            if (!facingRight && !region.isFlipX()) {
+                region.flip(true, false);
+            } else if (facingRight && region.isFlipX()) {
+                region.flip(true, false);
+            }
         }
 
         elapsedTime = currentState == prevState ? elapsedTime + deltaTime: 0;

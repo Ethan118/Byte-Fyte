@@ -12,11 +12,11 @@ public class WorldContactListener implements ContactListener {
         Fixture fixB = contact.getFixtureB();
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
+        TestChar chara;
 
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
-                TestChar chara;
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
                     chara = ((TestChar) fixA.getUserData());
                 } else {
@@ -24,6 +24,15 @@ public class WorldContactListener implements ContactListener {
                 }
 
                 if (chara.vel.y <= 0) chara.ground();
+                break;
+            case Tags.PLAYER_HEAD_BIT | Tags.GROUND_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.PLAYER_HEAD_BIT) {
+                    chara = ((TestChar) fixA.getUserData());
+                } else {
+                    chara = ((TestChar) fixB.getUserData());
+                }
+
+                chara.vel.y = 0;
                 break;
             case Tags.PLAYER_BIT | Tags.DEATH_BARRIER_BIT:
                 DeathWall wall;

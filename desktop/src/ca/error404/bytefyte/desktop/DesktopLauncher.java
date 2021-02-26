@@ -33,8 +33,12 @@ public class DesktopLauncher {
 			ini.store();
 		} else {
 			Wini ini = new Wini(settings);
-			ScreenSizes.screenSize =  Integer.parseInt(ini.get("Settings", "screen size"));
-			Main.musicVolume =  Integer.parseInt(ini.get("Settings", "music volume"));
+			try {
+				ScreenSizes.screenSize = Integer.parseInt(ini.get("Settings", "screen size"));
+				Main.musicVolume = Integer.parseInt(ini.get("Settings", "music volume"));
+			} catch (Exception ignored) {
+
+			}
 		}
 
 		if (Globals.OS.contains("WIN")) {
@@ -45,6 +49,7 @@ public class DesktopLauncher {
 			config.height = 720;
 		}
 		config.title = "Byte Fyte";
+		config.resizable = false;
 		config.addIcon("icons/windows + linux.png", Files.FileType.Internal);
 		config.addIcon("icons/windows old.png", Files.FileType.Internal);
 		config.addIcon("icons/mac.png", Files.FileType.Internal);

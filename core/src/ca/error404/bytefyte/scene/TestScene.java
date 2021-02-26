@@ -54,6 +54,8 @@ public class TestScene implements Screen {
         world.setContactListener(new WorldContactListener());
 
         new Wall(0, -30, 100, 10, this);
+        new Wall(-75, 65, 20, 20, this);
+        new Wall(75, 65, 20, 20, this);
         new DeathWall(0, -200, 1000, 10, this);
         new DeathWall(0, 200, 1000, 10, this);
         new DeathWall(-225, 0, 10, 1000, this);
@@ -61,6 +63,7 @@ public class TestScene implements Screen {
 
         // plays a song so I can hear things
         music = game.newSong();
+        music.setVolume(Main.musicVolume / 10f);
         music.play();
     }
 
