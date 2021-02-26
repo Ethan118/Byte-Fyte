@@ -13,6 +13,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import org.ini4j.Wini;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +25,12 @@ public class Main extends Game {
 	public static final int WIDTH = 384;
 	public static final int HEIGHT = 216;
 	public static final float PPM = 100;
+
+	public static int musicVolume = 5;
+	public static int sfxVolume = 5;
+	public static int cutsceneVolume = 5;
+
+	public static float deadZone = 0.1f;
 
 	public SpriteBatch batch;
 
@@ -47,15 +54,17 @@ public class Main extends Game {
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
-				controllers.add(cont);
-				recentButtons.put(cont, new Array<Integer>());
-				cont.addListener(new ControllerAdapter() {
-					@Override
-					public boolean buttonDown(Controller controller, int buttonIndex) {
-						recentButtons.get(controller).add(buttonIndex);
-						return false;
-					}
-				});
+				if (ControllerButtons.isXboxController(cont)) {
+					controllers.add(cont);
+					recentButtons.put(cont, new Array<Integer>());
+					cont.addListener(new ControllerAdapter() {
+						public boolean buttonDown(Controller controller, int buttonIndex) {
+							System.out.println(buttonIndex);
+							recentButtons.get(controller).add(buttonIndex);
+							return false;
+						}
+					});
+				}
 			}
 		}
 
@@ -64,7 +73,7 @@ public class Main extends Game {
 
 	public void loadSongs() {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -78,7 +87,7 @@ public class Main extends Game {
 		// Loops through CSV and loads songs
 		try {
 			while ((oneData = br.readLine()) != null) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0) manager.load("audio/music/" + data[0] + ".wav", Music.class);
 				i++;
@@ -90,7 +99,7 @@ public class Main extends Game {
 
 	public Music newSong(String song) {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -105,7 +114,7 @@ public class Main extends Game {
 		// Loops through CSV and changes song info if criteria met
 		try {
 			while ((oneData = br.readLine()) != null && keepLooping) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0 && data[0].equalsIgnoreCase(song)) {
 					songName = data[0];
@@ -131,7 +140,7 @@ public class Main extends Game {
 
 	public Music songFromSeries(String series) {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -149,30 +158,25 @@ public class Main extends Game {
 		try {
 			Random rand = new Random();
 			while ((oneData = br.readLine()) != null) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0 && data[4].equalsIgnoreCase(series)) {
-					names.add(data[0]);
-					start.add(Double.parseDouble(data[2]));
-					end.add(Double.parseDouble(data[3]));
+					for (int j=0; j < Integer.parseInt(data[6]); j++) {
+						names.add(data[0]);
+						start.add(Double.parseDouble(data[2]));
+						end.add(Double.parseDouble(data[3]));
+					}
 				}
 
 				i++;
 			}
 
-			// keep looping until a random song is picked
-			boolean choose = false;
-			while (!choose) {
-				for (i=0; i < names.size; i++) {
-					int next = rand.nextInt(names.size * 2);
-					if (next == 0) {
-						songName = names.get(i);
-						songLoopStart = start.get(i);
-						songLoopEnd = end.get(i);
-						choose = true;
-					}
-				}
-			}
+			// randomly selects song in list
+			i = rand.nextInt(names.size);
+
+			songName = names.get(i);
+			songLoopStart = start.get(i);
+			songLoopEnd = end.get(i);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -186,9 +190,9 @@ public class Main extends Game {
 		return music;
 	}
 
-	public Music songFromSeries() {
+	public Music newSong() {
 		// Locate file
-		String fileName = "songdata.csv";
+		String fileName = "songdata.tsv";
 
 		ClassLoader classLoader = Main.class.getClassLoader();
 		InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -206,30 +210,25 @@ public class Main extends Game {
 		try {
 			Random rand = new Random();
 			while ((oneData = br.readLine()) != null) {
-				String[] data = oneData.split(",");
+				String[] data = oneData.split("	");
 
 				if (i > 0) {
-					names.add(data[0]);
-					start.add(Double.parseDouble(data[2]));
-					end.add(Double.parseDouble(data[3]));
+					for (int j=0; j < Integer.parseInt(data[6]); j++) {
+						names.add(data[0]);
+						start.add(Double.parseDouble(data[2]));
+						end.add(Double.parseDouble(data[3]));
+					}
 				}
 
 				i++;
 			}
 
-			// loops through all songs until one is chosen
-			boolean choose = false;
-			while (!choose) {
-				for (i=0; i < names.size; i++) {
-					int next = rand.nextInt(names.size * 2);
-					if (next == 0) {
-						songName = names.get(i);
-						songLoopStart = start.get(i);
-						songLoopEnd = end.get(i);
-						choose = true;
-					}
-				}
-			}
+			// randomly selects song in list
+			i = rand.nextInt(names.size);
+
+			songName = names.get(i);
+			songLoopStart = start.get(i);
+			songLoopEnd = end.get(i);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -254,8 +253,8 @@ public class Main extends Game {
 		Vector2 moveVector = new Vector2();
 
 		if (controllers.size > 0) {
-			moveVector.x = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= 0.1f ? controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
-			moveVector.y = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= 0.1f ? -controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
+			moveVector.x = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadZone ? controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
+			moveVector.y = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadZone ? -controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT)) moveVector.x += 1;

@@ -1,6 +1,9 @@
 package ca.error404.bytefyte.scene;
 
-import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.chars.DeathWall;
+import ca.error404.bytefyte.chars.Wall;
+import ca.error404.bytefyte.constants.Globals;
+import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.TestChar;
@@ -13,27 +16,29 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.ini4j.Wini;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 public class TestScene implements Screen {
-    private Main game;
-    private OrthographicCamera cam;
-    private Viewport viewport;
+    private final Main game;
+    private final OrthographicCamera cam;
+    private final Viewport viewport;
 
-    private World world;
-    private Box2DDebugRenderer b2dr;
-    private Body b2body;
+    private final World world;
+    private final Box2DDebugRenderer b2dr;
 
-    private TestChar player;
+    public final TestChar player;
 
     private Music music;
 
-    Texture icon;
     CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
 
     public TestScene(Main game) {
@@ -46,27 +51,19 @@ public class TestScene implements Screen {
 
         player = new TestChar(this);
 
-        icon = new Texture("icons/mac.png");
-
         world.setContactListener(new WorldContactListener());
 
-        // creates rectangle for player to stand on (TEMP)
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(0, -30 / Main.PPM);
-        bdef.type = BodyDef.BodyType.StaticBody;
-        b2body = world.createBody(bdef);
-
-        FixtureDef fdef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-
-        shape.setAsBox(100 / Main.PPM,10 / Main.PPM);
-        fdef.friction = 0;
-        fdef.filter.categoryBits = Tags.GROUND_BIT;
-        fdef.shape = shape;
-        b2body.createFixture(fdef);
+        new Wall(0, -30, 100, 10, this);
+        new Wall(-75, 65, 20, 20, this);
+        new Wall(75, 65, 20, 20, this);
+        new DeathWall(0, -200, 1000, 10, this);
+        new DeathWall(0, 200, 1000, 10, this);
+        new DeathWall(-225, 0, 10, 1000, this);
+        new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
-        music = game.songFromSeries();
+        music = game.newSong();
+        music.setVolume(Main.musicVolume / 10f);
         music.play();
     }
 
@@ -80,16 +77,15 @@ public class TestScene implements Screen {
         update(deltaTime);
 
         // draw everything to the screen
-        viewport.apply();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
+        player.draw(game.batch);
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
         game.batch.end();
-
 
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
@@ -107,14 +103,66 @@ public class TestScene implements Screen {
             videoPlayer.stop();
         }
 
+        // Set music volume
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            Main.musicVolume = Main.musicVolume < 10 ? Main.musicVolume + 1 : 10;
+
+            File settings = new File(Globals.workingDirectory + "settings.ini");
+
+            try {
+                Wini ini = new Wini(settings);
+                ini.add("Settings", "music volume", Main.musicVolume);
+                ini.store();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            Main.musicVolume = Main.musicVolume > 0 ? Main.musicVolume - 1 : 0;
+
+            File settings = new File(Globals.workingDirectory + "settings.ini");
+
+            try {
+                Wini ini = new Wini(settings);
+                ini.add("Settings", "music volume", Main.musicVolume);
+                ini.store();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            ScreenSizes.screenSize = ScreenSizes.screenSize >= ScreenSizes.screenSizes.size() - 1 ? 0 : ScreenSizes.screenSize + 1;
+            Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
+
+            File settings = new File(Globals.workingDirectory + "settings.ini");
+
+            try {
+                Wini ini = new Wini(settings);
+                ini.add("Settings", "screen size", ScreenSizes.screenSize);
+                ini.store();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        music.setVolume(Main.musicVolume / 10f);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            if (Gdx.graphics.isFullscreen()) {
+                Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
+            } else {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            }
+        }
+
         // start video if not playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
             music.pause();
         } else if (!videoPlayer.isPlaying()) {
             // update all objects and physics objects
-            player.update(deltaTime);
             world.step(1 / 60f, 6, 2);
+            player.update(deltaTime);
             if (!music.isPlaying()) {
                 music.play();
             }
@@ -130,16 +178,17 @@ public class TestScene implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+        cam.update();
     }
 
     @Override
     public void pause() {
-
+        music.pause();
     }
 
     @Override
     public void resume() {
-
+        music.play();
     }
 
     @Override
