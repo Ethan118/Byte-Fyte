@@ -1,12 +1,11 @@
 package libgdxtools;
 
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
-import com.sun.tools.jdeprscan.scan.Scan;
 
 import java.util.Scanner;
 
 public class Packer {
-    public static void main (String[] args) throws Exception {
+    public static void main (String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("in");

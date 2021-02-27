@@ -15,8 +15,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -37,7 +35,7 @@ public class TestScene implements Screen {
 
     public final TestChar player;
 
-    private Music music;
+    private final Music music;
 
     CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
 
@@ -49,7 +47,7 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-        player = new TestChar(this);
+        player = new TestChar(this, new Vector2(0, 1.5f));
 
         world.setContactListener(new WorldContactListener());
 
@@ -62,7 +60,7 @@ public class TestScene implements Screen {
         new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
-        music = game.newSong();
+        music = game.newSong("swsh battle tower");
         music.setVolume(Main.musicVolume / 10f);
         music.play();
     }

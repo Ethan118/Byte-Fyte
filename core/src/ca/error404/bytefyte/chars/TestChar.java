@@ -6,7 +6,6 @@ import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -47,20 +46,20 @@ public class TestChar extends Sprite {
     public boolean grounded = false;
 
     private boolean facingRight = true;
-    private TextureAtlas textureAtlas;
     private float elapsedTime = 0f;
-    private Animation idle;
-    private Animation walk;
-    private Animation run;
-    private Animation jump;
-    private Animation fall;
+    private final Animation<TextureRegion> idle;
+    private final Animation<TextureRegion> walk;
+    private final Animation<TextureRegion> run;
+    private final Animation<TextureRegion> jump;
+    private final Animation<TextureRegion> fall;
 
-    public TestChar(TestScene screen) {
+    public TestChar(TestScene screen, Vector2 spawnPoint) {
         this.world = screen.getWorld();
         currentState = State.IDLE;
         prevState = State.IDLE;
+        goToPos = spawnPoint;
 
-        textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/shyguy.atlas"));
+        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/shyguy.atlas"));
 
         idle = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
         walk = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
@@ -68,41 +67,43 @@ public class TestChar extends Sprite {
         jump = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
         fall = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
 
-        TextureRegion sprite = (TextureRegion) idle.getKeyFrame(elapsedTime, true);
+        TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         setRegion(sprite);
 
         defineChar();
 
-        setBounds(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getHeight() / 2), getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getHeight() / 2), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
         setRegion(sprite);
     }
     
     public void defineChar() {
         // loads collision box
         BodyDef bdef = new BodyDef();
-        bdef.position.set(0, 0);
+        bdef.position.set(goToPos.x, goToPos.y);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(getRegionWidth() / hitboxScale / 2 / Main.PPM,getRegionHeight() / hitboxScale / 2 / Main.PPM);
+        shape.setAsBox((float) getRegionWidth() / hitboxScale / 2 / Main.PPM,(float) getRegionHeight() / hitboxScale / 2 / Main.PPM);
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
+        // loads feet trigger
         EdgeShape feet = new EdgeShape();
-        feet.set(new Vector2(-getRegionWidth() / hitboxScale / 2.2f / Main.PPM, -getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM), new Vector2(getRegionWidth() / hitboxScale / 2.2f / Main.PPM, -getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM));
+        feet.set(new Vector2((float) -getRegionWidth() / hitboxScale / 2.2f / Main.PPM, -getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM), new Vector2((float) getRegionWidth() / hitboxScale / 2.2f / Main.PPM, -getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM));
         fdef.isSensor = true;
         fdef.shape = feet;
         fdef.filter.categoryBits = Tags.PLAYER_FEET_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
+        // loads head trigger
         EdgeShape head = new EdgeShape();
-        head.set(new Vector2(-getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM), new Vector2(getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM));
+        head.set(new Vector2((float) -getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM), new Vector2((float) getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM));
         fdef.isSensor = true;
         fdef.shape = head;
         fdef.filter.categoryBits = Tags.PLAYER_HEAD_BIT;
@@ -180,7 +181,7 @@ public class TestChar extends Sprite {
 
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
     // friction + gravity
@@ -221,20 +222,20 @@ public class TestChar extends Sprite {
         TextureRegion region;
         switch (currentState) {
             case WALK:
-                region = (TextureRegion) walk.getKeyFrame(elapsedTime, true);
+                region = walk.getKeyFrame(elapsedTime, true);
                 break;
             case RUN:
-                region = (TextureRegion) run.getKeyFrame(elapsedTime, true);
+                region = run.getKeyFrame(elapsedTime, true);
                 break;
             case JUMP:
-                region = (TextureRegion) jump.getKeyFrame(elapsedTime, true);
+                region = jump.getKeyFrame(elapsedTime, true);
                 break;
             case FALL:
-                region = (TextureRegion) fall.getKeyFrame(elapsedTime, true);
+                region = fall.getKeyFrame(elapsedTime, true);
                 break;
             case IDLE:
             default:
-                region = (TextureRegion) idle.getKeyFrame(elapsedTime, true);
+                region = idle.getKeyFrame(elapsedTime, true);
                 break;
         }
 
