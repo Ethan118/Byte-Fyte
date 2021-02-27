@@ -37,7 +37,7 @@ public class TestScene implements Screen {
 
     private final Music music;
 
-    CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
+    CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
     public TestScene(Main game) {
         // sets up variables
@@ -79,10 +79,11 @@ public class TestScene implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
-        player.draw(game.batch);
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
+        viewport.apply();
+        player.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
