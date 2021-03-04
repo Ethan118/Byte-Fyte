@@ -47,7 +47,7 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-        player = new TestChar(this, new Vector2(0, 1.5f));
+        player = new TestChar(this, new Vector2(0, 150));
 
         world.setContactListener(new WorldContactListener());
 
@@ -60,7 +60,7 @@ public class TestScene implements Screen {
         new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
-        music = game.newSong("swsh battle tower");
+        music = game.newSong();
         music.setVolume(Main.musicVolume / 10f);
         music.play();
     }

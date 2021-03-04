@@ -26,7 +26,5 @@ public class Globals {
         //folder.
 
         workingDirectory += "/ByteFyte/";
-
-        System.out.println(workingDirectory);
     }
 }

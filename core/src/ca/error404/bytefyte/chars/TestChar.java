@@ -57,7 +57,7 @@ public class TestChar extends Sprite {
         this.world = screen.getWorld();
         currentState = State.IDLE;
         prevState = State.IDLE;
-        goToPos = spawnPoint;
+        goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/shyguy.atlas"));
 
