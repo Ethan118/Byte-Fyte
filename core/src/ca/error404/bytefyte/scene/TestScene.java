@@ -15,8 +15,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -37,9 +35,9 @@ public class TestScene implements Screen {
 
     public final TestChar player;
 
-    private Music music;
+    private final Music music;
 
-    CutscenePlayer videoPlayer = new CutscenePlayer("test 2");
+    CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
     public TestScene(Main game) {
         // sets up variables
@@ -49,7 +47,7 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-        player = new TestChar(this);
+        player = new TestChar(this, new Vector2(0, 150));
 
         world.setContactListener(new WorldContactListener());
 
@@ -81,10 +79,11 @@ public class TestScene implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
-        player.draw(game.batch);
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
+        viewport.apply();
+        player.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
