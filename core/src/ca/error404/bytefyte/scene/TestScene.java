@@ -1,12 +1,13 @@
 package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.chars.DeathWall;
+import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
-import ca.error404.bytefyte.chars.TestChar;
+import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -33,7 +34,7 @@ public class TestScene implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
-    public final TestChar player;
+    public final Character player;
 
     private final Music music;
 
@@ -47,7 +48,7 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-        player = new TestChar(this, new Vector2(0, 150));
+        player = new ShyGuy(this, new Vector2(0, 150));
 
         world.setContactListener(new WorldContactListener());
 
