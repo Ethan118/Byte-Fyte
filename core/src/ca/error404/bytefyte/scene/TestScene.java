@@ -48,7 +48,12 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-        player = new ShyGuy(this, new Vector2(0, 150));
+        if (Main.controllers.size > 0) {
+            player = new ShyGuy(this, new Vector2(0, 150), Main.controllers.get(0));
+        } else {
+            player = new ShyGuy(this, new Vector2(0, 150), null);
+        }
+
 
         world.setContactListener(new WorldContactListener());
 
