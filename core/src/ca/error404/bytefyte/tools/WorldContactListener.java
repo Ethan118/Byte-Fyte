@@ -1,7 +1,7 @@
 package ca.error404.bytefyte.tools;
 
 import ca.error404.bytefyte.chars.DeathWall;
-import ca.error404.bytefyte.chars.TestChar;
+import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.Tags;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -12,24 +12,24 @@ public class WorldContactListener implements ContactListener {
         Fixture fixB = contact.getFixtureB();
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
-        TestChar chara;
+        Character chara;
 
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
-                    chara = ((TestChar) fixA.getUserData());
+                    chara = ((Character) fixA.getUserData());
                 } else {
-                    chara = ((TestChar) fixB.getUserData());
+                    chara = ((Character) fixB.getUserData());
                 }
 
                 if (chara.vel.y <= 0) chara.ground();
                 break;
             case Tags.PLAYER_HEAD_BIT | Tags.GROUND_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_HEAD_BIT) {
-                    chara = ((TestChar) fixA.getUserData());
+                    chara = ((Character) fixA.getUserData());
                 } else {
-                    chara = ((TestChar) fixB.getUserData());
+                    chara = ((Character) fixB.getUserData());
                 }
 
                 chara.vel.y = 0;
@@ -57,9 +57,9 @@ public class WorldContactListener implements ContactListener {
             // if player left the ground, tell them that they have left the ground
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
-                    ((TestChar) fixA.getUserData()).grounded = false;
+                    ((Character) fixA.getUserData()).grounded = false;
                 } else {
-                    ((TestChar) fixB.getUserData()).grounded = false;
+                    ((Character) fixB.getUserData()).grounded = false;
                 }
         }
     }
