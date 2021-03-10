@@ -16,7 +16,7 @@ public class TestChar extends Sprite {
     public State currentState;
     public State prevState;
 
-    public Vector2 goToPos = new Vector2();
+    public Vector2 goToPos;
     public Vector2 vel = new Vector2();
     public Vector2 pos = new Vector2();
     public Vector2 prevGoToPos = Vector2.Zero;
@@ -29,10 +29,10 @@ public class TestChar extends Sprite {
     public int walkSpeed = 1;
     public int jumpSpeed = 2;
 
-    public int friction = 3;
+    public int friction = 7;
     public int upGravity = 5;
     public int fallGravity = 6;
-    public int fastFall = 60;
+    public int fastFall = 20;
     public float maxFastFall = -10f;
 
     public float turnCooldown = 0;
