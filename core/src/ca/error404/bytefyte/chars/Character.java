@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class TestChar extends Sprite {
+public abstract class Character extends Sprite {
     public enum State {IDLE, WALK, RUN, JUMP, FALL}
 
     public State currentState;
@@ -35,7 +35,7 @@ public class TestChar extends Sprite {
     public int fastFall = 20;
     public float maxFastFall = -10f;
 
-    public float turnCooldown = 0;
+    public float turnCooldown = 0f;
     public float maxTurnCooldown = 0.1f;
     public int maxJumps = 1;
     public int jumpsLeft = 0;
@@ -53,7 +53,42 @@ public class TestChar extends Sprite {
     private final Animation<TextureRegion> jump;
     private final Animation<TextureRegion> fall;
 
-    public TestChar(TestScene screen, Vector2 spawnPoint) {
+    private enum AttackState {
+        BASIC,
+        SPECIAL,
+        SMASH,
+        ULTIMATE
+    }
+
+    private enum MovementState {
+        IDLE,
+        RUN,
+        WALK,
+        JUMP,
+        FALL
+    }
+
+    private enum DirectionInput {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        IDLE
+    }
+
+    private float ultMeter;
+
+    private AttackState aState;
+    private AttackState prevAState;
+
+    private MovementState mState;
+    private MovementState prevMState;
+
+    private DirectionInput direction;
+
+
+
+    public Character(TestScene screen, Vector2 spawnPoint) {
         this.world = screen.getWorld();
         currentState = State.IDLE;
         prevState = State.IDLE;
@@ -75,7 +110,7 @@ public class TestChar extends Sprite {
         setBounds(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getHeight() / 2), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
         setRegion(sprite);
     }
-    
+
     public void defineChar() {
         // loads collision box
         BodyDef bdef = new BodyDef();
@@ -263,4 +298,141 @@ public class TestChar extends Sprite {
     public void setPos(int x, int y) {
         goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
     }
+
+
+    public void handleAttacks() {
+
+//        Ultimate checker
+        if (aState == AttackState.ULTIMATE && ultMeter >= 100) {
+            ultimate();
+        }
+
+//        Idle attacks
+        if (mState == MovementState.IDLE && direction == DirectionInput.IDLE) {
+            if (aState == AttackState.BASIC) {
+                basicNeutral();
+            } else if (aState == AttackState.SMASH) {
+                smashNeutral();
+            } else if (aState == AttackState.SPECIAL) {
+                specialNeutral();
+            }
+
+
+        } else if (direction == DirectionInput.RIGHT || direction == DirectionInput.LEFT) {
+            if (aState == AttackState.SPECIAL) {
+                specialSide();
+            }
+
+//                Up attacks
+        } else if (direction == DirectionInput.UP) {
+            if (aState == AttackState.SPECIAL) {
+                specialUp();
+            }
+
+//                Down attacks
+        } else if (direction == DirectionInput.DOWN) {
+            if (aState == AttackState.SPECIAL) {
+                specialDown();
+            }
+
+
+//            Any attacks while not in air
+        } else if (mState != MovementState.FALL && mState != MovementState.JUMP) {
+
+//            Side attacks
+            if (direction == DirectionInput.RIGHT || direction == DirectionInput.LEFT) {
+                if (aState == AttackState.BASIC) {
+                    basicSide();
+                } else if (aState == AttackState.SMASH) {
+                    smashSide();
+                } else if (aState == AttackState.SPECIAL) {
+                    specialSide();
+                }
+
+//                Up attacks
+            } else if (direction == DirectionInput.UP) {
+                if (aState == AttackState.BASIC) {
+                    basicUp();
+                } else if (aState == AttackState.SMASH) {
+                    smashUp();
+                } else if (aState == AttackState.SPECIAL) {
+                    specialUp();
+                }
+
+//                Down attacks
+            } else if (direction == DirectionInput.DOWN) {
+                if (aState == AttackState.BASIC) {
+                    basicDown();
+                } else if (aState == AttackState.SMASH) {
+                    smashDown();
+                } else if (aState == AttackState.SPECIAL) {
+                    specialDown();
+                }
+            }
+
+//        Air attacks
+        } else if (mState == MovementState.FALL || mState == MovementState.JUMP) {
+            if (aState == AttackState.BASIC || aState == AttackState.SMASH) {
+                if (direction == DirectionInput.IDLE) {
+                    airNeutral();
+                } else if (direction == DirectionInput.LEFT) {
+                    airLeft();
+                } else if (direction == DirectionInput.RIGHT) {
+                    airRight();
+                } else if (direction == DirectionInput.UP) {
+                    airUp();
+                } else if (direction == DirectionInput.DOWN) {
+                    airDown();
+                }
+            }
+        } else if (mState == MovementState.RUN && aState == AttackState.BASIC) {
+            dashAttack();
+        }
+    }
+
+    //    Basic Attacks
+    abstract void basicNeutral();
+
+    abstract void basicSide();
+
+    abstract void basicUp();
+
+    abstract void basicDown();
+
+    abstract void dashAttack();
+
+    //    Smash Attacks
+    abstract void smashNeutral();
+
+    abstract void smashSide();
+
+    abstract void smashUp();
+
+    abstract void smashDown();
+
+
+    //    Special Attacks
+    abstract void specialNeutral();
+
+    abstract void specialSide();
+
+    abstract void specialUp();
+
+    abstract void specialDown();
+
+    abstract void ultimate();
+
+
+    //    Air Attacks
+    abstract void airNeutral();
+
+    abstract void airLeft();
+
+    abstract void airRight();
+
+    abstract void airUp();
+
+    abstract void airDown();
+
+
 }
