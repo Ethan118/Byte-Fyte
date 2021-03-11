@@ -160,19 +160,23 @@ public abstract class Character extends Sprite {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
 
+            moveVector.y = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y) ? 1 : 0;
         } else {
             moveVector.x += Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) ? 1 : 0;
             moveVector.x -= Gdx.input.isKeyPressed(Keys.MOVE_LEFT) ? 1 : 0;
             moveVector.y += Gdx.input.isKeyPressed(Keys.MOVE_UP) ? 1 : 0;
             moveVector.y -= Gdx.input.isKeyPressed(Keys.MOVE_DOWN) ? 1 : 0;
+
+            moveVector.x *= Gdx.input.isKeyPressed(Keys.RUN) ? 2 : 1;
+            moveVector.y = Gdx.input.isKeyJustPressed(Keys.JUMP) ? 1 : 0;
         }
     }
 
     public void update(float deltaTime) {
         // set variables
         prevVel = vel;
-        prevPos = new Vector2(pos.x, pos.y);
-        pos = new Vector2(b2body.getPosition().x, b2body.getPosition().y);
+        prevPos.set(pos);
+        pos.set(b2body.getPosition());
 
         // Teleport Player
         if (prevGoToPos != goToPos) {
@@ -182,10 +186,8 @@ public abstract class Character extends Sprite {
 
         handleInput();
 
-        boolean controllerJump = false;
-        if (Main.controllers.size > 0) controllerJump = Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y);
-
         int running = (Gdx.input.isKeyPressed(Keys.RUN)) ? 2 : 1;
+
         // horizontal movement
         if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed * running) {
             if (grounded) {
@@ -210,7 +212,7 @@ public abstract class Character extends Sprite {
         }
 
         // jumping
-        if ((Gdx.input.isKeyJustPressed(Keys.JUMP) || controllerJump) && jumpsLeft > 0) {
+        if (moveVector.y > 0 && jumpsLeft > 0) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {
