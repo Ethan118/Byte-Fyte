@@ -35,8 +35,6 @@ public abstract class Character extends Sprite {
     public int fastFall = 20;
     public float maxFastFall = -10f;
 
-    public float turnCooldown = 0f;
-    public float maxTurnCooldown = 0.1f;
     public int maxJumps = 1;
     public int jumpsLeft = 0;
 
@@ -169,16 +167,25 @@ public abstract class Character extends Sprite {
 
         Vector2 moveVector = Main.leftStick();
 
-        int running = (Gdx.input.isKeyPressed(Keys.RUN)) ? 2 : 1;
+        int running;
+        if (Gdx.input.isKeyPressed(Keys.RUN)) {
+            running = 2;
+        } else {
+            running = 1;
+            if (moveVector.x > 0) {
+                facingRight = false;
+            } else if (moveVector.x < 0)  {
+                facingRight = true;
+            }
+        }
         // horizontal movement
         if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed * running) {
             if (grounded) {
-                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
+                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && running == 2) {
                     vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
                 } else {
                     vel.x = walkSpeed * moveVector.x * running;
                 }
-                turnCooldown += moveVector.x * deltaTime;
             } else {
                 vel.x += walkSpeed * deltaTime * 10 * moveVector.x;
             }
@@ -274,13 +281,20 @@ public abstract class Character extends Sprite {
                 break;
         }
 
+        // Decide which direction to face
         if (grounded) {
-            if ((b2body.getLinearVelocity().x > 0 || !facingRight) && !region.isFlipX()) {
+            if ((vel.x > 0) && !region.isFlipX()) {
                 region.flip(true, false);
                 facingRight = false;
-            } else if ((b2body.getLinearVelocity().x < 0 || facingRight) && region.isFlipX()) {
+            } else if ((vel.x < 0) && region.isFlipX()) {
                 region.flip(true, false);
                 facingRight = true;
+            } else {
+                if (!facingRight && !region.isFlipX()) {
+                    region.flip(true, false);
+                } else if (facingRight && region.isFlipX()) {
+                    region.flip(true, false);
+                }
             }
         } else {
             if (!facingRight && !region.isFlipX()) {
