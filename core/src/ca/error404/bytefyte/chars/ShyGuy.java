@@ -2,14 +2,15 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class ShyGuy extends Character{
-    public ShyGuy(TestScene screen, Vector2 spawnPoint) {
-        super(screen, spawnPoint);
+    public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
+        super(screen, spawnPoint, controller);
     }
 
 

@@ -6,17 +6,17 @@ import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Character extends Sprite {
-    public enum State {IDLE, WALK, RUN, JUMP, FALL}
+    private Controller controller;
+    private float deadzone;
 
-    public State currentState;
-    public State prevState;
-
-    public Vector2 goToPos = new Vector2();
+    public Vector2 moveVector = new Vector2();
+    public Vector2 goToPos;
     public Vector2 vel = new Vector2();
     public Vector2 pos = new Vector2();
     public Vector2 prevGoToPos = Vector2.Zero;
@@ -34,9 +34,6 @@ public abstract class Character extends Sprite {
     public int fallGravity = 6;
     public int fastFall = 20;
     public float maxFastFall = -10f;
-
-    public float turnCooldown = 0f;
-    public float maxTurnCooldown = 0.1f;
     public int maxJumps = 1;
     public int jumpsLeft = 0;
 
@@ -86,12 +83,13 @@ public abstract class Character extends Sprite {
 
     private DirectionInput direction;
 
-
-
-    public Character(TestScene screen, Vector2 spawnPoint) {
+    public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
         this.world = screen.getWorld();
-        currentState = State.IDLE;
-        prevState = State.IDLE;
+        this.controller = controller;
+
+        mState = MovementState.IDLE;
+        prevMState = MovementState.IDLE;
+
         goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/shyguy.atlas"));
@@ -152,11 +150,30 @@ public abstract class Character extends Sprite {
         grounded = true;
     }
 
+    private void handleInput() {
+        moveVector.set(0f, 0f);
+
+        if (controller != null) {
+            moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
+            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
+
+            moveVector.y = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y) ? 1 : 0;
+        } else {
+            moveVector.x += Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) ? 1 : 0;
+            moveVector.x -= Gdx.input.isKeyPressed(Keys.MOVE_LEFT) ? 1 : 0;
+            moveVector.y += Gdx.input.isKeyPressed(Keys.MOVE_UP) ? 1 : 0;
+            moveVector.y -= Gdx.input.isKeyPressed(Keys.MOVE_DOWN) ? 1 : 0;
+
+            //moveVector.x *= Gdx.input.isKeyPressed(Keys.RUN) ? 2 : 1;
+            moveVector.y = Gdx.input.isKeyJustPressed(Keys.JUMP) ? 1 : 0;
+        }
+    }
+
     public void update(float deltaTime) {
         // set variables
         prevVel = vel;
-        prevPos = new Vector2(pos.x, pos.y);
-        pos = new Vector2(b2body.getPosition().x, b2body.getPosition().y);
+        prevPos.set(pos);
+        pos.set(b2body.getPosition());
 
         // Teleport Player
         if (prevGoToPos != goToPos) {
@@ -164,21 +181,27 @@ public abstract class Character extends Sprite {
         }
         prevGoToPos = goToPos;
 
-        boolean controllerJump = false;
-        if (Main.controllers.size > 0) controllerJump = Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y);
+        handleInput();
 
-        Vector2 moveVector = Main.leftStick();
-
-        int running = (Gdx.input.isKeyPressed(Keys.RUN)) ? 2 : 1;
+        int running;
+        if (Gdx.input.isKeyPressed(Keys.RUN)) {
+            running = 2;
+        } else {
+            running = 1;
+            if (moveVector.x > 0) {
+                facingRight = false;
+            } else if (moveVector.x < 0)  {
+                facingRight = true;
+            }
+        }
         // horizontal movement
         if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed * running) {
             if (grounded) {
-                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && Math.abs(turnCooldown) >= maxTurnCooldown) {
+                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && running == 2) {
                     vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
                 } else {
                     vel.x = walkSpeed * moveVector.x * running;
                 }
-                turnCooldown += moveVector.x * deltaTime;
             } else {
                 vel.x += walkSpeed * deltaTime * 10 * moveVector.x;
             }
@@ -194,7 +217,7 @@ public abstract class Character extends Sprite {
         }
 
         // jumping
-        if ((Gdx.input.isKeyJustPressed(Keys.JUMP) || controllerJump) && jumpsLeft > 0) {
+        if (moveVector.y > 0 && jumpsLeft > 0) {
             if (vel.y <= 0) {
                 vel.y = jumpSpeed;
             } else {
@@ -236,26 +259,26 @@ public abstract class Character extends Sprite {
         }
     }
 
-    public State getState() {
+    public MovementState getState() {
         if (vel.y > 0 && !grounded) {
-            return State.JUMP;
+            return MovementState.JUMP;
         } else if (vel.y <= 0 && !grounded) {
-            return State.FALL;
+            return MovementState.FALL;
         } else if (Math.abs(b2body.getLinearVelocity().x) > 0.1 && walkSpeed * 1.5f > Math.abs(b2body.getLinearVelocity().x)) {
-            return State.WALK;
+            return MovementState.WALK;
         } else if (Math.abs(b2body.getLinearVelocity().x) >= walkSpeed * 1.5) {
-            return State.RUN;
+            return MovementState.RUN;
         }
 
-        return State.IDLE;
+        return MovementState.IDLE;
     }
 
     public TextureRegion getFrame(float deltaTime) {
         elapsedTime += deltaTime;
-        currentState = getState();
+        mState = getState();
 
         TextureRegion region;
-        switch (currentState) {
+        switch (mState) {
             case WALK:
                 region = walk.getKeyFrame(elapsedTime, true);
                 break;
@@ -274,13 +297,20 @@ public abstract class Character extends Sprite {
                 break;
         }
 
+        // Decide which direction to face
         if (grounded) {
-            if ((b2body.getLinearVelocity().x > 0 || !facingRight) && !region.isFlipX()) {
+            if ((vel.x > 0) && !region.isFlipX()) {
                 region.flip(true, false);
                 facingRight = false;
-            } else if ((b2body.getLinearVelocity().x < 0 || facingRight) && region.isFlipX()) {
+            } else if ((vel.x < 0) && region.isFlipX()) {
                 region.flip(true, false);
                 facingRight = true;
+            } else {
+                if (!facingRight && !region.isFlipX()) {
+                    region.flip(true, false);
+                } else if (facingRight && region.isFlipX()) {
+                    region.flip(true, false);
+                }
             }
         } else {
             if (!facingRight && !region.isFlipX()) {
@@ -290,8 +320,8 @@ public abstract class Character extends Sprite {
             }
         }
 
-        elapsedTime = currentState == prevState ? elapsedTime + deltaTime: 0;
-        prevState = currentState;
+        elapsedTime = mState == prevMState ? elapsedTime + deltaTime: 0;
+        prevMState = mState;
         return region;
     }
 
