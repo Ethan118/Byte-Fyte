@@ -12,37 +12,57 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Character extends Sprite {
-    private Controller controller;
-    private float deadzone;
-
-    public Vector2 moveVector = new Vector2();
-    public Vector2 goToPos;
-    public Vector2 vel = new Vector2();
-    public Vector2 pos = new Vector2();
-    public Vector2 prevGoToPos = Vector2.Zero;
-    public Vector2 prevVel = Vector2.Zero;
-    public Vector2 prevPos = Vector2.Zero;
-
     public World world;
     public Body b2body;
 
-    public int walkSpeed = 1;
-    public int jumpSpeed = 2;
+    public Controller controller;
+    public float deadzone;
 
-    public int friction = 7;
+    public Vector2 moveVector = new Vector2();
+
+    public Vector2 goToPos;
+    public Vector2 prevGoToPos = Vector2.Zero;
+
+    public Vector2 pos = new Vector2();
+    public Vector2 prevPos = Vector2.Zero;
+
+    public Vector2 vel = new Vector2();
+    public Vector2 prevVel = Vector2.Zero;
+
+    public float walkSpeed = 1;
+    public float dashSpeed = 2;
+    public float runSpeed = 2;
+    public float maxSpeed;
+    public boolean running = false;
+
+    private boolean facingRight = true;
+    public boolean grounded = false;
+
+    public float jumpPower = 2;
+    public boolean jumping = false;
+    public int jumpLimit;
+    public int jumpsLeft;
+
+    public float friction = 3;
+
+    public int gravity;
+    public int airSpeed = 5;
+    public int fallSpeed;
+    public int fastFallSpeed;
+
+    public int weight;
+
     public int upGravity = 5;
     public int fallGravity = 6;
     public int fastFall = 20;
     public float maxFastFall = -10f;
     public int maxJumps = 1;
-    public int jumpsLeft = 0;
 
     public int hitboxScale = 18;
     public int spriteScale = 15;
 
-    public boolean grounded = false;
+    //public int running = 1;
 
-    private boolean facingRight = true;
     private float elapsedTime = 0f;
     private final Animation<TextureRegion> idle;
     private final Animation<TextureRegion> walk;
@@ -164,8 +184,8 @@ public abstract class Character extends Sprite {
             moveVector.y += Gdx.input.isKeyPressed(Keys.MOVE_UP) ? 1 : 0;
             moveVector.y -= Gdx.input.isKeyPressed(Keys.MOVE_DOWN) ? 1 : 0;
 
-            //moveVector.x *= Gdx.input.isKeyPressed(Keys.RUN) ? 2 : 1;
-            moveVector.y = Gdx.input.isKeyJustPressed(Keys.JUMP) ? 1 : 0;
+            running = Gdx.input.isKeyPressed(Keys.RUN);
+            jumping = Gdx.input.isKeyJustPressed(Keys.JUMP);
         }
     }
 
@@ -183,32 +203,38 @@ public abstract class Character extends Sprite {
 
         handleInput();
 
-        int running;
-        if (Gdx.input.isKeyPressed(Keys.RUN)) {
-            running = 2;
-        } else {
-            running = 1;
-            if (moveVector.x > 0) {
-                facingRight = false;
-            } else if (moveVector.x < 0)  {
-                facingRight = true;
+//        if (running == 1) {
+//            if (moveVector.x > 0) {
+//                facingRight = false;
+//            } else if (moveVector.x < 0)  {
+//                facingRight = true;
+//            }
+//        }
+
+        if (grounded) {
+            if (running) {
+                maxSpeed = runSpeed;
+            } else {
+                maxSpeed = walkSpeed;
             }
+        } else {
+            maxSpeed = airSpeed;
         }
-        // horizontal movement
-        if (moveVector.x != 0 && Math.abs(vel.x) <= walkSpeed * running) {
+
+        if (moveVector.x != 0 && Math.abs(vel.x) <= maxSpeed) {
             if (grounded) {
-                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && running == 2) {
-                    vel.x += walkSpeed * deltaTime * 2 * moveVector.x;
+                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && running) {
+                    vel.x += maxSpeed * deltaTime * moveVector.x;
                 } else {
-                    vel.x = walkSpeed * moveVector.x * running;
+                    vel.x = maxSpeed * moveVector.x;
                 }
             } else {
-                vel.x += walkSpeed * deltaTime * 10 * moveVector.x;
+                vel.x += maxSpeed * moveVector.x * deltaTime;
             }
         }
 
         // fast fall if down is held
-        if (moveVector.y < -0.9f && !grounded && vel.y < jumpSpeed) {
+        if (moveVector.y < 0 && !grounded && vel.y < jumpPower) {
             if (vel.y > 0) {
                 vel.y = 0;
             }
@@ -217,11 +243,11 @@ public abstract class Character extends Sprite {
         }
 
         // jumping
-        if (moveVector.y > 0 && jumpsLeft > 0) {
+        if (jumping && jumpsLeft > 0) {
             if (vel.y <= 0) {
-                vel.y = jumpSpeed;
+                vel.y = jumpPower;
             } else {
-                vel.y += jumpSpeed;
+                vel.y += jumpPower;
             }
 
             if (!grounded) jumpsLeft -= 1;
