@@ -29,28 +29,32 @@ public abstract class Character extends Sprite {
     public Vector2 vel = new Vector2();
     public Vector2 prevVel = Vector2.Zero;
 
-    public float walkSpeed = 1;
+    public float walkSpeed = 1f;
+    public float walkAcc = 20;
     public float dashSpeed = 2;
     public float runSpeed = 2;
+    public float runAcc = 25;
     public float maxSpeed;
     public boolean running = false;
 
     private boolean facingRight = true;
     public boolean grounded = false;
 
-    public float jumpPower = 2;
+    public float jumpPower = 5;
     public boolean jumping = false;
     public int jumpLimit;
     public int jumpsLeft;
 
-    public float friction = 7;
+    public float friction = 7f;
 
-    public int gravity;
-    public int airSpeed = 10;
-    public int fallSpeed;
-    public int fastFallSpeed;
+    public float gravity = 15;
+    public float airSpeed = 1f;
+    public float airAcc = 25;
+    public float fallSpeed = -2;
+    public float fastFallSpeed = -10;
+    public float maxFallSpeed;
 
-    public int weight;
+    public float weight = 1f;
 
     public int upGravity = 5;
     public int fallGravity = 6;
@@ -203,41 +207,30 @@ public abstract class Character extends Sprite {
 
         handleInput();
 
-//        if (running == 1) {
-//            if (moveVector.x > 0) {
-//                facingRight = false;
-//            } else if (moveVector.x < 0)  {
-//                facingRight = true;
-//            }
-//        }
-
         if (grounded) {
-            if (running) {
-                maxSpeed = runSpeed;
-            } else {
-                maxSpeed = walkSpeed;
-            }
+            maxSpeed = running ? runSpeed : walkSpeed;
+        } else {
+            maxSpeed = airSpeed;
         }
 
-        if (moveVector.x != 0 && Math.abs(vel.x) <= maxSpeed) {
+        if (Math.abs(vel.x) <= maxSpeed) {
             if (grounded) {
-                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0))) {
-                    vel.x += maxSpeed * deltaTime * moveVector.x;
-                } else {
-                    vel.x = maxSpeed * moveVector.x;
+                if (!(moveVector.x < 0 && vel.x > 0) && !(moveVector.x > 0 && vel.x < 0)) {
+                    vel.x += (walkAcc / weight) * deltaTime * moveVector.x;
                 }
             } else {
-                vel.x += airSpeed * moveVector.x * deltaTime;
+                vel.x += (airAcc / weight) * moveVector.x * deltaTime;
             }
         }
 
-        // fast fall if down is held
-        if (moveVector.y < 0 && !grounded && vel.y < jumpPower) {
-            if (vel.y > 0) {
-                vel.y = 0;
-            }
-            vel.y -= fastFall * deltaTime;
-            vel.y = Math.max(vel.y, maxFastFall);
+        if (moveVector.y < 0) {
+            maxFallSpeed = fastFallSpeed;
+        } else {
+            maxFallSpeed = fallSpeed;
+        }
+
+        if (vel.y > maxFallSpeed && !grounded) {
+            vel.y -= gravity * deltaTime;
         }
 
         // jumping
@@ -253,11 +246,10 @@ public abstract class Character extends Sprite {
         }
 
         applyFriction(deltaTime);
-        if (grounded) vel.y = 0;
 
         // grounds player if y position hasn't changed in a while because sometimes
         // the game doesn't register the player landing on the ground
-        if (pos.y == prevPos.y && vel.y <= maxFastFall * 1.1 && !grounded) {
+        if (pos.y == prevPos.y && vel.y < fastFallSpeed&& !grounded) {
             ground();
         }
 
@@ -274,12 +266,6 @@ public abstract class Character extends Sprite {
             vel.x += friction * deltaTime;
         } else {
             vel.x = 0;
-        }
-
-        if (vel.y > 0) {
-            vel.y -= upGravity * deltaTime ;
-        } else if (vel.y <= 0) {
-            vel.y -= fallGravity * deltaTime;
         }
     }
 
