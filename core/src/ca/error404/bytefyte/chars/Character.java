@@ -43,10 +43,10 @@ public abstract class Character extends Sprite {
     public int jumpLimit;
     public int jumpsLeft;
 
-    public float friction = 3;
+    public float friction = 7;
 
     public int gravity;
-    public int airSpeed = 5;
+    public int airSpeed = 10;
     public int fallSpeed;
     public int fastFallSpeed;
 
@@ -217,19 +217,17 @@ public abstract class Character extends Sprite {
             } else {
                 maxSpeed = walkSpeed;
             }
-        } else {
-            maxSpeed = airSpeed;
         }
 
         if (moveVector.x != 0 && Math.abs(vel.x) <= maxSpeed) {
             if (grounded) {
-                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0)) && running) {
+                if (((moveVector.x < 0 && vel.x > 0) || (moveVector.x > 0 && vel.x < 0))) {
                     vel.x += maxSpeed * deltaTime * moveVector.x;
                 } else {
                     vel.x = maxSpeed * moveVector.x;
                 }
             } else {
-                vel.x += maxSpeed * moveVector.x * deltaTime;
+                vel.x += airSpeed * moveVector.x * deltaTime;
             }
         }
 
