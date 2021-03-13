@@ -33,39 +33,33 @@ public abstract class Character extends Sprite {
     public float walkAcc = 20;
     public float dashSpeed = 2;
     public float runSpeed = 2;
-    public float runAcc = 25;
     public float maxSpeed;
     public boolean running = false;
 
     private boolean facingRight = true;
     public boolean grounded = false;
 
-    public float jumpPower = 5;
+    public float jumpPower = 3;
     public boolean jumping = false;
-    public int jumpLimit;
+    public int maxJumps = 1;
     public int jumpsLeft;
 
-    public float friction = 7f;
+    public float friction = -7f;
 
-    public float gravity = 15;
+    public float downGravity = 20;
+    public float upGravity = 10;
+
     public float airSpeed = 1f;
     public float airAcc = 25;
-    public float fallSpeed = -2;
-    public float fastFallSpeed = -10;
+
+    public float fallSpeed = -3;
+    public float fastFallSpeed = -20;
     public float maxFallSpeed;
 
     public float weight = 1f;
 
-    public int upGravity = 5;
-    public int fallGravity = 6;
-    public int fastFall = 20;
-    public float maxFastFall = -10f;
-    public int maxJumps = 1;
-
     public int hitboxScale = 18;
     public int spriteScale = 15;
-
-    //public int running = 1;
 
     private float elapsedTime = 0f;
     private final Animation<TextureRegion> idle;
@@ -223,14 +217,18 @@ public abstract class Character extends Sprite {
             }
         }
 
+        applyFriction(deltaTime);
+
         if (moveVector.y < 0) {
             maxFallSpeed = fastFallSpeed;
         } else {
             maxFallSpeed = fallSpeed;
         }
 
-        if (vel.y > maxFallSpeed && !grounded) {
-            vel.y -= gravity * deltaTime;
+        if (vel.y > 0 && !grounded) {
+            vel.y -= upGravity * deltaTime;
+        } else if (vel.y > maxFallSpeed && !grounded) {
+            vel.y -= downGravity * deltaTime;
         }
 
         // jumping
@@ -245,11 +243,9 @@ public abstract class Character extends Sprite {
             grounded = false;
         }
 
-        applyFriction(deltaTime);
-
         // grounds player if y position hasn't changed in a while because sometimes
         // the game doesn't register the player landing on the ground
-        if (pos.y == prevPos.y && vel.y < fastFallSpeed&& !grounded) {
+        if (pos.y == prevPos.y && vel.y < fastFallSpeed && !grounded) {
             ground();
         }
 
@@ -260,10 +256,8 @@ public abstract class Character extends Sprite {
 
     // friction + gravity
     public void applyFriction(float deltaTime) {
-        if (vel.x > 0.1) {
-            vel.x -= friction * deltaTime;
-        } else if (vel.x < -0.1) {
-            vel.x += friction * deltaTime;
+        if (Math.abs(vel.x) > 0.1f) {
+            vel.x += Math.signum(vel.x) * friction * deltaTime;
         } else {
             vel.x = 0;
         }
@@ -338,7 +332,6 @@ public abstract class Character extends Sprite {
     public void setPos(int x, int y) {
         goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
     }
-
 
     public void handleAttacks() {
 
