@@ -62,11 +62,19 @@ public abstract class Character extends Sprite {
     public int spriteScale = 15;
 
     private float elapsedTime = 0f;
+
     private final Animation<TextureRegion> idle;
     private final Animation<TextureRegion> walk;
     private final Animation<TextureRegion> run;
+
     private final Animation<TextureRegion> jump;
     private final Animation<TextureRegion> fall;
+    private final Animation<TextureRegion> hit;
+
+    private final Animation<TextureRegion> neutralAttack;
+    private final Animation<TextureRegion> upTilt;
+    private final Animation<TextureRegion> downTilt;
+    private final Animation<TextureRegion> sideTilt;
 
     private enum AttackState {
         BASIC,
@@ -115,8 +123,15 @@ public abstract class Character extends Sprite {
         idle = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
         walk = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
         run = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
+
         jump = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
         fall = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
+        hit = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_hit"), Animation.PlayMode.LOOP);
+
+        neutralAttack = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral"), Animation.PlayMode.LOOP);
+        sideTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.LOOP);
+        upTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.LOOP);
+        downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.LOOP);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         setRegion(sprite);
