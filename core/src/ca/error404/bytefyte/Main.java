@@ -2,6 +2,7 @@ package ca.error404.bytefyte;
 
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
+import ca.error404.bytefyte.scene.MenuScene;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,7 +14,8 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import org.ini4j.Wini;
+
+import java.util.Scanner;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -43,8 +45,32 @@ public class Main extends Game {
 	public static Array<Controller> controllers = new Array<>();
 	public static Hashtable<Controller, Array<Integer>> recentButtons = new Hashtable<>();
 
+
+
+
+	public String action;
+
+
 	@Override
 	public void create () {
+
+
+		System.out.println("typing");
+
+		Scanner input = new Scanner(System.in);
+		for (int i=0; i < 250; i++) {
+
+			action = input.next();
+
+			setScreen(new MenuScene());
+
+			if (action.equalsIgnoreCase("=")); {
+				break;
+			}
+		}
+
+
+
 		batch = new SpriteBatch();
 
 		manager = new AssetManager();
