@@ -80,7 +80,8 @@ public abstract class Character extends Sprite {
         BASIC,
         SPECIAL,
         SMASH,
-        ULTIMATE
+        ULTIMATE,
+        NONE
     }
 
     private enum MovementState {
@@ -99,7 +100,7 @@ public abstract class Character extends Sprite {
         IDLE
     }
 
-    private float ultMeter;
+    private float ultMeter = 0;
 
     private AttackState aState;
     private AttackState prevAState;
@@ -107,7 +108,7 @@ public abstract class Character extends Sprite {
     private MovementState mState;
     private MovementState prevMState;
 
-    private DirectionInput direction;
+    private DirectionInput direction = DirectionInput.IDLE;
 
     public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
         this.world = screen.getWorld();
@@ -199,6 +200,29 @@ public abstract class Character extends Sprite {
 
             running = Gdx.input.isKeyPressed(Keys.RUN);
             jumping = Gdx.input.isKeyJustPressed(Keys.JUMP);
+
+            if (Gdx.input.isKeyJustPressed(Keys.EMPTY_METER)) {
+                ultMeter = 0;
+                System.out.println(ultMeter);
+            }
+            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) {
+                ultMeter = 100;
+                System.out.println(ultMeter);
+            }
+
+            if (Gdx.input.isKeyJustPressed(Keys.SPECIAL)) {
+                if (ultMeter >= 100 && direction == DirectionInput.IDLE) {
+                    aState = AttackState.ULTIMATE;
+                } else {
+                    aState = AttackState.SPECIAL;
+                }
+            } else if (Gdx.input.isKeyJustPressed(Keys.BASIC)) {
+                aState = AttackState.BASIC;
+            } else if (Gdx.input.isKeyJustPressed(Keys.SMASH)) {
+                aState = AttackState.SMASH;
+            } else {
+                aState = AttackState.NONE;
+            }
         }
     }
 
@@ -264,10 +288,22 @@ public abstract class Character extends Sprite {
             ground();
         }
 
+        mState = getState();
+        direction = getDirection();
+        handleAttacks();
+//        if (direction != DirectionInput.IDLE) {
+//            System.out.println(direction);
+//        }
+//        if (aState != AttackState.NONE) {
+//            System.out.println(aState);
+//        }
+
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
         setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+
     }
+
 
     // friction + gravity
     public void applyFriction(float deltaTime) {
@@ -292,9 +328,23 @@ public abstract class Character extends Sprite {
         return MovementState.IDLE;
     }
 
+    public DirectionInput getDirection() {
+        if (moveVector.y < 0) {
+            return DirectionInput.DOWN;
+        } else {
+            if (moveVector.x > 0) {
+                return DirectionInput.RIGHT;
+            } else if (moveVector.x < 0) {
+                return DirectionInput.LEFT;
+            } else {
+                return DirectionInput.IDLE;
+            }
+        }
+    }
+
     public TextureRegion getFrame(float deltaTime) {
         elapsedTime += deltaTime;
-        mState = getState();
+
 
         TextureRegion region;
         switch (mState) {
@@ -352,6 +402,7 @@ public abstract class Character extends Sprite {
 
 //        Ultimate checker
         if (aState == AttackState.ULTIMATE && ultMeter >= 100) {
+            ultMeter = 0;
             ultimate();
         }
 
@@ -361,40 +412,34 @@ public abstract class Character extends Sprite {
                 basicNeutral();
             } else if (aState == AttackState.SMASH) {
                 smashNeutral();
-            } else if (aState == AttackState.SPECIAL) {
+
+            }
+
+        }
+
+        if (aState == AttackState.SPECIAL) {
+            if (direction == DirectionInput.IDLE) {
                 specialNeutral();
-            }
-
-
-        } else if (direction == DirectionInput.RIGHT || direction == DirectionInput.LEFT) {
-            if (aState == AttackState.SPECIAL) {
+            } else if (direction == DirectionInput.LEFT || direction == DirectionInput.RIGHT) {
                 specialSide();
-            }
-
-//                Up attacks
-        } else if (direction == DirectionInput.UP) {
-            if (aState == AttackState.SPECIAL) {
+            } else if (direction == DirectionInput.DOWN) {
+                specialDown();
+            } else if (direction == DirectionInput.UP) {
                 specialUp();
             }
+        }
 
-//                Down attacks
-        } else if (direction == DirectionInput.DOWN) {
-            if (aState == AttackState.SPECIAL) {
-                specialDown();
-            }
 
+//                Up attacks
 
 //            Any attacks while not in air
-        } else if (mState != MovementState.FALL && mState != MovementState.JUMP) {
-
+        if (mState != MovementState.FALL && mState != MovementState.JUMP) {
 //            Side attacks
-            if (direction == DirectionInput.RIGHT || direction == DirectionInput.LEFT) {
+            if ((direction == DirectionInput.RIGHT || direction == DirectionInput.LEFT) && mState != MovementState.RUN) {
                 if (aState == AttackState.BASIC) {
                     basicSide();
                 } else if (aState == AttackState.SMASH) {
                     smashSide();
-                } else if (aState == AttackState.SPECIAL) {
-                    specialSide();
                 }
 
 //                Up attacks
@@ -403,8 +448,6 @@ public abstract class Character extends Sprite {
                     basicUp();
                 } else if (aState == AttackState.SMASH) {
                     smashUp();
-                } else if (aState == AttackState.SPECIAL) {
-                    specialUp();
                 }
 
 //                Down attacks
@@ -413,8 +456,6 @@ public abstract class Character extends Sprite {
                     basicDown();
                 } else if (aState == AttackState.SMASH) {
                     smashDown();
-                } else if (aState == AttackState.SPECIAL) {
-                    specialDown();
                 }
             }
 
@@ -433,7 +474,8 @@ public abstract class Character extends Sprite {
                     airDown();
                 }
             }
-        } else if (mState == MovementState.RUN && aState == AttackState.BASIC) {
+        }
+        if (mState == MovementState.RUN && aState == AttackState.BASIC) {
             dashAttack();
         }
     }
@@ -481,4 +523,6 @@ public abstract class Character extends Sprite {
     abstract void airUp();
 
     abstract void airDown();
+
+
 }
