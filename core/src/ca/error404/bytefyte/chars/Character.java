@@ -481,6 +481,4 @@ public abstract class Character extends Sprite {
     abstract void airUp();
 
     abstract void airDown();
-
-
 }
