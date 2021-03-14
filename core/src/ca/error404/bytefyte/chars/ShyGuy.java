@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+
 public class ShyGuy extends Character{
     public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
         super(screen, spawnPoint, controller);
     }
 
+private int duration = -6;
 
     @Override
     void basicNeutral() {
@@ -73,6 +75,61 @@ public class ShyGuy extends Character{
     @Override
     void specialUp() {
         System.out.println("Special Up");
+        vel.y = duration^2;
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        if (duration != 7) {
+            duration += 1;
+            vel.y = duration^2;
+        }
+        duration = -6;
+
 
     }
 
