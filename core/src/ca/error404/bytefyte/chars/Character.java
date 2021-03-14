@@ -8,7 +8,6 @@ import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -47,7 +46,7 @@ public abstract class Character extends Sprite {
 
     public float friction = -7f;
 
-    public float downGravity = 20;
+    public float downGravity = 15;
     public float upGravity = 10;
 
     public float airSpeed = 1f;
@@ -79,6 +78,11 @@ public abstract class Character extends Sprite {
     private final Animation<TextureRegion> upTilt;
     private final Animation<TextureRegion> downTilt;
     private final Animation<TextureRegion> sideTilt;
+
+    private final Animation<TextureRegion> neutralB;
+    private final Animation<TextureRegion> upB;
+    private final Animation<TextureRegion> downB;
+    private final Animation<TextureRegion> sideB;
 
     private enum MovementState {
         IDLE,
@@ -164,6 +168,11 @@ public abstract class Character extends Sprite {
         sideTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.NORMAL);
         upTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.NORMAL);
         downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
+
+        neutralB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.NORMAL);
+        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.NORMAL);
+        sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
@@ -287,6 +296,9 @@ public abstract class Character extends Sprite {
 
         if (moveVector.y < 0) {
             maxFallSpeed = fastFallSpeed;
+            if (vel.y > 0) {
+                vel.y = 0;
+            }
         } else {
             maxFallSpeed = fallSpeed;
         }
@@ -482,9 +494,21 @@ public abstract class Character extends Sprite {
                 attackAnimation = sideTilt;
                 break;
             case SPECIAL_N:
+                region = neutralB.getKeyFrame(elapsedTime, false);
+                attackAnimation = neutralB;
+                break;
             case SPECIAL_U:
+                region = upB.getKeyFrame(elapsedTime, false);
+                attackAnimation = upB;
+                break;
             case SPECIAL_D:
+                region = downB.getKeyFrame(elapsedTime, false);
+                attackAnimation = downB;
+                break;
             case SPECIAL_S:
+                region = sideB.getKeyFrame(elapsedTime, false);
+                attackAnimation = sideB;
+                break;
             case AIR_N:
             case AIR_U:
             case AIR_D:
