@@ -54,7 +54,6 @@ public class TestScene implements Screen {
             player = new ShyGuy(this, new Vector2(0, 150), null);
         }
 
-
         world.setContactListener(new WorldContactListener());
 
         new Wall(0, -30, 100, 10, this);

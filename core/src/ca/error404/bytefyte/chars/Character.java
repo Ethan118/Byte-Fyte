@@ -46,7 +46,7 @@ public abstract class Character extends Sprite {
 
     public float friction = -7f;
 
-    public float downGravity = 20;
+    public float downGravity = 15;
     public float upGravity = 10;
 
     public float airSpeed = 1f;
@@ -75,6 +75,11 @@ public abstract class Character extends Sprite {
     private final Animation<TextureRegion> upTilt;
     private final Animation<TextureRegion> downTilt;
     private final Animation<TextureRegion> sideTilt;
+
+    private final Animation<TextureRegion> neutralB;
+    private final Animation<TextureRegion> upB;
+    private final Animation<TextureRegion> downB;
+    private final Animation<TextureRegion> sideB;
 
     private enum AttackState {
         BASIC,
@@ -133,6 +138,11 @@ public abstract class Character extends Sprite {
         sideTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.LOOP);
         upTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.LOOP);
         downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.LOOP);
+
+        neutralB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.LOOP);
+        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
+        sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.LOOP);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         setRegion(sprite);
@@ -260,6 +270,9 @@ public abstract class Character extends Sprite {
 
         if (moveVector.y < 0) {
             maxFallSpeed = fastFallSpeed;
+            if (vel.y > 0) {
+                vel.y = 0;
+            }
         } else {
             maxFallSpeed = fallSpeed;
         }
@@ -291,12 +304,6 @@ public abstract class Character extends Sprite {
         mState = getState();
         direction = getDirection();
         handleAttacks();
-//        if (direction != DirectionInput.IDLE) {
-//            System.out.println(direction);
-//        }
-//        if (aState != AttackState.NONE) {
-//            System.out.println(aState);
-//        }
 
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
