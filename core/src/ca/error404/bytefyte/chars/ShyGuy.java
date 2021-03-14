@@ -41,12 +41,6 @@ public class ShyGuy extends Character{
     }
 
     @Override
-    void smashNeutral() {
-        System.out.println("Smash Neutral");
-
-    }
-
-    @Override
     void smashSide() {
         System.out.println("Smash Side");
 
@@ -101,14 +95,14 @@ public class ShyGuy extends Character{
     }
 
     @Override
-    void airLeft() {
-        System.out.println("Air Left");
+    void airForward() {
+        System.out.println("Air Forward");
 
     }
 
     @Override
-    void airRight() {
-        System.out.println("Air Right");
+    void airBack() {
+        System.out.println("Air Backward");
 
     }
 
