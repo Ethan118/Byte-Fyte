@@ -86,6 +86,12 @@ public abstract class Character extends Sprite {
     private final Animation<TextureRegion> downB;
     private final Animation<TextureRegion> sideB;
 
+    private final Animation<TextureRegion> nair;
+    private final Animation<TextureRegion> dair;
+    private final Animation<TextureRegion> fair;
+    private final Animation<TextureRegion> bair;
+    private final Animation<TextureRegion> uair;
+
     private enum MovementState {
         IDLE,
         RUN,
@@ -175,6 +181,12 @@ public abstract class Character extends Sprite {
         upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
         downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
         sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
+
+        nair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
+        dair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
+        fair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
+        bair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
+        uair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
@@ -512,10 +524,25 @@ public abstract class Character extends Sprite {
                 attackAnimation = sideB;
                 break;
             case AIR_N:
+                region = nair.getKeyFrame(elapsedTime, false);
+                attackAnimation = nair;
+                break;
             case AIR_U:
+                region = uair.getKeyFrame(elapsedTime, false);
+                attackAnimation = uair;
+                break;
             case AIR_D:
+                region = dair.getKeyFrame(elapsedTime, false);
+                attackAnimation = dair;
+                break;
             case AIR_F:
+                region = fair.getKeyFrame(elapsedTime, false);
+                attackAnimation = fair;
+                break;
             case AIR_B:
+                region = bair.getKeyFrame(elapsedTime, false);
+                attackAnimation = bair;
+                break;
             case SMASH_U:
             case SMASH_D:
             case SMASH_S:
