@@ -19,6 +19,8 @@ public class Packer {
 
         settings.maxWidth = 16384;
         settings.maxHeight = 16384;
+        settings.stripWhitespaceX = true;
+        settings.stripWhitespaceY = true;
 
         TexturePacker.process(settings, inputDir, outputDir, packFileName);
     }

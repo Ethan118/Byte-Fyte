@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 public class ShyGuy extends Character{
     public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
         super(screen, spawnPoint, controller);
+        manualSpriteOffset = new Vector2(2200, 300);
     }
 
 

@@ -36,7 +36,7 @@ public abstract class Character extends Sprite {
     public float maxSpeed;
     public boolean running = false;
 
-    private boolean facingRight = true;
+    public boolean facingLeft = true;
     public boolean grounded = false;
 
     public float jumpPower = 3;
@@ -60,6 +60,8 @@ public abstract class Character extends Sprite {
 
     public int hitboxScale = 18;
     public int spriteScale = 15;
+    private Vector2 spriteOffset = Vector2.Zero;
+    public Vector2 manualSpriteOffset = Vector2.Zero;
 
     private float elapsedTime = 0f;
 
@@ -170,8 +172,8 @@ public abstract class Character extends Sprite {
         downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
 
         neutralB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
-        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.NORMAL);
-        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
         sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
@@ -333,7 +335,7 @@ public abstract class Character extends Sprite {
 
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM)  - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
 
@@ -530,28 +532,30 @@ public abstract class Character extends Sprite {
         if (grounded) {
             if ((vel.x > 0) && !region.isFlipX()) {
                 region.flip(true, false);
-                facingRight = false;
+                facingLeft = false;
             } else if ((vel.x < 0) && region.isFlipX()) {
                 region.flip(true, false);
-                facingRight = true;
+                facingLeft = true;
             } else {
-                if (!facingRight && !region.isFlipX()) {
+                if (!facingLeft && !region.isFlipX()) {
                     region.flip(true, false);
-                } else if (facingRight && region.isFlipX()) {
+                } else if (facingLeft && region.isFlipX()) {
                     region.flip(true, false);
                 }
             }
         } else {
-            if (!facingRight && !region.isFlipX()) {
+            if (!facingLeft && !region.isFlipX()) {
                 region.flip(true, false);
-            } else if (facingRight && region.isFlipX()) {
+            } else if (facingLeft && region.isFlipX()) {
                 region.flip(true, false);
             }
         }
 
+        spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
+        spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
+
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
         prevAnimState = animState;
-
         lockAnim = attackAnimation != null && !attackAnimation.isAnimationFinished(elapsedTime);
 
         return region;
