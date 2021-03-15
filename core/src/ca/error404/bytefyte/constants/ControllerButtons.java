@@ -61,8 +61,8 @@ public class ControllerButtons
             DPAD = 0;
             L_TRIGGER = 2; // postive value
             R_TRIGGER = 2; // negative value
-            L_STICK_VERTICAL_AXIS = 0; // Down = -1, up = 1
-            L_STICK_HORIZONTAL_AXIS = 1; // Left = -1, right = 1
+            L_STICK_VERTICAL_AXIS = 1; // Down = -1, up = 1
+            L_STICK_HORIZONTAL_AXIS = 0; // Left = -1, right = 1
             R_STICK_VERTICAL_AXIS = 2; // Assume same story
             R_STICK_HORIZONTAL_AXIS = 3;
             L3 = 8;
