@@ -1,8 +1,11 @@
 package ca.error404.bytefyte.tools;
 
+import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.objects.Collider;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class WorldContactListener implements ContactListener {
@@ -43,6 +46,21 @@ public class WorldContactListener implements ContactListener {
                 }
 
                 wall.contact();
+                break;
+            case Tags.ATTACK_BIT | Tags.PLAYER_BIT:
+                Collider collider;
+                if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
+                    chara = (Character) fixA.getUserData();
+                    collider = (Collider) fixB.getUserData();
+                } else {
+                    chara = (Character) fixB.getUserData();
+                    collider = (Collider) fixA.getUserData();
+                }
+
+                if (!(collider.parent == chara)) {
+                    Vector2 force = new Vector2(Math.signum((chara.pos.x / Main.PPM) - (collider.parent.pos.x / Main.PPM)) * collider.power, Math.signum((chara.pos.y / Main.PPM) - (collider.parent.pos.y / Main.PPM)) * collider.power);
+                    chara.Hit(collider.damage, force, collider.minPower);
+                }
         }
     }
 

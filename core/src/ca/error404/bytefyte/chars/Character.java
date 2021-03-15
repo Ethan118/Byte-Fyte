@@ -4,6 +4,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
@@ -11,12 +12,18 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
+import java.util.ArrayList;
+
 public abstract class Character extends Sprite {
     public World world;
     public Body b2body;
 
+    protected ArrayList<Collider> colliders = new ArrayList<>();
+
     public Controller controller;
-    public float deadzone;
+    public float deadzone = 0.1f;
+
+    public float percent = 0f;
 
     public Vector2 moveVector = new Vector2();
 
@@ -36,7 +43,7 @@ public abstract class Character extends Sprite {
     public float maxSpeed;
     public boolean running = false;
 
-    private boolean facingRight = true;
+    protected boolean facingRight = true;
     public boolean grounded = false;
 
     public float jumpPower = 3;
@@ -230,7 +237,7 @@ public abstract class Character extends Sprite {
 
         if (controller != null) {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
-            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
+            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
             moveVector.y = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y) ? 1 : 0;
         } else {
@@ -274,7 +281,16 @@ public abstract class Character extends Sprite {
         }
         prevGoToPos = goToPos;
 
-        handleInput();
+        if (!lockAnim) {
+            handleInput();
+        }
+
+        if (attackAnimation == null) {
+            for (Collider collider : colliders) {
+                collider.destroy();
+            }
+            colliders.clear();
+        }
 
         if (grounded) {
             maxSpeed = running ? runSpeed : walkSpeed;
@@ -331,6 +347,16 @@ public abstract class Character extends Sprite {
             getState();
         }
 
+        for (Collider collider : colliders) {
+            if (facingRight) {
+                collider.setPosition(pos, -1);
+                collider.direction.x = -1;
+            } else {
+                collider.setPosition(pos, 1);
+                collider.direction.x = 1;
+            }
+        }
+
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
         setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
@@ -378,10 +404,11 @@ public abstract class Character extends Sprite {
                         //dash
                         animState = AnimationState.DASH;
                         dashAttack();
+                    } else {
+                        // side
+                        animState = AnimationState.BASIC_S;
+                        basicSide();
                     }
-                    // side
-                    animState = AnimationState.BASIC_S;
-                    basicSide();
                 } else if (moveVector.y > 0) {
                     // up
                     animState = AnimationState.BASIC_U;
@@ -467,15 +494,19 @@ public abstract class Character extends Sprite {
         switch (animState) {
             case WALK:
                 region = walk.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case RUN:
                 region = run.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case JUMP:
                 region = jump.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case FALL:
                 region = fall.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case BASIC_N:
                 region = neutralAttack.getKeyFrame(elapsedTime, false);
@@ -555,6 +586,11 @@ public abstract class Character extends Sprite {
         lockAnim = attackAnimation != null && !attackAnimation.isAnimationFinished(elapsedTime);
 
         return region;
+    }
+
+    public void Hit(float damage, Vector2 force, float minPower) {
+        percent = Math.min(percent + damage, 999.9f);
+        vel = force.scl(Math.max((percent / 100 / weight), minPower));
     }
 
     public void setPos(int x, int y) {
