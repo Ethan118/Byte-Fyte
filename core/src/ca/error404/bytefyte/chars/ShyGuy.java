@@ -22,6 +22,14 @@ public class ShyGuy extends Character{
         manualSpriteOffset = new Vector2(2200, 300);
     }
 
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
+            lockAnim = false;
+        }
+    }
+
     @Override
     void basicNeutral() {
         System.out.println("Basic Neutral");
