@@ -21,7 +21,7 @@ public abstract class Character extends Sprite {
     protected ArrayList<Collider> colliders = new ArrayList<>();
 
     public Controller controller;
-    public float deadzone = 0.1f;
+    public float deadzone = Main.deadZone;
 
     public float percent = 0f;
 
@@ -122,7 +122,7 @@ public abstract class Character extends Sprite {
         NONE
     }
 
-    public enum AnimationState {
+    protected enum AnimationState {
         IDLE,
         RUN,
         WALK,
@@ -151,13 +151,13 @@ public abstract class Character extends Sprite {
 
     private float ultMeter = 0;
 
-    private AttackState attackState;
-    private final AttackState prevAttackState;
+    protected AttackState attackState;
+    protected final AttackState prevAttackState;
 
     private MovementState moveState;
     private final MovementState prevMoveState;
 
-    public AnimationState animState;
+    protected AnimationState animState;
     private AnimationState prevAnimState;
 
     public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
@@ -266,6 +266,7 @@ public abstract class Character extends Sprite {
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
             jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y);
+            running = controller.getButton(ControllerButtons.R_BUMPER) || controller.getButton(ControllerButtons.L_BUMPER);
 
             if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.A)) {
                 if (ultMeter >= 100 && moveVector == Vector2.Zero) {
@@ -440,6 +441,14 @@ public abstract class Character extends Sprite {
                     // neutral
                     animState = AnimationState.BASIC_N;
                     basicNeutral();
+                } else if (moveVector.y > 0) {
+                    // up
+                    animState = AnimationState.BASIC_U;
+                    basicUp();
+                } else if (moveVector.y < 0) {
+                    // down
+                    animState = AnimationState.BASIC_D;
+                    basicDown();
                 } else if (Math.abs(moveVector.x) > 0) {
                     if (moveState == MovementState.RUN) {
                         //dash
@@ -450,14 +459,6 @@ public abstract class Character extends Sprite {
                         animState = AnimationState.BASIC_S;
                         basicSide();
                     }
-                } else if (moveVector.y > 0) {
-                    // up
-                    animState = AnimationState.BASIC_U;
-                    basicUp();
-                } else if (moveVector.y < 0) {
-                    // down
-                    animState = AnimationState.BASIC_D;
-                    basicDown();
                 }
 
             // air attacks
@@ -466,14 +467,6 @@ public abstract class Character extends Sprite {
                     // neutral
                     animState = AnimationState.AIR_N;
                     airNeutral();
-                } else if ((!facingLeft && moveVector.x >= deadzone) || (facingLeft && moveVector.x <= -deadzone)) {
-                    // forward
-                    animState = AnimationState.AIR_F;
-                    airForward();
-                } else if ((!facingLeft && moveVector.x <= -deadzone) || (facingLeft && moveVector.x >= deadzone)) {
-                    // backward
-                    animState = AnimationState.AIR_B;
-                    airBack();
                 } else if (moveVector.y > 0) {
                     // up
                     animState = AnimationState.AIR_U;
@@ -482,6 +475,14 @@ public abstract class Character extends Sprite {
                     // down
                     animState = AnimationState.AIR_D;
                     airDown();
+                } else if ((!facingLeft && moveVector.x >= deadzone) || (facingLeft && moveVector.x <= -deadzone)) {
+                    // forward
+                    animState = AnimationState.AIR_F;
+                    airForward();
+                } else if ((!facingLeft && moveVector.x <= -deadzone) || (facingLeft && moveVector.x >= deadzone)) {
+                    // backward
+                    animState = AnimationState.AIR_B;
+                    airBack();
                 }
             }
         // special attacks
@@ -490,10 +491,6 @@ public abstract class Character extends Sprite {
                 //neutral
                 animState = AnimationState.SPECIAL_N;
                 specialNeutral();
-            } else if (Math.abs(moveVector.x) > 0) {
-                //side
-                animState = AnimationState.SPECIAL_S;
-                specialSide();
             } else if (moveVector.y > 0) {
                 //up
                 animState = AnimationState.SPECIAL_U;
@@ -502,6 +499,10 @@ public abstract class Character extends Sprite {
                 //down
                 animState = AnimationState.SPECIAL_D;
                 specialDown();
+            } else if (Math.abs(moveVector.x) > 0) {
+                //side
+                animState = AnimationState.SPECIAL_S;
+                specialSide();
             }
         // smash attacks
         } else if (attackState == AttackState.SMASH) {

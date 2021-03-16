@@ -30,7 +30,7 @@ public class Main extends Game {
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
-	public static float deadZone = 0.1f;
+	public static float deadZone = 0.5f;
 
 	public SpriteBatch batch;
 
