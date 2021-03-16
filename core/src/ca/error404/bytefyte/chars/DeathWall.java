@@ -14,10 +14,9 @@ public class DeathWall extends Wall {
         fix.setFilterData(filter);
     }
 
-    @Override
-    public void contact() {
-        scene.player.setPos(0, 30);
-        scene.player.vel = new Vector2(0, 0);
-        scene.player.prevVel = new Vector2(0, 0);
+    public void contact(Character chara) {
+        chara.setPos(0, 30);
+        chara.vel = new Vector2(0, 0);
+        chara.prevVel = new Vector2(0, 0);
     }
 }

@@ -41,11 +41,13 @@ public class WorldContactListener implements ContactListener {
                 DeathWall wall;
                 if (fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
                     wall = ((DeathWall) fixA.getUserData());
+                    chara = ((Character) fixB.getUserData());
                 } else {
                     wall = ((DeathWall) fixB.getUserData());
+                    chara = ((Character) fixA.getUserData());
                 }
 
-                wall.contact();
+                wall.contact(chara);
                 break;
             case Tags.ATTACK_BIT | Tags.PLAYER_BIT:
                 Collider collider;

@@ -103,6 +103,8 @@ public abstract class Character extends Sprite {
     private final Animation<TextureRegion> downSmash;
     private final Animation<TextureRegion> sideSmash;
 
+    private final Animation<TextureRegion> dashAttack;
+
     private enum MovementState {
         IDLE,
         RUN,
@@ -203,6 +205,8 @@ public abstract class Character extends Sprite {
         downSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
         sideSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
 
+        dashAttack = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
+
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
         setRegion(sprite);
@@ -259,9 +263,23 @@ public abstract class Character extends Sprite {
 
         if (controller != null) {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
-            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
+            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-            moveVector.y = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y) ? 1 : 0;
+            jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y);
+
+            if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.A)) {
+                if (ultMeter >= 100 && moveVector == Vector2.Zero) {
+                    attackState = AttackState.ULTIMATE;
+                } else {
+                    attackState = AttackState.SPECIAL;
+                }
+            } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
+                attackState = AttackState.BASIC;
+            } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.X)) {
+                attackState = AttackState.SMASH;
+            } else {
+                attackState = AttackState.NONE;
+            }
         } else {
             moveVector.x += Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) ? 1 : 0;
             moveVector.x -= Gdx.input.isKeyPressed(Keys.MOVE_LEFT) ? 1 : 0;
@@ -300,6 +318,7 @@ public abstract class Character extends Sprite {
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
+            percent = 0;
         }
         prevGoToPos = goToPos;
 
@@ -589,8 +608,17 @@ public abstract class Character extends Sprite {
                 attackAnimation = upSmash;
                 break;
             case SMASH_D:
+                region = downSmash.getKeyFrame(elapsedTime, false);
+                attackAnimation = downSmash;
+                break;
             case SMASH_S:
+                region = sideSmash.getKeyFrame(elapsedTime, false);
+                attackAnimation = sideSmash;
+                break;
             case DASH:
+                region = dashAttack.getKeyFrame(elapsedTime, false);
+                attackAnimation = dashAttack;
+                break;
             case ULTIMATE:
             case IDLE:
             default:
