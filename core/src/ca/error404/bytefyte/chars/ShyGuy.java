@@ -25,28 +25,28 @@ public class ShyGuy extends Character{
     @Override
     void basicNeutral() {
         System.out.println("Basic Neutral");
-        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 5, 30, this, 2f, 0.5f, 5f, Vector2.X);
+        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 5, 30, this, 3f, 1f, 5f, Vector2.X);
         colliders.add(hitBox);
     }
 
     @Override
     void basicSide() {
         System.out.println("Basic Side");
-        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 15, 20, this, 4f, 0.75f, 7f, Vector2.X);
+        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 15, 20, this, 3f, 1f, 7f, Vector2.X);
         colliders.add(hitBox);
     }
 
     @Override
     void basicUp() {
         System.out.println("Basic Up");
-        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, 20 / Main.PPM), 30, 5, this, 5f, 0.75f, 7f, new Vector2(0, 1));
+        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, 20 / Main.PPM), 30, 5, this, 3f, 1f, 7f, new Vector2(0, 1));
         colliders.add(hitBox);
     }
 
     @Override
     void basicDown() {
         System.out.println("Basic Down");
-        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, -10 / Main.PPM), 40, 20, this, 4f, 0.75f, 6f, new Vector2(0, 1));
+        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, -10 / Main.PPM), 40, 20, this, 3f, 1f, 6f, new Vector2(0, 1));
         colliders.add(hitBox);
     }
 

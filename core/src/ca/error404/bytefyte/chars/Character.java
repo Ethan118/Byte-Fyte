@@ -21,7 +21,7 @@ public abstract class Character extends Sprite {
     protected ArrayList<Collider> colliders = new ArrayList<>();
 
     public Controller controller;
-    public float deadzone = 0.1f;
+    public float deadzone = 0.3f;
 
     public float percent = 0f;
 
@@ -251,9 +251,18 @@ public abstract class Character extends Sprite {
 
         if (controller != null) {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
-            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
+            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-            moveVector.y = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y) ? 1 : 0;
+            jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y);
+            running = Main.contains(Main.recentButtons.get(controller), ControllerButtons.L_BUMPER) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.R_BUMPER);
+
+            if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
+                attackState = AttackState.SPECIAL;
+            } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.A)) {
+                attackState = AttackState.BASIC;
+            } else {
+                attackState = AttackState.NONE;
+            }
         } else {
             moveVector.x += Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) ? 1 : 0;
             moveVector.x -= Gdx.input.isKeyPressed(Keys.MOVE_LEFT) ? 1 : 0;
@@ -443,7 +452,7 @@ public abstract class Character extends Sprite {
                     // forward
                     animState = AnimationState.AIR_F;
                     airForward();
-                } else if (Math.signum(vel.x) != Math.signum(moveVector.x)){
+                } else if (Math.signum(vel.x) != Math.signum(moveVector.x) && moveVector.x != 0){
                     // backward
                     animState = AnimationState.AIR_B;
                     airBack();
@@ -621,7 +630,7 @@ public abstract class Character extends Sprite {
 
     public void Hit(float damage, Vector2 force, float minPower) {
         percent = Math.min(percent + damage, 999.9f);
-        vel = force.scl(Math.max((percent / 100 / weight), minPower));
+        vel.add(force.scl(Math.max((percent / 100 / weight), minPower)));
     }
 
     public void setPos(int x, int y) {
