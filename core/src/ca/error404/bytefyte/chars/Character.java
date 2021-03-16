@@ -43,7 +43,7 @@ public abstract class Character extends Sprite {
     public float maxSpeed;
     public boolean running = false;
 
-    protected boolean facingRight = true;
+    public boolean facingLeft = true;
     public boolean grounded = false;
 
     public float jumpPower = 3;
@@ -67,6 +67,8 @@ public abstract class Character extends Sprite {
 
     public int hitboxScale = 18;
     public int spriteScale = 15;
+    private Vector2 spriteOffset = Vector2.Zero;
+    public Vector2 manualSpriteOffset = Vector2.Zero;
 
     private float elapsedTime = 0f;
 
@@ -90,6 +92,12 @@ public abstract class Character extends Sprite {
     private final Animation<TextureRegion> upB;
     private final Animation<TextureRegion> downB;
     private final Animation<TextureRegion> sideB;
+
+    private final Animation<TextureRegion> nair;
+    private final Animation<TextureRegion> dair;
+    private final Animation<TextureRegion> fair;
+    private final Animation<TextureRegion> bair;
+    private final Animation<TextureRegion> uair;
 
     private enum MovementState {
         IDLE,
@@ -177,9 +185,15 @@ public abstract class Character extends Sprite {
         downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
 
         neutralB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
-        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.NORMAL);
-        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
         sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
+
+        nair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
+        dair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
+        fair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
+        bair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
+        uair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
@@ -348,7 +362,7 @@ public abstract class Character extends Sprite {
         }
 
         for (Collider collider : colliders) {
-            if (facingRight) {
+            if (facingLeft) {
                 collider.setPosition(pos, -1);
                 collider.direction.x = -1;
             } else {
@@ -359,7 +373,7 @@ public abstract class Character extends Sprite {
 
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM)  - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
 
@@ -541,10 +555,25 @@ public abstract class Character extends Sprite {
                 attackAnimation = sideB;
                 break;
             case AIR_N:
+                region = nair.getKeyFrame(elapsedTime, false);
+                attackAnimation = nair;
+                break;
             case AIR_U:
+                region = uair.getKeyFrame(elapsedTime, false);
+                attackAnimation = uair;
+                break;
             case AIR_D:
+                region = dair.getKeyFrame(elapsedTime, false);
+                attackAnimation = dair;
+                break;
             case AIR_F:
+                region = fair.getKeyFrame(elapsedTime, false);
+                attackAnimation = fair;
+                break;
             case AIR_B:
+                region = bair.getKeyFrame(elapsedTime, false);
+                attackAnimation = bair;
+                break;
             case SMASH_U:
             case SMASH_D:
             case SMASH_S:
@@ -561,28 +590,30 @@ public abstract class Character extends Sprite {
         if (grounded) {
             if ((vel.x > 0) && !region.isFlipX()) {
                 region.flip(true, false);
-                facingRight = false;
+                facingLeft = false;
             } else if ((vel.x < 0) && region.isFlipX()) {
                 region.flip(true, false);
-                facingRight = true;
+                facingLeft = true;
             } else {
-                if (!facingRight && !region.isFlipX()) {
+                if (!facingLeft && !region.isFlipX()) {
                     region.flip(true, false);
-                } else if (facingRight && region.isFlipX()) {
+                } else if (facingLeft && region.isFlipX()) {
                     region.flip(true, false);
                 }
             }
         } else {
-            if (!facingRight && !region.isFlipX()) {
+            if (!facingLeft && !region.isFlipX()) {
                 region.flip(true, false);
-            } else if (facingRight && region.isFlipX()) {
+            } else if (facingLeft && region.isFlipX()) {
                 region.flip(true, false);
             }
         }
 
+        spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
+        spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
+
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
         prevAnimState = animState;
-
         lockAnim = attackAnimation != null && !attackAnimation.isAnimationFinished(elapsedTime);
 
         return region;

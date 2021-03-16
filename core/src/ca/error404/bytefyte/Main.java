@@ -49,7 +49,17 @@ public class Main extends Game {
 
 		manager = new AssetManager();
 		loadSongs();
+
+		long startTime = System.currentTimeMillis();
+		long endTime = 0;
+
 		manager.finishLoading();
+
+		endTime = System.currentTimeMillis();
+
+		float timeneeded =  (float) ((startTime - endTime) /1000);
+
+		System.out.println(timeneeded);
 
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
@@ -238,6 +248,7 @@ public class Main extends Game {
 
 		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
 		music.setLooping(true);
+
 		return music;
 	}
 
