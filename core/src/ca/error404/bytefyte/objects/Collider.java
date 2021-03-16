@@ -59,7 +59,7 @@ public class Collider {
     }
 
     public void setPosition(Vector2 pos, float direction) {
-        b2body.setTransform(pos.x + (offset.x * direction), pos.y + (offset.y * direction), 0);
+        b2body.setTransform(pos.x + (offset.x * direction), pos.y + (offset.y), 0);
     }
 
     public void destroy() {

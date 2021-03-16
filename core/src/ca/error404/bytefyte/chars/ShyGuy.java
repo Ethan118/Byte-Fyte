@@ -39,14 +39,14 @@ public class ShyGuy extends Character{
     @Override
     void basicUp() {
         System.out.println("Basic Up");
-        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, -20 / Main.PPM), 30, 5, this, 5f, 0.75f, 7f, new Vector2(0, 1));
+        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, 20 / Main.PPM), 30, 5, this, 5f, 0.75f, 7f, new Vector2(0, 1));
         colliders.add(hitBox);
     }
 
     @Override
     void basicDown() {
         System.out.println("Basic Down");
-        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, 10 / Main.PPM), 40, 20, this, 4f, 0.75f, 6f, new Vector2(0, 1));
+        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, -10 / Main.PPM), 40, 20, this, 4f, 0.75f, 6f, new Vector2(0, 1));
         colliders.add(hitBox);
     }
 
