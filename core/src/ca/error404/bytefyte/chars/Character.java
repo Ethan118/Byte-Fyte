@@ -4,6 +4,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
@@ -11,12 +12,18 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
+import java.util.ArrayList;
+
 public abstract class Character extends Sprite {
     public World world;
     public Body b2body;
 
+    protected ArrayList<Collider> colliders = new ArrayList<>();
+
     public Controller controller;
-    public float deadzone;
+    public float deadzone = 0.1f;
+
+    public float percent = 0f;
 
     public Vector2 moveVector = new Vector2();
 
@@ -36,7 +43,7 @@ public abstract class Character extends Sprite {
     public float maxSpeed;
     public boolean running = false;
 
-    private boolean facingRight = true;
+    public boolean facingLeft = true;
     public boolean grounded = false;
 
     public float jumpPower = 3;
@@ -60,11 +67,13 @@ public abstract class Character extends Sprite {
 
     public int hitboxScale = 18;
     public int spriteScale = 15;
+    private Vector2 spriteOffset = Vector2.Zero;
+    public Vector2 manualSpriteOffset = Vector2.Zero;
 
     private float elapsedTime = 0f;
 
     private Animation<TextureRegion> attackAnimation;
-    private boolean lockAnim = false;
+    public boolean lockAnim = false;
 
     private final Animation<TextureRegion> idle;
     private final Animation<TextureRegion> walk;
@@ -84,6 +93,18 @@ public abstract class Character extends Sprite {
     private final Animation<TextureRegion> downB;
     private final Animation<TextureRegion> sideB;
 
+    private final Animation<TextureRegion> nair;
+    private final Animation<TextureRegion> dair;
+    private final Animation<TextureRegion> fair;
+    private final Animation<TextureRegion> bair;
+    private final Animation<TextureRegion> uair;
+
+    private final Animation<TextureRegion> upSmash;
+    private final Animation<TextureRegion> downSmash;
+    private final Animation<TextureRegion> sideSmash;
+
+    private final Animation<TextureRegion> dashAttack;
+
     private enum MovementState {
         IDLE,
         RUN,
@@ -101,7 +122,7 @@ public abstract class Character extends Sprite {
         NONE
     }
 
-    private enum AnimationState {
+    public enum AnimationState {
         IDLE,
         RUN,
         WALK,
@@ -136,7 +157,7 @@ public abstract class Character extends Sprite {
     private MovementState moveState;
     private final MovementState prevMoveState;
 
-    private AnimationState animState;
+    public AnimationState animState;
     private AnimationState prevAnimState;
 
     public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
@@ -170,9 +191,21 @@ public abstract class Character extends Sprite {
         downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
 
         neutralB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
-        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.NORMAL);
-        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
         sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
+
+        nair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
+        dair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
+        fair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
+        bair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
+        uair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
+
+        upSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_smash"), Animation.PlayMode.NORMAL);
+        downSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
+        sideSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
+
+        dashAttack = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
@@ -230,9 +263,23 @@ public abstract class Character extends Sprite {
 
         if (controller != null) {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
-            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
+            moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-            moveVector.y = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(Main.controllers.get(0)), ControllerButtons.Y) ? 1 : 0;
+            jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y);
+
+            if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.A)) {
+                if (ultMeter >= 100 && moveVector == Vector2.Zero) {
+                    attackState = AttackState.ULTIMATE;
+                } else {
+                    attackState = AttackState.SPECIAL;
+                }
+            } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
+                attackState = AttackState.BASIC;
+            } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.X)) {
+                attackState = AttackState.SMASH;
+            } else {
+                attackState = AttackState.NONE;
+            }
         } else {
             moveVector.x += Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) ? 1 : 0;
             moveVector.x -= Gdx.input.isKeyPressed(Keys.MOVE_LEFT) ? 1 : 0;
@@ -271,10 +318,20 @@ public abstract class Character extends Sprite {
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
+            percent = 0;
         }
         prevGoToPos = goToPos;
 
-        handleInput();
+        if (!lockAnim) {
+            handleInput();
+        }
+
+        if (attackAnimation == null) {
+            for (Collider collider : colliders) {
+                collider.destroy();
+            }
+            colliders.clear();
+        }
 
         if (grounded) {
             maxSpeed = running ? runSpeed : walkSpeed;
@@ -331,9 +388,19 @@ public abstract class Character extends Sprite {
             getState();
         }
 
+        for (Collider collider : colliders) {
+            if (facingLeft) {
+                collider.setPosition(pos, -1);
+                collider.direction.x = -1;
+            } else {
+                collider.setPosition(pos, 1);
+                collider.direction.x = 1;
+            }
+        }
+
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 0.01f, (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM)  - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
 
@@ -378,10 +445,11 @@ public abstract class Character extends Sprite {
                         //dash
                         animState = AnimationState.DASH;
                         dashAttack();
+                    } else {
+                        // side
+                        animState = AnimationState.BASIC_S;
+                        basicSide();
                     }
-                    // side
-                    animState = AnimationState.BASIC_S;
-                    basicSide();
                 } else if (moveVector.y > 0) {
                     // up
                     animState = AnimationState.BASIC_U;
@@ -398,11 +466,11 @@ public abstract class Character extends Sprite {
                     // neutral
                     animState = AnimationState.AIR_N;
                     airNeutral();
-                } else if ((Math.signum(vel.x) == Math.signum(moveVector.x)) && moveVector.x != 0) {
+                } else if ((!facingLeft && moveVector.x >= deadzone) || (facingLeft && moveVector.x <= -deadzone)) {
                     // forward
                     animState = AnimationState.AIR_F;
                     airForward();
-                } else if (Math.signum(vel.x) != Math.signum(moveVector.x)){
+                } else if ((!facingLeft && moveVector.x <= -deadzone) || (facingLeft && moveVector.x >= deadzone)) {
                     // backward
                     animState = AnimationState.AIR_B;
                     airBack();
@@ -460,22 +528,28 @@ public abstract class Character extends Sprite {
     }
 
     public TextureRegion getFrame(float deltaTime) {
-
         elapsedTime += deltaTime;
         TextureRegion region;
+
+        elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
+        prevAnimState = animState;
 
         switch (animState) {
             case WALK:
                 region = walk.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case RUN:
                 region = run.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case JUMP:
                 region = jump.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case FALL:
                 region = fall.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case BASIC_N:
                 region = neutralAttack.getKeyFrame(elapsedTime, false);
@@ -510,14 +584,41 @@ public abstract class Character extends Sprite {
                 attackAnimation = sideB;
                 break;
             case AIR_N:
+                region = nair.getKeyFrame(elapsedTime, false);
+                attackAnimation = nair;
+                break;
             case AIR_U:
+                region = uair.getKeyFrame(elapsedTime, false);
+                attackAnimation = uair;
+                break;
             case AIR_D:
+                region = dair.getKeyFrame(elapsedTime, false);
+                attackAnimation = dair;
+                break;
             case AIR_F:
+                region = fair.getKeyFrame(elapsedTime, false);
+                attackAnimation = fair;
+                break;
             case AIR_B:
+                region = bair.getKeyFrame(elapsedTime, false);
+                attackAnimation = bair;
+                break;
             case SMASH_U:
+                region = upSmash.getKeyFrame(elapsedTime, false);
+                attackAnimation = upSmash;
+                break;
             case SMASH_D:
+                region = downSmash.getKeyFrame(elapsedTime, false);
+                attackAnimation = downSmash;
+                break;
             case SMASH_S:
+                region = sideSmash.getKeyFrame(elapsedTime, false);
+                attackAnimation = sideSmash;
+                break;
             case DASH:
+                region = dashAttack.getKeyFrame(elapsedTime, false);
+                attackAnimation = dashAttack;
+                break;
             case ULTIMATE:
             case IDLE:
             default:
@@ -530,31 +631,36 @@ public abstract class Character extends Sprite {
         if (grounded) {
             if ((vel.x > 0) && !region.isFlipX()) {
                 region.flip(true, false);
-                facingRight = false;
+                facingLeft = false;
             } else if ((vel.x < 0) && region.isFlipX()) {
                 region.flip(true, false);
-                facingRight = true;
+                facingLeft = true;
             } else {
-                if (!facingRight && !region.isFlipX()) {
+                if (!facingLeft && !region.isFlipX()) {
                     region.flip(true, false);
-                } else if (facingRight && region.isFlipX()) {
+                } else if (facingLeft && region.isFlipX()) {
                     region.flip(true, false);
                 }
             }
         } else {
-            if (!facingRight && !region.isFlipX()) {
+            if (!facingLeft && !region.isFlipX()) {
                 region.flip(true, false);
-            } else if (facingRight && region.isFlipX()) {
+            } else if (facingLeft && region.isFlipX()) {
                 region.flip(true, false);
             }
         }
 
-        elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
-        prevAnimState = animState;
+        spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
+        spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
 
         lockAnim = attackAnimation != null && !attackAnimation.isAnimationFinished(elapsedTime);
 
         return region;
+    }
+
+    public void Hit(float damage, Vector2 force, float minPower) {
+        percent = Math.min(percent + damage, 999.9f);
+        vel = force.scl(Math.max((percent / 100 / weight), minPower));
     }
 
     public void setPos(int x, int y) {
