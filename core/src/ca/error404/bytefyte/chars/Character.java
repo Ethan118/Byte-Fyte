@@ -418,6 +418,7 @@ public abstract class Character extends Sprite {
 
             if (!grounded) jumpsLeft -= 1;
             grounded = false;
+            jumping = false;
         }
 
         // grounds player if y position hasn't changed in a while because sometimes
