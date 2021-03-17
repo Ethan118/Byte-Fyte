@@ -33,6 +33,7 @@ public class Main extends Game {
 
 	public SpriteBatch batch;
 
+	public Music music;
 	public static String songName = "";
 	public double songLoopStart = Double.POSITIVE_INFINITY;
 	public double songLoopEnd = Double.POSITIVE_INFINITY;

@@ -72,9 +72,9 @@ public abstract class Character extends Sprite {
     private Vector2 spriteOffset = Vector2.Zero;
     public Vector2 manualSpriteOffset = Vector2.Zero;
 
-    private float elapsedTime = 0f;
+    protected float elapsedTime = 0f;
 
-    private Animation<TextureRegion> attackAnimation;
+    protected Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
     private final Animation<TextureRegion> idle;
@@ -107,7 +107,7 @@ public abstract class Character extends Sprite {
 
     private final Animation<TextureRegion> dashAttack;
 
-    protected double moveTimer = 6;
+    protected double moveTimer = 0;
 
     private boolean afterUpB = false;
 
@@ -329,7 +329,6 @@ public abstract class Character extends Sprite {
     }
 
     public void update(float deltaTime) {
-        System.out.println(animDuration);
         if (animDuration > 0) {
             animDuration -= deltaTime;
         } else {
@@ -345,11 +344,10 @@ public abstract class Character extends Sprite {
 
         }
 
-        if (!lockAnim) {
-            moveTimer = Double.POSITIVE_INFINITY;
-        } else {
+        if (moveTimer >= 0) {
             moveTimer -= deltaTime;
         }
+
         // set variables
         prevVel = vel;
         prevPos.set(pos);
@@ -431,7 +429,6 @@ public abstract class Character extends Sprite {
         if (!lockAnim) {
             if (animDuration <= 0) {
                 getState();
-                System.out.println("Get State");
             } else {
                 lockAnim = true;
             }
@@ -712,7 +709,7 @@ public abstract class Character extends Sprite {
         spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
         spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
 
-        lockAnim = attackAnimation != null && (moveTimer <= 0 || !attackAnimation.isAnimationFinished(elapsedTime));
+        lockAnim = attackAnimation != null && (moveTimer > 0 || !attackAnimation.isAnimationFinished(elapsedTime));
 
         return region;
     }
