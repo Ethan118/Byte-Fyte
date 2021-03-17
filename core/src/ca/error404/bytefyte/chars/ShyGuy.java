@@ -64,11 +64,9 @@ public class ShyGuy extends Character {
             }
         }
     }
-
-
+    
     public void update(float deltaTime) {
         super.update(deltaTime);
-        System.out.println(hasHovered);
 
 
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
@@ -85,58 +83,58 @@ public class ShyGuy extends Character {
     void basicNeutral() {
         Collider hitBox = new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5f, 0.25f);
         colliders.add(hitBox);
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void basicSide() {
         Collider hitBox = new Collider(new Vector2(20, 0), 25, 30, this, 3f, 7f, 0.25f);
         colliders.add(hitBox);
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void basicUp() {
         Collider hitBox = new Collider(new Vector2(0, 20), 30, 5, this, 3f, 7f, 0.25f);
         colliders.add(hitBox);
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void basicDown() {
         Collider hitBox = new Collider(new Vector2(0, -10), 40, 20, this, 3f, 6f, 0.25f);
         colliders.add(hitBox);
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void dashAttack() {
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void smashSide() {
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void smashUp() {
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void smashDown() {
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void specialNeutral() {
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
     void specialSide() {
-        moveVector = new Vector2(0, 0);
+        resetControls();
     }
 
     @Override
@@ -151,13 +149,8 @@ public class ShyGuy extends Character {
             animDuration = 1.4f;
         }
 
-        vel.y = (flyAcceleration * flyAcceleration);
-        flyAcceleration += 0.02;
-
-
-
-//        vel.y = jumpPower + 3;
-//        jumpsLeft = 0;
+        vel.y = (duration * duration);
+        duration += 0.02;
     }
 
     @Override
