@@ -6,23 +6,14 @@ import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import org.apache.commons.io.FileUtils;
-import sun.security.util.IOUtils;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class ShyGuy extends Character {
@@ -33,7 +24,7 @@ public class ShyGuy extends Character {
     Random rand = new Random();
 
     private boolean hasHovered = false;
-    private float duration = 0f;
+    private float flyAcceleration = 0f;
 
     public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
         super(screen, spawnPoint, controller);
@@ -77,10 +68,7 @@ public class ShyGuy extends Character {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (grounded) {
-            hasHovered = false;
-            duration = 0;
-        }
+
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;
         }
@@ -152,15 +140,15 @@ public class ShyGuy extends Character {
     @Override
     void specialUp() {
         if (animDuration == 0) {
-            if (!hasHovered) {
+            if (!hasHovered && !grounded) {
                 vel.y = -3;
-                duration = 0;
-                hasHovered = true;
             }
+
+            flyAcceleration = 0;
+            hasHovered = true;
             animDuration = 1.4f;
-
-
         }
+
         vel.y = (duration * duration);
         duration += 0.02;
     }
