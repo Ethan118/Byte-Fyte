@@ -13,7 +13,6 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import org.ini4j.Wini;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,10 +29,11 @@ public class Main extends Game {
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
-	public static float deadZone = 0.1f;
+	public static float deadZone = 0.5f;
 
 	public SpriteBatch batch;
 
+	public Music music;
 	public static String songName = "";
 	public double songLoopStart = Double.POSITIVE_INFINITY;
 	public double songLoopEnd = Double.POSITIVE_INFINITY;
@@ -51,6 +51,12 @@ public class Main extends Game {
 		loadSongs();
 		manager.finishLoading();
 
+		checkControllers();
+
+		setScreen(new TestScene(this));
+	}
+
+	public static void checkControllers() {
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
@@ -66,8 +72,6 @@ public class Main extends Game {
 				}
 			}
 		}
-
-		setScreen(new TestScene(this));
 	}
 
 	public void loadSongs() {
@@ -238,6 +242,7 @@ public class Main extends Game {
 
 		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
 		music.setLooping(true);
+
 		return music;
 	}
 

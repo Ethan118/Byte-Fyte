@@ -17,8 +17,10 @@ public class Packer {
 
         TexturePacker.Settings settings = new TexturePacker.Settings();
 
-        settings.maxWidth = 16384;
-        settings.maxHeight = 16384;
+        settings.maxWidth = 8192;
+        settings.maxHeight = 8192;
+        settings.stripWhitespaceX = true;
+        settings.stripWhitespaceY = true;
 
         TexturePacker.process(settings, inputDir, outputDir, packFileName);
     }

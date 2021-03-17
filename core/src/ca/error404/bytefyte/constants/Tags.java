@@ -8,4 +8,5 @@ public class Tags {
     public static final int DEATH_BARRIER_BIT = 4;
     public static final int PLAYER_BIT = 8;
     public static final int PLAYER_HEAD_BIT = 16;
+    public static final int ATTACK_BIT = 32;
 }

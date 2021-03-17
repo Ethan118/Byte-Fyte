@@ -35,8 +35,7 @@ public class TestScene implements Screen {
     private final Box2DDebugRenderer b2dr;
 
     public final Character player;
-
-    private final Music music;
+    public final Character player2;
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
@@ -48,27 +47,33 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
+
+        System.out.println(game.music);
+
         if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(0, 150), Main.controllers.get(0));
+            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0));
+            player2 = new ShyGuy(this, new Vector2(38, 150), null);
         } else {
-            player = new ShyGuy(this, new Vector2(0, 150), null);
+            player = new ShyGuy(this, new Vector2(-38, 150), null);
+            player2 = new ShyGuy(this, new Vector2(38, 150), null);
         }
 
+        player.facingLeft = false;
 
         world.setContactListener(new WorldContactListener());
 
         new Wall(0, -30, 100, 10, this);
         new Wall(-75, 65, 20, 20, this);
         new Wall(75, 65, 20, 20, this);
-        new DeathWall(0, -200, 1000, 10, this);
-        new DeathWall(0, 200, 1000, 10, this);
+        new DeathWall(0, -400, 1000, 10, this);
+        new DeathWall(0, 500, 1000, 10, this);
         new DeathWall(-225, 0, 10, 1000, this);
         new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
-        music = game.newSong();
-        music.setVolume(Main.musicVolume / 10f);
-        music.play();
+        game.music = game.newSong();
+        game.music.setVolume(Main.musicVolume / 10f);
+        game.music.play();
     }
 
     @Override
@@ -90,6 +95,7 @@ public class TestScene implements Screen {
         }
         viewport.apply();
         player.draw(game.batch);
+        player2.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
@@ -98,9 +104,9 @@ public class TestScene implements Screen {
     }
 
     public void update(float deltaTime) {
-        // music looping
-        if (music.getPosition() >= game.songLoopEnd) {
-            music.setPosition((float) (music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
+        // game.music looping
+        if (game.music.getPosition() >= game.songLoopEnd) {
+            game.music.setPosition((float) (game.music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
         }
 
         // stop video if playing
@@ -108,7 +114,7 @@ public class TestScene implements Screen {
             videoPlayer.stop();
         }
 
-        // Set music volume
+        // Set game.music volume
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             Main.musicVolume = Main.musicVolume < 10 ? Main.musicVolume + 1 : 10;
 
@@ -150,7 +156,7 @@ public class TestScene implements Screen {
             }
         }
 
-        music.setVolume(Main.musicVolume / 10f);
+        game.music.setVolume(Main.musicVolume / 10f);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             if (Gdx.graphics.isFullscreen()) {
@@ -160,16 +166,23 @@ public class TestScene implements Screen {
             }
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+            game.music.stop();
+            System.out.println(game.music);
+            game.setScreen(new TestScene2(game));
+        }
+
         // start video if not playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
-            music.pause();
+            game.music.pause();
         } else if (!videoPlayer.isPlaying()) {
             // update all objects and physics objects
             world.step(1 / 60f, 6, 2);
             player.update(deltaTime);
-            if (!music.isPlaying()) {
-                music.play();
+            player2.update(deltaTime);
+            if (!game.music.isPlaying()) {
+                game.music.play();
             }
         }
 
@@ -188,12 +201,12 @@ public class TestScene implements Screen {
 
     @Override
     public void pause() {
-        music.pause();
+        game.music.pause();
     }
 
     @Override
     public void resume() {
-        music.play();
+        game.music.play();
     }
 
     @Override
