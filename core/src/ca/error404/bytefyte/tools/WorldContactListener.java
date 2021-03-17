@@ -58,8 +58,10 @@ public class WorldContactListener implements ContactListener {
                 }
 
                 if (!(collider.parent == chara)) {
-                    Vector2 force = new Vector2(Math.signum((chara.pos.x / Main.PPM) - (collider.parent.pos.x / Main.PPM)) * collider.power, Math.signum((chara.pos.y / Main.PPM) - (collider.parent.pos.y / Main.PPM)) * collider.power);
-                    chara.Hit(collider.damage, force, collider.minPower);
+                    Vector2 force = new Vector2(((chara.pos.x) - (collider.parent.pos.x)) * collider.power, ((chara.b2body.getPosition().y) - (collider.parent.b2body.getPosition().y)) * collider.power);
+                    force.x = Math.round(force.x * 100.0f) / 100.0f;
+                    force.y = Math.round(force.y * 100.0f) / 100.0f;
+                    chara.Hit(collider.damage, force, collider.minPower, collider.hitStun);
                 }
         }
     }

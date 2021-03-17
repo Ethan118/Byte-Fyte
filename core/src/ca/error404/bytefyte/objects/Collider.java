@@ -24,7 +24,9 @@ public class Collider {
     public float damage;
     public Vector2 direction;
 
-    public Collider(Vector2 offset, float width, float height, Character parent, float power, float minPower, float damage, Vector2 direction) {
+    public float hitStun;
+
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float minPower, float damage, Vector2 direction, float hitStun) {
         this.pos = parent.pos;
         this.offset = offset;
         this.width = width;
@@ -35,6 +37,8 @@ public class Collider {
         this.minPower = minPower;
         this.damage = damage;
         this.direction = direction;
+
+        this.hitStun = hitStun;
 
         this.world = parent.world;
 

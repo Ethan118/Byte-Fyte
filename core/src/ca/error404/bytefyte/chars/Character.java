@@ -24,6 +24,7 @@ public abstract class Character extends Sprite {
     public float deadzone = 0.3f;
 
     public float percent = 0f;
+    private float stunTimer;
 
     public Vector2 moveVector = new Vector2();
 
@@ -254,7 +255,7 @@ public abstract class Character extends Sprite {
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
             jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.X) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y);
-            running = Main.contains(Main.recentButtons.get(controller), ControllerButtons.L_BUMPER) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.R_BUMPER);
+            running = controller.getButton(ControllerButtons.L_BUMPER) || controller.getButton(ControllerButtons.R_BUMPER);
 
             if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
                 attackState = AttackState.SPECIAL;
@@ -304,7 +305,11 @@ public abstract class Character extends Sprite {
         }
         prevGoToPos = goToPos;
 
-        if (!lockAnim) {
+        if (stunTimer > 0) {
+            stunTimer -= deltaTime;
+        }
+
+        if (!lockAnim && stunTimer <= 0) {
             handleInput();
         }
 
@@ -588,6 +593,9 @@ public abstract class Character extends Sprite {
             case SMASH_S:
             case DASH:
             case ULTIMATE:
+            case HIT:
+                region = hit.getKeyFrame(elapsedTime, true);
+                break;
             case IDLE:
             default:
                 region = idle.getKeyFrame(elapsedTime, true);
@@ -628,13 +636,18 @@ public abstract class Character extends Sprite {
         return region;
     }
 
-    public void Hit(float damage, Vector2 force, float minPower) {
+    public void Hit(float damage, Vector2 force, float minPower, float hitStun) {
         percent = Math.min(percent + damage, 999.9f);
-        vel.add(force.scl(Math.max((percent / 100 / weight), minPower)));
+        vel.set(force.scl(Math.max((percent / 100 / weight), minPower)));
+
+        stunTimer = hitStun * ((percent + 1) / 100);
+
+        moveVector.x = 0;
     }
 
     public void setPos(int x, int y) {
         goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+        percent = 0;
     }
 
     //    Basic Attacks
