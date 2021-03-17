@@ -41,11 +41,13 @@ public class WorldContactListener implements ContactListener {
                 DeathWall wall;
                 if (fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
                     wall = ((DeathWall) fixA.getUserData());
+                    chara = ((Character) fixB.getUserData());
                 } else {
                     wall = ((DeathWall) fixB.getUserData());
+                    chara = ((Character) fixA.getUserData());
                 }
 
-                wall.contact();
+                wall.contact(chara);
                 break;
             case Tags.ATTACK_BIT | Tags.PLAYER_BIT:
                 Collider collider;
@@ -58,10 +60,14 @@ public class WorldContactListener implements ContactListener {
                 }
 
                 if (!(collider.parent == chara)) {
-                    Vector2 force = new Vector2(((chara.pos.x) - (collider.parent.pos.x)) * collider.power, ((chara.b2body.getPosition().y) - (collider.parent.b2body.getPosition().y)) * collider.power);
-                    force.x = Math.round(force.x * 100.0f) / 100.0f;
-                    force.y = Math.round(force.y * 100.0f) / 100.0f;
-                    chara.Hit(collider.damage, force, collider.minPower, collider.hitStun);
+                    Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (collider.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (collider.parent.pos.y)) * 100.0f) / 100.0f);
+                    direction.x = Math.signum(direction.x);
+                    direction.y = Math.signum(direction.y);
+                    System.out.println(direction);
+
+                    Vector2 force = new Vector2(direction.x * collider.power, direction.y * collider.power);
+                    chara.Hit(collider.damage, force, collider.hitStun);
+                    System.out.println(force);
                 }
         }
     }

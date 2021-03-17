@@ -30,7 +30,7 @@ public class Main extends Game {
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
-	public static float deadZone = 0.1f;
+	public static float deadZone = 0.5f;
 
 	public SpriteBatch batch;
 
@@ -49,17 +49,7 @@ public class Main extends Game {
 
 		manager = new AssetManager();
 		loadSongs();
-
-		long startTime = System.currentTimeMillis();
-		long endTime = 0;
-
 		manager.finishLoading();
-
-		endTime = System.currentTimeMillis();
-
-		float timeneeded =  (float) ((startTime - endTime) /1000);
-
-		System.out.println(timeneeded);
 
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
@@ -69,6 +59,7 @@ public class Main extends Game {
 					recentButtons.put(cont, new Array<Integer>());
 					cont.addListener(new ControllerAdapter() {
 						public boolean buttonDown(Controller controller, int buttonIndex) {
+							System.out.println(buttonIndex);
 							recentButtons.get(controller).add(buttonIndex);
 							return false;
 						}

@@ -22,43 +22,57 @@ public class ShyGuy extends Character{
         manualSpriteOffset = new Vector2(2200, 300);
     }
 
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
+            lockAnim = false;
+        }
+    }
+
     @Override
     void basicNeutral() {
         System.out.println("Basic Neutral");
-        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 5, 30, this, 3f, 1f, 5f, Vector2.X, 0.25f);
+        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 5, 30, this, 2f, 5f, 0.25f);
         colliders.add(hitBox);
+        moveVector = new Vector2(0, moveVector.y);
     }
 
     @Override
     void basicSide() {
         System.out.println("Basic Side");
-        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 15, 20, this, 3f, 1f, 7f, Vector2.X, 0.25f);
+        Collider hitBox = new Collider(new Vector2(20 / Main.PPM, 0 / Main.PPM), 25, 30, this, 3f, 7f, 0.25f);
         colliders.add(hitBox);
+        moveVector = new Vector2(0, moveVector.y);
     }
 
     @Override
     void basicUp() {
         System.out.println("Basic Up");
-        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, 20 / Main.PPM), 30, 5, this, 3f, 1f, 7f, new Vector2(0, 1), 0.25f);
+        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, 20 / Main.PPM), 30, 5, this, 3f, 7f, 0.25f);
         colliders.add(hitBox);
+        moveVector = new Vector2(0, moveVector.y);
     }
 
     @Override
     void basicDown() {
         System.out.println("Basic Down");
-        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, -10 / Main.PPM), 40, 20, this, 3f, 1f, 6f, new Vector2(0, 1), 0.25f);
+        Collider hitBox = new Collider(new Vector2(0 / Main.PPM, -10 / Main.PPM), 40, 20, this, 3f, 6f, 0.25f);
         colliders.add(hitBox);
+        moveVector = new Vector2(0, moveVector.y);
     }
 
     @Override
     void dashAttack() {
         System.out.println("Dash Attack");
+        moveVector = new Vector2(0, moveVector.y);
 
     }
 
     @Override
     void smashSide() {
         System.out.println("Smash Side");
+        moveVector = new Vector2(0, moveVector.y);
 
     }
 
@@ -77,13 +91,13 @@ public class ShyGuy extends Character{
     @Override
     void specialNeutral() {
         System.out.println("Special Neutral");
-
+        moveVector = new Vector2(0, moveVector.y);
     }
 
     @Override
     void specialSide() {
         System.out.println("Special Side");
-
+        moveVector = new Vector2(0, moveVector.y);
     }
 
     @Override
@@ -96,19 +110,18 @@ public class ShyGuy extends Character{
     @Override
     void specialDown() {
         System.out.println("Special Down");
-
+        moveVector = new Vector2(0, moveVector.y);
     }
 
     @Override
     void ultimate() {
         System.out.println("Ultimate");
-
     }
 
     @Override
     void airNeutral() {
         System.out.println("Air Neutral");
-
+        Collider hitBox = new Collider(Vector2.Zero, 40, 40, this, 4f, 5f, 0.25f);
     }
 
     @Override
