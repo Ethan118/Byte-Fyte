@@ -149,8 +149,8 @@ public class ShyGuy extends Character {
             animDuration = 1.4f;
         }
 
-        vel.y = (duration * duration);
-        duration += 0.02;
+        vel.y = (flyAcceleration * flyAcceleration);
+        flyAcceleration += 0.02;
     }
 
     @Override
