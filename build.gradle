@@ -21,7 +21,8 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Byte Fyte"
-        gdxVersion = '1.9.13'
+        gdxVersion = '1.9.14'
+        gdxControllerVersion = '1.9.13'
         roboVMVersion = '2.3.12'
         box2DLightsVersion = '1.5'
         ashleyVersion = '1.7.4'
@@ -55,8 +56,8 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxControllerVersion"
+        api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxControllerVersion:natives-desktop"
         
     }
 }
@@ -78,7 +79,7 @@ project(":core") {
         api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-controllers:$gdxControllerVersion"
         
     }
 }
