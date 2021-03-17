@@ -30,14 +30,17 @@ public class ShyGuy extends Character {
     private ArrayList<Float> healSongLengths;
     private int hovertimer = 2;
     private int timer = 2;
-    private int duration = 0;
     Random rand = new Random();
+
+    private boolean hasHovered = false;
+    private float duration = 0f;
 
     public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
         super(screen, spawnPoint, controller);
         manualSpriteOffset = new Vector2(2200, 300);
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
+
 
         int i = 0;
         while (true) {
@@ -63,9 +66,7 @@ public class ShyGuy extends Character {
                 float frameRate = format.getFrameRate();
                 float durationInSeconds = (audioFileLength / (frameSize * frameRate));
 
-    private int hovertimer = 2;
-    private int timer = 2;
-    private boolean hasHovered = false;
+
                 healSongLengths.add(durationInSeconds);
             } catch(Exception e) {
                 break;
@@ -91,7 +92,6 @@ public class ShyGuy extends Character {
             hasHovered = true;
         }
     }
-private float duration = 0f;
 
     @Override
     void basicNeutral() {
