@@ -1,13 +1,13 @@
 package ca.error404.bytefyte.scene;
 
+import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.tools.CutscenePlayer;
-import ca.error404.bytefyte.Main;
-import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,7 +17,8 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.ini4j.Wini;
@@ -26,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-public class TestScene implements Screen {
+public class TestScene2 implements Screen {
     private final Main game;
     private final OrthographicCamera cam;
     private final Viewport viewport;
@@ -34,41 +35,20 @@ public class TestScene implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
-    public final Character player;
-    public final Character player2;
-
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
-    public TestScene(Main game) {
+    public TestScene2(Main game) {
         // sets up variables
         this.game = game;
+        game.music = this.game.music;
         cam = new OrthographicCamera();
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-
         System.out.println(game.music);
 
-        if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0));
-            player2 = new ShyGuy(this, new Vector2(38, 150), null);
-        } else {
-            player = new ShyGuy(this, new Vector2(-38, 150), null);
-            player2 = new ShyGuy(this, new Vector2(38, 150), null);
-        }
-
-        player.facingLeft = false;
-
         world.setContactListener(new WorldContactListener());
-
-        new Wall(0, -30, 100, 10, this);
-        new Wall(-75, 65, 20, 20, this);
-        new Wall(75, 65, 20, 20, this);
-        new DeathWall(0, -400, 1000, 10, this);
-        new DeathWall(0, 500, 1000, 10, this);
-        new DeathWall(-225, 0, 10, 1000, this);
-        new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
         game.music = game.newSong();
@@ -86,7 +66,7 @@ public class TestScene implements Screen {
         update(deltaTime);
 
         // draw everything to the screen
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
@@ -94,8 +74,6 @@ public class TestScene implements Screen {
             videoPlayer.draw(game.batch);
         }
         viewport.apply();
-        player.draw(game.batch);
-        player2.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
@@ -134,7 +112,7 @@ public class TestScene implements Screen {
 
             try {
                 Wini ini = new Wini(settings);
-                ini.add("Settings", "music volume", Main.musicVolume);
+                ini.add("Settings", "game volume", Main.musicVolume);
                 ini.store();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -166,12 +144,6 @@ public class TestScene implements Screen {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-            game.music.stop();
-            System.out.println(game.music);
-            game.setScreen(new TestScene2(game));
-        }
-
         // start video if not playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
@@ -179,8 +151,6 @@ public class TestScene implements Screen {
         } else if (!videoPlayer.isPlaying()) {
             // update all objects and physics objects
             world.step(1 / 60f, 6, 2);
-            player.update(deltaTime);
-            player2.update(deltaTime);
             if (!game.music.isPlaying()) {
                 game.music.play();
             }

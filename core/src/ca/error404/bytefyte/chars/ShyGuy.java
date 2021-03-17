@@ -4,6 +4,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -12,19 +13,66 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import org.apache.commons.io.FileUtils;
+import sun.security.util.IOUtils;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class ShyGuy extends Character {
+    private  ArrayList<Sound> healSongs;
+    private ArrayList<Float> healSongLengths;
+    private int hovertimer = 2;
+    private int timer = 2;
+    private int duration = 0;
+    Random rand = new Random();
 
     public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
         super(screen, spawnPoint, controller);
         manualSpriteOffset = new Vector2(2200, 300);
-    }
+        healSongs = new ArrayList<>();
+        healSongLengths = new ArrayList<>();
+
+        int i = 0;
+        while (true) {
+            i++;
+
+            try {
+                healSongs.add(Gdx.audio.newSound(Gdx.files.internal(String.format("audio/sound effects/shyguy_song_%d.wav", i))));
+
+                String fileName = String.format("audio/sound effects/shyguy_song_%d.wav", i);
+
+                File file = new File("bye-bye.world");
+
+                ClassLoader classLoader = Main.class.getClassLoader();
+                InputStream inputStream = classLoader.getResourceAsStream(fileName);
+
+                FileUtils.copyInputStreamToFile(inputStream, file);
+
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+                AudioFormat format = audioInputStream.getFormat();
+
+                long audioFileLength = file.length();
+                int frameSize = format.getFrameSize();
+                float frameRate = format.getFrameRate();
+                float durationInSeconds = (audioFileLength / (frameSize * frameRate));
 
     private int hovertimer = 2;
     private int timer = 2;
     private boolean hasHovered = false;
+                healSongLengths.add(durationInSeconds);
+            } catch(Exception e) {
+                break;
+            }
+        }
+    }
+
 
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -126,9 +174,12 @@ private float duration = 0f;
 
     @Override
     void specialDown() {
-        animDuration = 7;
+        int i = rand.nextInt(healSongs.size() - 1);
+        healSongs.get(i).play(Main.sfxVolume / 10f);
+
+        animDuration = healSongLengths.get(i);
+        moveTimer = healSongLengths.get(i);
         lockAnim = true;
-        moveVector = new Vector2(0, 0);
     }
 
     @Override

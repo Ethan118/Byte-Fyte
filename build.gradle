@@ -67,6 +67,8 @@ project(":core") {
 
 
     dependencies {
+        implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+
         api "games.rednblack.hyperlap2d:runtime-libgdx:$h2dVersion"
         api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
 
