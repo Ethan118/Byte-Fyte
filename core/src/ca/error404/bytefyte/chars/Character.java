@@ -580,6 +580,13 @@ public abstract class Character extends Sprite {
         }
     }
 
+    public void resetControls() {
+        moveVector = new Vector2(0, 0);
+        rStick = new Vector2(0, 0);
+        jumping = false;
+        running = false;
+    }
+
     public TextureRegion getFrame(float deltaTime) {
         elapsedTime += deltaTime;
         TextureRegion region;

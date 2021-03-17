@@ -64,11 +64,9 @@ public class WorldContactListener implements ContactListener {
                     Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (collider.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (collider.parent.pos.y)) * 100.0f) / 100.0f);
                     direction.x = Math.signum(direction.x);
                     direction.y = Math.signum(direction.y);
-                    System.out.println(direction);
 
                     Vector2 force = new Vector2(direction.x * collider.power, direction.y * collider.power);
                     chara.Hit(collider.damage, force, collider.hitStun);
-                    System.out.println(force);
                 }
                 break;
         }
