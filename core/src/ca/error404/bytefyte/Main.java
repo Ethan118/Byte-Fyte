@@ -13,7 +13,6 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import org.ini4j.Wini;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +29,7 @@ public class Main extends Game {
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
-	public static float deadZone = 0.1f;
+	public static float deadZone = 0.5f;
 
 	public SpriteBatch batch;
 
@@ -51,6 +50,12 @@ public class Main extends Game {
 		loadSongs();
 		manager.finishLoading();
 
+		checkControllers();
+
+		setScreen(new TestScene(this));
+	}
+
+	public static void checkControllers() {
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
@@ -59,7 +64,6 @@ public class Main extends Game {
 					recentButtons.put(cont, new Array<Integer>());
 					cont.addListener(new ControllerAdapter() {
 						public boolean buttonDown(Controller controller, int buttonIndex) {
-							System.out.println(buttonIndex);
 							recentButtons.get(controller).add(buttonIndex);
 							return false;
 						}
@@ -67,8 +71,6 @@ public class Main extends Game {
 				}
 			}
 		}
-
-		setScreen(new TestScene(this));
 	}
 
 	public void loadSongs() {

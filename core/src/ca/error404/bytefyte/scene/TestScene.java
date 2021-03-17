@@ -50,11 +50,11 @@ public class TestScene implements Screen {
         b2dr = new Box2DDebugRenderer();
 
         if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(0, 150), Main.controllers.get(0));
-            player2 = new ShyGuy(this, new Vector2(0, 150), Main.controllers.get(1));
+            player = new ShyGuy(this, new Vector2(-40, 150), Main.controllers.get(0));
+            player2 = new ShyGuy(this, new Vector2(40, 150), null);
         } else {
-            player = new ShyGuy(this, new Vector2(0, 150), null);
-            player2 = new ShyGuy(this, new Vector2(0, 150), null);
+            player = new ShyGuy(this, new Vector2(-40, 150), null);
+            player2 = new ShyGuy(this, new Vector2(40, 150), null);
         }
 
         world.setContactListener(new WorldContactListener());
