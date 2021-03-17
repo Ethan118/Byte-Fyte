@@ -24,28 +24,26 @@ public class ShyGuy extends Character {
 
     private int hovertimer = 2;
     private int timer = 2;
-
+    private boolean hasHovered = false;
 
     public void update(float deltaTime) {
         super.update(deltaTime);
+        System.out.println(hasHovered);
 
+        if (grounded) {
+            hasHovered = false;
+            duration = 0;
+        }
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;
         }
 
         if (animState == AnimationState.SPECIAL_U) {
             specialUp();
-            hovertimer -= deltaTime;
-            if (hovertimer <= 0) {
-                timer -= deltaTime;
-                if (hovertimer <= 0 && timer <= 0) {
-                    timer = 6;
-                    hovertimer = 6;
-                }
-            }
+            hasHovered = true;
         }
     }
-private int duration = 0;
+private float duration = 0f;
 
     @Override
     void basicNeutral() {
@@ -107,21 +105,19 @@ private int duration = 0;
 
     @Override
     void specialUp() {
+        if (animDuration == 0) {
+            if (!hasHovered) {
+                vel.y = -3;
+                duration = 0;
+                hasHovered = true;
+            }
+            animDuration = 1.4f;
 
-        moveTimer = 6;
 
-        if (hovertimer > 0) {
-            downGravity = 0;
-            upGravity = 0;
-            vel.y = 0;
         }
-        if (timer > 0) {
-            downGravity = 15;
-            upGravity = 10;
-            vel.y = 2 * (duration^2) - 1;
-            duration += 1;
-        }
-        duration = 0;
+        vel.y = (duration * duration);
+        duration += 0.02;
+
 
 
 //        vel.y = jumpPower + 3;

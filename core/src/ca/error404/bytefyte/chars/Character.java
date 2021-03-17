@@ -431,7 +431,6 @@ public abstract class Character extends Sprite {
         if (!lockAnim) {
             if (animDuration <= 0) {
                 getState();
-                System.out.println("Get State");
             } else {
                 lockAnim = true;
             }
