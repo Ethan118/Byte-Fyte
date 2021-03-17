@@ -121,25 +121,27 @@ public class ShyGuy extends Character{
     @Override
     void airNeutral() {
         System.out.println("Air Neutral");
-        Collider hitBox = new Collider(Vector2.Zero, 40, 40, this, 4f, 5f, 0.25f);
+        Collider hitBox = new Collider(new Vector2(0, 0), 40, 40, this, 4f, 5f, 0.25f);
+        colliders.add(hitBox);
     }
 
     @Override
     void airForward() {
         System.out.println("Air Forward");
-
     }
 
     @Override
     void airBack() {
         System.out.println("Air Backward");
-
+        Collider hitBox = new Collider(new Vector2(-20 / Main.PPM, 0), 20, 20, this, 3f, 4f, 0.25f);
+        colliders.add(hitBox);
     }
 
     @Override
     void airUp() {
         System.out.println("Air Up");
-
+        Collider hitBox = new Collider(new Vector2(0, 20 / Main.PPM), 40, 20, this, 4f, 4f, 0.5f);
+        colliders.add(hitBox);
     }
 
     @Override
