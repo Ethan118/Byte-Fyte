@@ -22,14 +22,30 @@ public class ShyGuy extends Character {
         manualSpriteOffset = new Vector2(2200, 300);
     }
 
+    private int hovertimer = 2;
+    private int timer = 2;
+
+
     public void update(float deltaTime) {
         super.update(deltaTime);
 
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;
         }
+
+        if (animState == AnimationState.SPECIAL_U) {
+            specialUp();
+            hovertimer -= deltaTime;
+            if (hovertimer <= 0) {
+                timer -= deltaTime;
+                if (hovertimer <= 0 && timer <= 0) {
+                    timer = 6;
+                    hovertimer = 6;
+                }
+            }
+        }
     }
-private int duration = -6;
+private int duration = 0;
 
     @Override
     void basicNeutral() {
@@ -91,69 +107,31 @@ private int duration = -6;
 
     @Override
     void specialUp() {
-        System.out.println("Special Up");
-        vel.y = duration^2;
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
+
+        moveTimer = 6;
+
+        if (hovertimer > 0) {
+            downGravity = 0;
+            upGravity = 0;
+            vel.y = 0;
         }
-        if (duration != 7) {
+        if (timer > 0) {
+            downGravity = 15;
+            upGravity = 10;
+            vel.y = 2 * (duration^2) - 1;
             duration += 1;
-            vel.y = duration^2;
         }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        if (duration != 7) {
-            duration += 1;
-            vel.y = duration^2;
-        }
-        duration = -6;
+        duration = 0;
 
 
-        vel.y = jumpPower + 3;
-        jumpsLeft = 0;
+//        vel.y = jumpPower + 3;
+//        jumpsLeft = 0;
     }
 
     @Override
     void specialDown() {
+        animDuration = 7;
+        lockAnim = true;
         moveVector = new Vector2(0, 0);
     }
 

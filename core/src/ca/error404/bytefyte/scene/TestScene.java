@@ -35,7 +35,7 @@ public class TestScene implements Screen {
     private final Box2DDebugRenderer b2dr;
 
     public final Character player;
-    public final Character player2;
+//    public final Character player2;
 
     private final Music music;
 
@@ -50,11 +50,11 @@ public class TestScene implements Screen {
         b2dr = new Box2DDebugRenderer();
 
         if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(-40, 150), Main.controllers.get(0));
-            player2 = new ShyGuy(this, new Vector2(40, 150), null);
+            player = new ShyGuy(this, new Vector2(0, 150), Main.controllers.get(0));
+//            player2 = new ShyGuy(this, new Vector2(0, 150), Main.controllers.get(1));
         } else {
-            player = new ShyGuy(this, new Vector2(-40, 150), null);
-            player2 = new ShyGuy(this, new Vector2(40, 150), null);
+            player = new ShyGuy(this, new Vector2(0, 150), null);
+//            player2 = new ShyGuy(this, new Vector2(0, 150), null);
         }
 
         world.setContactListener(new WorldContactListener());
@@ -92,7 +92,7 @@ public class TestScene implements Screen {
         }
         viewport.apply();
         player.draw(game.batch);
-        player2.draw(game.batch);
+//        player2.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
@@ -171,7 +171,7 @@ public class TestScene implements Screen {
             // update all objects and physics objects
             world.step(1 / 60f, 6, 2);
             player.update(deltaTime);
-            player2.update(deltaTime);
+//            player2.update(deltaTime);
             if (!music.isPlaying()) {
                 music.play();
             }
