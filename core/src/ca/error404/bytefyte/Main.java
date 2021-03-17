@@ -2,6 +2,7 @@ package ca.error404.bytefyte;
 
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
+import ca.error404.bytefyte.scene.MenuScene;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.Scanner;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -29,11 +32,10 @@ public class Main extends Game {
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
-	public static float deadZone = 0.5f;
+	public static float deadZone = 0.1f;
 
 	public SpriteBatch batch;
 
-	public Music music;
 	public static String songName = "";
 	public double songLoopStart = Double.POSITIVE_INFINITY;
 	public double songLoopEnd = Double.POSITIVE_INFINITY;
@@ -43,20 +45,38 @@ public class Main extends Game {
 	public static Array<Controller> controllers = new Array<>();
 	public static Hashtable<Controller, Array<Integer>> recentButtons = new Hashtable<>();
 
+
+
+
+	public String action;
+
+
 	@Override
 	public void create () {
+
+
+		System.out.println("typing");
+
+		Scanner input = new Scanner(System.in);
+		for (int i=0; i < 250; i++) {
+
+			action = input.next();
+
+			setScreen(new MenuScene());
+
+			if (action.equalsIgnoreCase("=")); {
+				break;
+			}
+		}
+
+
+
 		batch = new SpriteBatch();
 
 		manager = new AssetManager();
 		loadSongs();
 		manager.finishLoading();
 
-		checkControllers();
-
-		setScreen(new TestScene(this));
-	}
-
-	public static void checkControllers() {
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
@@ -65,7 +85,6 @@ public class Main extends Game {
 					recentButtons.put(cont, new Array<Integer>());
 					cont.addListener(new ControllerAdapter() {
 						public boolean buttonDown(Controller controller, int buttonIndex) {
-							System.out.println(buttonIndex);
 							recentButtons.get(controller).add(buttonIndex);
 							return false;
 						}
@@ -73,6 +92,8 @@ public class Main extends Game {
 				}
 			}
 		}
+
+		setScreen(new TestScene(this));
 	}
 
 	public void loadSongs() {
@@ -243,7 +264,6 @@ public class Main extends Game {
 
 		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
 		music.setLooping(true);
-
 		return music;
 	}
 
