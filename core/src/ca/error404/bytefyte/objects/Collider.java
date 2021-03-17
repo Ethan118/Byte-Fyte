@@ -26,7 +26,7 @@ public class Collider {
 
     public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun) {
         this.pos = parent.pos;
-        this.offset = offset;
+        this.offset = new Vector2(offset.x / Main.PPM, offset.y / Main.PPM);
         this.width = width;
         this.height = height;
         this.parent = parent;

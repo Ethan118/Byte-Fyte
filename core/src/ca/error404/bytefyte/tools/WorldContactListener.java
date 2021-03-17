@@ -16,6 +16,7 @@ public class WorldContactListener implements ContactListener {
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         Character chara;
+        Character charb;
 
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
@@ -69,6 +70,7 @@ public class WorldContactListener implements ContactListener {
                     chara.Hit(collider.damage, force, collider.hitStun);
                     System.out.println(force);
                 }
+                break;
         }
     }
 
@@ -82,6 +84,7 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             // if player left the ground, tell them that they have left the ground
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
+            // case Tags.PLAYER_BIT | Tags.PLAYER_FEET_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
                     ((Character) fixA.getUserData()).grounded = false;
                 } else {

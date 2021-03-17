@@ -27,6 +27,7 @@ public abstract class Character extends Sprite {
     private float stunTimer;
 
     public Vector2 moveVector = new Vector2();
+    public Vector2 rStick = new Vector2();
 
     public Vector2 goToPos;
     public Vector2 prevGoToPos = Vector2.Zero;
@@ -232,6 +233,7 @@ public abstract class Character extends Sprite {
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
+        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -266,7 +268,10 @@ public abstract class Character extends Sprite {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-            jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y);
+            rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
+            rStick.y = Math.abs(controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS) : 0;
+
+            jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.X);
             running = controller.getButton(ControllerButtons.R_BUMPER) || controller.getButton(ControllerButtons.L_BUMPER);
 
             if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.A)) {
@@ -277,7 +282,7 @@ public abstract class Character extends Sprite {
                 }
             } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
                 attackState = AttackState.BASIC;
-            } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.X)) {
+            } else if (Math.abs(rStick.x) >= deadzone || Math.abs(rStick.y) >= deadzone) {
                 attackState = AttackState.SMASH;
             } else {
                 attackState = AttackState.NONE;
@@ -506,27 +511,34 @@ public abstract class Character extends Sprite {
                 //side
                 animState = AnimationState.SPECIAL_S;
                 specialSide();
+            }  else if (attackState == AttackState.ULTIMATE) {
+                if (ultMeter >= 100) {
+                    //ult
+                    animState = AnimationState.ULTIMATE;
+                    ultimate();
+                }
             }
         // smash attacks
         } else if (attackState == AttackState.SMASH) {
-            if (Math.abs(moveVector.x) > 0) {
-                //side
-                animState = AnimationState.SMASH_S;
-                smashSide();
-            } else if (moveVector.y > 0) {
+            Vector2 vec = controller == null ? moveVector : rStick;
+
+             if (vec.y > 0) {
                 //up
                 animState = AnimationState.SMASH_U;
                 smashUp();
-            } else if (moveVector.y < 0) {
+            } else if (vec.y < 0) {
                 //down
                 animState = AnimationState.SMASH_D;
                 smashDown();
-            }
-        } else if (attackState == AttackState.ULTIMATE) {
-            if (ultMeter >= 100) {
-                //ult
-                animState = AnimationState.ULTIMATE;
-                ultimate();
+            } else if (vec.x < 0) {
+                //side
+                facingLeft = false;
+                animState = AnimationState.SMASH_S;
+                smashSide();
+            } else if (vec.x > 0) {
+                facingLeft = true;
+                animState = AnimationState.SMASH_S;
+                smashSide();
             }
         }
     }
@@ -635,7 +647,7 @@ public abstract class Character extends Sprite {
         }
 
         // Decide which direction to face
-        if (grounded) {
+        if (grounded && attackAnimation == null) {
             if ((vel.x > 0) && !region.isFlipX()) {
                 region.flip(true, false);
                 facingLeft = false;
