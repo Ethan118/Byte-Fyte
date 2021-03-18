@@ -418,6 +418,7 @@ public abstract class Character extends Sprite {
 
             if (!grounded) jumpsLeft -= 1;
             grounded = false;
+            jumping = false;
         }
 
         // grounds player if y position hasn't changed in a while because sometimes
@@ -578,6 +579,13 @@ public abstract class Character extends Sprite {
                 }
             }
         }
+    }
+
+    public void resetControls() {
+        moveVector = new Vector2(0, 0);
+        rStick = new Vector2(0, 0);
+        jumping = false;
+        running = false;
     }
 
     public TextureRegion getFrame(float deltaTime) {
