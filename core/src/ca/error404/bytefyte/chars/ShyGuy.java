@@ -151,6 +151,12 @@ public class ShyGuy extends Character {
 
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;
+
+        if (moveVector.x > deadzone) {
+            facingLeft = false;
+        } else if (moveVector.x < -deadzone) {
+            facingLeft = true;
+        }
     }
 
     @Override
@@ -161,6 +167,8 @@ public class ShyGuy extends Character {
         animDuration = healSongLengths.get(i);
         moveTimer = healSongLengths.get(i);
         lockAnim = true;
+
+        resetControls();
     }
 
     @Override
