@@ -1,5 +1,6 @@
 package ca.error404.bytefyte.scene;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
@@ -34,9 +35,6 @@ public class TestScene implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
-    public final Character player;
-    public final Character player2;
-
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
     public TestScene(Main game) {
@@ -49,13 +47,14 @@ public class TestScene implements Screen {
 
 
         System.out.println(game.music);
+        Character player;
 
         if (Main.controllers.size > 0) {
             player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0));
-            player2 = new ShyGuy(this, new Vector2(38, 150), null);
+            new ShyGuy(this, new Vector2(38, 150),  Main.controllers.get(1));
         } else {
             player = new ShyGuy(this, new Vector2(-38, 150), null);
-            player2 = new ShyGuy(this, new Vector2(38, 150), null);
+            new ShyGuy(this, new Vector2(38, 150), null);
         }
 
         player.facingLeft = false;
@@ -94,8 +93,7 @@ public class TestScene implements Screen {
             videoPlayer.draw(game.batch);
         }
         viewport.apply();
-        player.draw(game.batch);
-        player2.draw(game.batch);
+        for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
@@ -179,8 +177,7 @@ public class TestScene implements Screen {
         } else if (!videoPlayer.isPlaying()) {
             // update all objects and physics objects
             world.step(1 / 60f, 6, 2);
-            player.update(deltaTime);
-            player2.update(deltaTime);
+            for (GameObject obj : Main.gameObjects) obj.update(deltaTime);
             if (!game.music.isPlaying()) {
                 game.music.play();
             }

@@ -1,5 +1,6 @@
 package ca.error404.bytefyte.chars;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
@@ -14,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.ArrayList;
 
-public abstract class Character extends Sprite {
+public abstract class Character extends GameObject {
     public World world;
     public Body b2body;
 
@@ -169,6 +170,7 @@ public abstract class Character extends Sprite {
     private AnimationState prevAnimState;
 
     public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
+        super();
         this.world = screen.getWorld();
         this.controller = controller;
 
@@ -183,7 +185,7 @@ public abstract class Character extends Sprite {
 
         goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/shyguy.atlas"));
+        TextureAtlas textureAtlas = Main.manager.get("sprites/shyguy.atlas", TextureAtlas.class);
 
         idle = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
         walk = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
