@@ -7,6 +7,7 @@ import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -169,10 +170,15 @@ public abstract class Character extends GameObject {
     protected AnimationState animState;
     private AnimationState prevAnimState;
 
-    public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
+    protected int playerNumber;
+
+    public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
         super();
+        this.playerNumber = playerNumber;
         this.world = screen.getWorld();
         this.controller = controller;
+
+        new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;

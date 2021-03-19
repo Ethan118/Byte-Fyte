@@ -9,4 +9,8 @@ public abstract class GameObject extends Sprite {
     }
 
     public abstract void update(float delta);
+
+    public void draw(SpriteBatch batch) {
+        super.draw(batch);
+    }
 }

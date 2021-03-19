@@ -26,8 +26,8 @@ public class ShyGuy extends Character {
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
 
-    public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
-        super(screen, spawnPoint, controller);
+    public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        super(screen, spawnPoint, controller, playernumber, "marioluigi");
         manualSpriteOffset = new Vector2(2200, 300);
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
