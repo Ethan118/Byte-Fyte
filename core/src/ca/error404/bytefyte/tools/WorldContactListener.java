@@ -3,8 +3,10 @@ package ca.error404.bytefyte.tools;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.Character;
+import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.Projectile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -16,6 +18,9 @@ public class WorldContactListener implements ContactListener {
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         Character chara;
+        Projectile projectile;
+        DeathWall wall;
+        Collider collider;
         Character charb;
 
         switch (cDef) {
@@ -39,7 +44,6 @@ public class WorldContactListener implements ContactListener {
                 chara.vel.y = 0;
                 break;
             case Tags.PLAYER_BIT | Tags.DEATH_BARRIER_BIT:
-                DeathWall wall;
                 if (fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
                     wall = ((DeathWall) fixA.getUserData());
                     chara = ((Character) fixB.getUserData());
@@ -51,7 +55,6 @@ public class WorldContactListener implements ContactListener {
                 wall.contact(chara);
                 break;
             case Tags.ATTACK_BIT | Tags.PLAYER_BIT:
-                Collider collider;
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     collider = (Collider) fixB.getUserData();
@@ -69,6 +72,36 @@ public class WorldContactListener implements ContactListener {
                     chara.Hit(collider.damage, force, collider.hitStun);
                 }
                 break;
+
+            case Tags.PROJECTILE_BIT | Tags.PLAYER_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
+                    chara = (Character) fixA.getUserData();
+                    projectile = (Projectile) fixB.getUserData();
+                } else {
+                    chara = (Character) fixB.getUserData();
+                    projectile = (Projectile) fixA.getUserData();
+                }
+
+                if (!(projectile.parent == chara)) {
+                    Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (projectile.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (projectile.parent.pos.y)) * 100.0f) / 100.0f);
+                    direction.x = Math.signum(direction.x);
+                    direction.y = Math.signum(direction.y);
+
+                    Vector2 force = new Vector2(direction.x * projectile.power, direction.y * projectile.power);
+                    chara.Hit(projectile.damage, force, projectile.hitStun);
+
+                    projectile.destroy();
+                }
+                break;
+
+            case Tags.PROJECTILE_BIT | Tags.GROUND_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.GROUND_BIT) {
+                    projectile = (Projectile) fixB.getUserData();
+                } else {
+                    projectile = (Projectile) fixA.getUserData();
+                }
+
+                projectile.destroy();
         }
     }
 

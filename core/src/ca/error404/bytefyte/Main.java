@@ -47,6 +47,8 @@ public class Main extends Game {
 	public static Hashtable<Controller, Array<Integer>> recentButtons = new Hashtable<>();
 
 	public static ArrayList<GameObject> gameObjects = new ArrayList<>();
+	public static ArrayList<GameObject> objectsToAdd = new ArrayList<>();
+	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
 	@Override
 	public void create () {

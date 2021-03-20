@@ -6,6 +6,7 @@ import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
+import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
@@ -177,7 +178,19 @@ public class TestScene implements Screen {
         } else if (!videoPlayer.isPlaying()) {
             // update all objects and physics objects
             world.step(1 / 60f, 6, 2);
-            for (GameObject obj : Main.gameObjects) obj.update(deltaTime);
+            for (GameObject obj : Main.gameObjects) {
+                if (obj.remove) {
+                    Projectile projectile = (Projectile) obj;
+                    world.destroyBody(projectile.b2body);
+                    Main.objectsToRemove.add(obj);
+                }
+                obj.update(deltaTime);
+            }
+            Main.gameObjects.addAll(Main.objectsToAdd);
+            Main.gameObjects.removeAll(Main.objectsToRemove);
+            Main.objectsToAdd.clear();
+            Main.objectsToRemove.clear();
+
             if (!game.music.isPlaying()) {
                 game.music.play();
             }

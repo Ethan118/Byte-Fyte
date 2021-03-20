@@ -241,7 +241,7 @@ public abstract class Character extends GameObject {
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
-        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT;
+        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -429,7 +429,7 @@ public abstract class Character extends GameObject {
             ground();
         }
 
-        if (!lockAnim) {
+        if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
                 getState();
             } else {
@@ -447,7 +447,7 @@ public abstract class Character extends GameObject {
 
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM)  - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
 
@@ -725,6 +725,8 @@ public abstract class Character extends GameObject {
     }
 
     public void Hit(float damage, Vector2 force, float hitStun) {
+        animState = AnimationState.HIT;
+
         percent = Math.min(percent + damage, 999.9f);
         vel.set(force.scl(((percent / 100) + 1) / weight));
 
@@ -778,6 +780,4 @@ public abstract class Character extends GameObject {
     abstract void airUp();
 
     abstract void airDown();
-
-
 }

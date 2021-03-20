@@ -2,6 +2,7 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -134,6 +135,11 @@ public class ShyGuy extends Character {
 
     @Override
     void specialSide() {
+        if (facingLeft) {
+            new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f);
+        } else {
+            new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f);
+        }
         resetControls();
     }
 
@@ -183,6 +189,11 @@ public class ShyGuy extends Character {
 
     @Override
     void airForward() {
+        if (facingLeft) {
+            new Projectile(this, new Vector2(pos.x - 0.2f, pos.y + 0.1f), new Vector2(-4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f);
+        } else {
+            new Projectile(this, new Vector2(pos.x + 0.2f, pos.y + 0.1f), new Vector2(4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f);
+        }
     }
 
     @Override
