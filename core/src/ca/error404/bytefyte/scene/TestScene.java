@@ -51,11 +51,11 @@ public class TestScene implements Screen {
         Character player;
 
         if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0));
-            new ShyGuy(this, new Vector2(38, 150),  Main.controllers.get(1));
+            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0), 1);
+            new ShyGuy(this, new Vector2(38, 150),  null, 2);
         } else {
-            player = new ShyGuy(this, new Vector2(-38, 150), null);
-            new ShyGuy(this, new Vector2(38, 150), null);
+            player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
+            new ShyGuy(this, new Vector2(38, 150), null, 2);
         }
 
         player.facingLeft = false;
@@ -180,8 +180,7 @@ public class TestScene implements Screen {
             world.step(1 / 60f, 6, 2);
             for (GameObject obj : Main.gameObjects) {
                 if (obj.remove) {
-                    Projectile projectile = (Projectile) obj;
-                    world.destroyBody(projectile.b2body);
+                    world.destroyBody(obj.b2body);
                     Main.objectsToRemove.add(obj);
                 }
                 obj.update(deltaTime);

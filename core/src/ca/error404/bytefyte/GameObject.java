@@ -1,11 +1,13 @@
- package ca.error404.bytefyte;
+package ca.error404.bytefyte;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Body;
 
 public abstract class GameObject extends Sprite {
 
     public boolean remove;
+    public Body b2body;
 
     public GameObject() {
         Main.objectsToAdd.add(this);
@@ -15,5 +17,9 @@ public abstract class GameObject extends Sprite {
 
     public void destroy() {
         remove = true;
+    }
+
+    public void draw(SpriteBatch batch) {
+        super.draw(batch);
     }
 }

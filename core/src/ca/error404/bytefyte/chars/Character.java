@@ -7,19 +7,15 @@ import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-import java.util.ArrayList;
-
 public abstract class Character extends GameObject {
     public World world;
-    public Body b2body;
-
-    protected ArrayList<Collider> colliders = new ArrayList<>();
 
     public Controller controller;
     public float deadzone = Main.deadZone;
@@ -75,7 +71,7 @@ public abstract class Character extends GameObject {
 
     protected float elapsedTime = 0f;
 
-    protected Animation<TextureRegion> attackAnimation;
+    public Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
     private final Animation<TextureRegion> idle;
@@ -169,10 +165,15 @@ public abstract class Character extends GameObject {
     protected AnimationState animState;
     private AnimationState prevAnimState;
 
-    public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
+    protected int playerNumber;
+
+    public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
         super();
+        this.playerNumber = playerNumber;
         this.world = screen.getWorld();
         this.controller = controller;
+
+        //new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -370,13 +371,6 @@ public abstract class Character extends GameObject {
             handleInput();
         }
 
-        if (attackAnimation == null) {
-            for (Collider collider : colliders) {
-                collider.destroy();
-            }
-            colliders.clear();
-        }
-
         if (grounded) {
             maxSpeed = running ? runSpeed : walkSpeed;
         } else {
@@ -434,14 +428,6 @@ public abstract class Character extends GameObject {
                 getState();
             } else {
                 lockAnim = true;
-            }
-        }
-
-        for (Collider collider : colliders) {
-            if (facingLeft) {
-                collider.setPosition(pos, -1);
-            } else {
-                collider.setPosition(pos, 1);
             }
         }
 
@@ -571,11 +557,11 @@ public abstract class Character extends GameObject {
                     smashDown();
                 } else if (vec.x < 0) {
                     //side
-                    facingLeft = false;
+                    facingLeft = true;
                     animState = AnimationState.SMASH_S;
                     smashSide();
                 } else if (vec.x > 0) {
-                    facingLeft = true;
+                    facingLeft = false;
                     animState = AnimationState.SMASH_S;
                     smashSide();
                 }

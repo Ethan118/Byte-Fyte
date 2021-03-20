@@ -1,13 +1,14 @@
 package ca.error404.bytefyte.objects;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.Tags;
-import ca.error404.bytefyte.scene.TestScene;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class Collider {
+public class Collider extends GameObject {
     public Vector2 pos;
     public Vector2 offset;
 
@@ -17,14 +18,16 @@ public class Collider {
     public Character parent;
     private final World world;
 
-    public Body b2body;
-
     public float power;
     public float damage;
 
     public float hitStun;
 
-    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun) {
+    private float delay;
+
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay) {
+        super();
+
         this.pos = parent.pos;
         this.offset = new Vector2(offset.x / Main.PPM, offset.y / Main.PPM);
         this.width = width;
@@ -36,9 +39,9 @@ public class Collider {
 
         this.hitStun = hitStun;
 
-        this.world = parent.world;
+        this.delay = delay;
 
-        define();
+        this.world = parent.world;
     }
 
     private void define() {
@@ -58,11 +61,29 @@ public class Collider {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    public void setPosition(Vector2 pos, float direction) {
-        b2body.setTransform(pos.x + (offset.x * direction), pos.y + (offset.y), 0);
+    @Override
+    public void update(float delta) {
+        if (!remove && (delay <= 0)) {
+            if (b2body == null) {
+                define();
+            }
+
+            if (parent.facingLeft) {
+                b2body.setTransform(parent.pos.x + (offset.x * -1), parent.pos.y + (offset.y), 0);
+            } else {
+                b2body.setTransform(parent.pos.x + offset.x, parent.pos.y + (offset.y), 0);
+            }
+
+            if (parent.attackAnimation == null) {
+                destroy();
+            }
+        } else {
+            delay -= delta;
+        }
     }
 
-    public void destroy() {
-        world.destroyBody(b2body);
+    @Override
+    public void draw(SpriteBatch batch) {
+
     }
 }

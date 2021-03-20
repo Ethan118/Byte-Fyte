@@ -19,8 +19,6 @@ public class Projectile extends GameObject {
     public Character parent;
     private final World world;
 
-    public Body b2body;
-
     public float power;
     public float damage;
 
