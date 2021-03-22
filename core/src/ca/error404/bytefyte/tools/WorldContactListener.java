@@ -96,13 +96,14 @@ public class WorldContactListener implements ContactListener {
 
             case Tags.PROJECTILE_BIT | Tags.GROUND_BIT:
             case Tags.PROJECTILE_BIT | Tags.DEATH_BARRIER_BIT:
-                if (fixA.getFilterData().categoryBits == Tags.GROUND_BIT) {
-                    projectile = (Projectile) fixB.getUserData();
-                } else {
+                if (fixA.getFilterData().categoryBits == Tags.PROJECTILE_BIT) {
                     projectile = (Projectile) fixA.getUserData();
+                } else {
+                    projectile = (Projectile) fixB.getUserData();
                 }
 
                 projectile.destroy();
+                break;
         }
     }
 
