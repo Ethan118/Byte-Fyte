@@ -14,13 +14,8 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-import java.util.ArrayList;
-
 public abstract class Character extends GameObject {
     public World world;
-    public Body b2body;
-
-    protected ArrayList<Collider> colliders = new ArrayList<>();
 
     public Controller controller;
     public float deadzone = Main.deadZone;
@@ -76,7 +71,7 @@ public abstract class Character extends GameObject {
 
     protected float elapsedTime = 0f;
 
-    protected Animation<TextureRegion> attackAnimation;
+    public Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
     private final Animation<TextureRegion> idle;
@@ -252,7 +247,7 @@ public abstract class Character extends GameObject {
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
-        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT;
+        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -380,13 +375,6 @@ public abstract class Character extends GameObject {
             handleInput();
         }
 
-        if (attackAnimation == null) {
-            for (Collider collider : colliders) {
-                collider.destroy();
-            }
-            colliders.clear();
-        }
-
         if (grounded) {
             maxSpeed = running ? runSpeed : walkSpeed;
         } else {
@@ -439,7 +427,7 @@ public abstract class Character extends GameObject {
             ground();
         }
 
-        if (!lockAnim) {
+        if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
                 getState();
             } else {
@@ -447,17 +435,9 @@ public abstract class Character extends GameObject {
             }
         }
 
-        for (Collider collider : colliders) {
-            if (facingLeft) {
-                collider.setPosition(pos, -1);
-            } else {
-                collider.setPosition(pos, 1);
-            }
-        }
-
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM)  - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
 
@@ -581,11 +561,11 @@ public abstract class Character extends GameObject {
                     smashDown();
                 } else if (vec.x < 0) {
                     //side
-                    facingLeft = false;
+                    facingLeft = true;
                     animState = AnimationState.SMASH_S;
                     smashSide();
                 } else if (vec.x > 0) {
-                    facingLeft = true;
+                    facingLeft = false;
                     animState = AnimationState.SMASH_S;
                     smashSide();
                 }
@@ -735,6 +715,8 @@ public abstract class Character extends GameObject {
     }
 
     public void Hit(float damage, Vector2 force, float hitStun) {
+        animState = AnimationState.HIT;
+
         percent = Math.min(percent + damage, 999.9f);
         vel.set(force.scl(((percent / 100) + 1) / weight));
 
@@ -802,6 +784,4 @@ public abstract class Character extends GameObject {
     abstract void airUp();
 
     abstract void airDown();
-
-
 }
