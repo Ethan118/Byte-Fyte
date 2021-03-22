@@ -32,8 +32,6 @@ public class PlayerHealth extends GameObject {
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
         headOffset.x = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetX;
         headOffset.y = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetY;
-
-        System.out.println(baseOffset + ", " + headOffset);
     }
 
     @Override

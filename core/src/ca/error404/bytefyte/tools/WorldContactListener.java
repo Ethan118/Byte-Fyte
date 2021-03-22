@@ -95,6 +95,7 @@ public class WorldContactListener implements ContactListener {
                 break;
 
             case Tags.PROJECTILE_BIT | Tags.GROUND_BIT:
+            case Tags.PROJECTILE_BIT | Tags.DEATH_BARRIER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.GROUND_BIT) {
                     projectile = (Projectile) fixB.getUserData();
                 } else {

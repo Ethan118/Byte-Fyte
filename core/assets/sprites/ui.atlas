@@ -100,14 +100,14 @@ marioluigi_ingame
   xy: 5676, 1309
   size: 1231, 1386
   orig: 2835, 1701
-  offset: 0, 0
+  offset: 194, 222
   index: -1
 masterchief_ingame
   rotate: false
   xy: 6909, 1259
   size: 1168, 1436
   orig: 2835, 1701
-  offset: 0, 212
+  offset: 241, 222
   index: -1
 percent
   rotate: false
@@ -149,12 +149,12 @@ sans_ingame
   xy: 5676, 2697
   size: 1394, 1324
   orig: 2835, 1701
-  offset: 0, 377
+  offset: 158, 222
   index: -1
 shyguy_ingame
   rotate: false
   xy: 7072, 2748
   size: 1013, 1273
   orig: 2835, 1701
-  offset: 0, 74
+  offset: 354, 222
   index: -1
