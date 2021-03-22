@@ -20,6 +20,8 @@ import java.util.Random;
 public class ShyGuy extends Character {
     private  ArrayList<Sound> healSongs;
     private ArrayList<Float> healSongLengths;
+
+    private float currentSongLength;
     private int hovertimer = 2;
     private int timer = 2;
     Random rand = new Random();
@@ -69,6 +71,13 @@ public class ShyGuy extends Character {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        System.out.println(percent);
+
+        if (animState == AnimationState.SPECIAL_D) {
+            if (animDuration <= 0) {
+                percent = Math.max(percent - (currentSongLength), 0);
+            }
+        }
 
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;
@@ -172,6 +181,8 @@ public class ShyGuy extends Character {
 
         animDuration = healSongLengths.get(i);
         moveTimer = healSongLengths.get(i);
+        currentSongLength = healSongLengths.get(i);
+
         lockAnim = true;
 
         resetControls();
