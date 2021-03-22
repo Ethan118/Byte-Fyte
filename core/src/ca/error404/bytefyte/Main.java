@@ -3,6 +3,8 @@ package ca.error404.bytefyte;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.scene.MenuScene;
+import ca.error404.bytefyte.scene.SettingsMenu;
+import ca.error404.bytefyte.scene.StoryMenu;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -27,6 +29,7 @@ public class Main extends Game {
 	public static final int WIDTH = 384;
 	public static final int HEIGHT = 216;
 	public static final float PPM = 100;
+	public Music music;
 
 	public static int musicVolume = 5;
 	public static int sfxVolume = 5;
@@ -54,20 +57,6 @@ public class Main extends Game {
 	@Override
 	public void create () {
 
-
-		System.out.println("typing");
-
-		Scanner input = new Scanner(System.in);
-		for (int i=0; i < 250; i++) {
-
-			action = input.next();
-
-			setScreen(new MenuScene());
-
-			if (action.equalsIgnoreCase("=")); {
-				break;
-			}
-		}
 
 
 
