@@ -113,6 +113,11 @@ public abstract class Character extends GameObject {
 
     private boolean afterUpB = false;
 
+    protected int stockCount = 3;
+
+    protected boolean dead = false;
+    protected boolean knockedOff = false;
+
     protected enum MovementState {
         IDLE,
         RUN,
@@ -178,7 +183,7 @@ public abstract class Character extends GameObject {
         this.world = screen.getWorld();
         this.controller = controller;
 
-        new PlayerHealth(playerNumber, charname);
+//        new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -364,7 +369,6 @@ public abstract class Character extends GameObject {
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
-            percent = 0;
         }
         prevGoToPos = goToPos;
 
@@ -740,7 +744,21 @@ public abstract class Character extends GameObject {
     }
 
     public void setPos(int x, int y) {
-        goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+        System.out.println("Reset");
+        percent = 0;
+        animDuration = -1;
+        lockAnim = false;
+        stunTimer = 0;
+        moveVector.x = 0;
+        moveVector.y = 0;
+        knockedOff = true;
+
+        if (stockCount != 1) {
+            goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+            stockCount -= 1;
+        } else {
+            dead = true;
+        }
     }
 
     //    Basic Attacks

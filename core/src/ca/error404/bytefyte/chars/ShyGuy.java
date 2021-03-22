@@ -68,6 +68,16 @@ public class ShyGuy extends Character {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        if (dead || knockedOff) {
+            animDuration = 0;
+            for (Sound song: healSongs) {
+                song.stop();
+            }
+        }
+
+        if (knockedOff && stockCount != 0) {
+            knockedOff = false;
+        }
 
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;
