@@ -1,5 +1,6 @@
 package ca.error404.bytefyte.scene;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
@@ -12,7 +13,6 @@ import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,9 +34,6 @@ public class TestScene implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
-    public final Character player;
-    public final Character player2;
-
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
     public TestScene(Main game) {
@@ -47,15 +44,14 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-
-        System.out.println(game.music);
+        Character player;
 
         if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0));
-            player2 = new ShyGuy(this, new Vector2(38, 150), null);
+            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0), 1);
+            new ShyGuy(this, new Vector2(38, 150),  null, 2);
         } else {
-            player = new ShyGuy(this, new Vector2(-38, 150), null);
-            player2 = new ShyGuy(this, new Vector2(38, 150), null);
+            player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
+            new ShyGuy(this, new Vector2(38, 150), null, 2);
         }
 
         player.facingLeft = false;
@@ -76,6 +72,7 @@ public class TestScene implements Screen {
         game.music.play();
     }
 
+    // function is called in between constructor and first render; is required for the Screen class
     @Override
     public void show() {
 
@@ -94,8 +91,7 @@ public class TestScene implements Screen {
             videoPlayer.draw(game.batch);
         }
         viewport.apply();
-        player.draw(game.batch);
-        player2.draw(game.batch);
+        for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
@@ -118,6 +114,7 @@ public class TestScene implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             Main.musicVolume = Main.musicVolume < 10 ? Main.musicVolume + 1 : 10;
 
+            // Writes data to the settings file
             File settings = new File(Globals.workingDirectory + "settings.ini");
 
             try {
@@ -130,6 +127,7 @@ public class TestScene implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             Main.musicVolume = Main.musicVolume > 0 ? Main.musicVolume - 1 : 0;
 
+            // Writes data to the settings file
             File settings = new File(Globals.workingDirectory + "settings.ini");
 
             try {
@@ -141,6 +139,7 @@ public class TestScene implements Screen {
             }
         }
 
+        // Adjusts screen size, then writes screen size to settings file
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             ScreenSizes.screenSize = ScreenSizes.screenSize >= ScreenSizes.screenSizes.size() - 1 ? 0 : ScreenSizes.screenSize + 1;
             Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
@@ -158,6 +157,7 @@ public class TestScene implements Screen {
 
         game.music.setVolume(Main.musicVolume / 10f);
 
+        // toggles fullscreen
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             if (Gdx.graphics.isFullscreen()) {
                 Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
@@ -166,6 +166,7 @@ public class TestScene implements Screen {
             }
         }
 
+        // Scene Switching test
         if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
             game.music.stop();
             System.out.println(game.music);
@@ -179,8 +180,20 @@ public class TestScene implements Screen {
         } else if (!videoPlayer.isPlaying()) {
             // update all objects and physics objects
             world.step(1 / 60f, 6, 2);
-            player.update(deltaTime);
-            player2.update(deltaTime);
+            for (GameObject obj : Main.gameObjects) {
+                if (obj.remove) {
+                    world.destroyBody(obj.b2body);
+                    Main.objectsToRemove.add(obj);
+                }
+                obj.update(deltaTime);
+            }
+
+            // Manage which game objects are active
+            Main.gameObjects.addAll(Main.objectsToAdd);
+            Main.gameObjects.removeAll(Main.objectsToRemove);
+            Main.objectsToAdd.clear();
+            Main.objectsToRemove.clear();
+
             if (!game.music.isPlaying()) {
                 game.music.play();
             }
@@ -193,6 +206,7 @@ public class TestScene implements Screen {
         }
     }
 
+    // updates screen size
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);

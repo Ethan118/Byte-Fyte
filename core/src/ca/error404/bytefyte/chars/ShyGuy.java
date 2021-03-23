@@ -2,10 +2,12 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import org.apache.commons.io.FileUtils;
 
@@ -26,8 +28,8 @@ public class ShyGuy extends Character {
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
 
-    public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller) {
-        super(screen, spawnPoint, controller);
+    public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        super(screen, spawnPoint, controller, playernumber, "marioluigi");
         manualSpriteOffset = new Vector2(2200, 300);
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
@@ -68,6 +70,16 @@ public class ShyGuy extends Character {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        if (dead || knockedOff || animState == AnimationState.HIT) {
+            animDuration = 0;
+            for (Sound song: healSongs) {
+                song.stop();
+            }
+        }
+
+        if (knockedOff && stockCount != 0) {
+            knockedOff = false;
+        }
 
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;
@@ -81,29 +93,25 @@ public class ShyGuy extends Character {
 
     @Override
     void basicNeutral() {
-        Collider hitBox = new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5f, 0.25f);
-        colliders.add(hitBox);
+        new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicSide() {
-        Collider hitBox = new Collider(new Vector2(20, 0), 25, 30, this, 3f, 7f, 0.25f);
-        colliders.add(hitBox);
+        new Collider(new Vector2(20, 0), 25, 30, this, 3f, 7f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicUp() {
-        Collider hitBox = new Collider(new Vector2(0, 20), 30, 5, this, 3f, 7f, 0.25f);
-        colliders.add(hitBox);
+        new Collider(new Vector2(0, 20), 30, 5, this, 3f, 7f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicDown() {
-        Collider hitBox = new Collider(new Vector2(0, -10), 40, 20, this, 3f, 6f, 0.25f);
-        colliders.add(hitBox);
+        new Collider(new Vector2(0, -10), 40, 20, this, 3f, 6f, 0.25f, 0);
         resetControls();
     }
 
@@ -114,16 +122,20 @@ public class ShyGuy extends Character {
 
     @Override
     void smashSide() {
+        new Collider(new Vector2(40, 0), 50, 30, this, 5f, 7f, 0.25f, 13f / 60f);
         resetControls();
     }
 
     @Override
     void smashUp() {
+        new Collider(new Vector2(0, 25), 30, 15, this, 5f, 7f, 0.25f, 12f / 60f, 7f / 60f);
         resetControls();
     }
 
     @Override
     void smashDown() {
+        new Collider(new Vector2(20, 0), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f, 19f / 60f);
+        new Collider(new Vector2(-20, 0), 25, 25, this, 5f, 7f, 0.25f, 35f / 60f);
         resetControls();
     }
 
@@ -134,6 +146,11 @@ public class ShyGuy extends Character {
 
     @Override
     void specialSide() {
+        if (facingLeft) {
+            new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f);
+        } else {
+            new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f);
+        }
         resetControls();
     }
 
@@ -151,6 +168,12 @@ public class ShyGuy extends Character {
 
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;
+
+        if (moveVector.x > deadzone) {
+            facingLeft = false;
+        } else if (moveVector.x < -deadzone) {
+            facingLeft = true;
+        }
     }
 
     @Override
@@ -161,6 +184,8 @@ public class ShyGuy extends Character {
         animDuration = healSongLengths.get(i);
         moveTimer = healSongLengths.get(i);
         lockAnim = true;
+
+        resetControls();
     }
 
     @Override
@@ -169,27 +194,30 @@ public class ShyGuy extends Character {
 
     @Override
     void airNeutral() {
-        Collider hitBox = new Collider(new Vector2(0, 0), 40, 40, this, 4f, 5f, 0.25f);
-        colliders.add(hitBox);
+        new Collider(new Vector2(0, 0), 40, 40, this, 4f, 5f, 0.25f, 0);
     }
 
     @Override
     void airForward() {
+        if (facingLeft) {
+            new Projectile(this, new Vector2(pos.x - 0.2f, pos.y + 0.1f), new Vector2(-4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f);
+        } else {
+            new Projectile(this, new Vector2(pos.x + 0.2f, pos.y + 0.1f), new Vector2(4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f);
+        }
     }
 
     @Override
     void airBack() {
-        Collider hitBox = new Collider(new Vector2(-20, 0), 20, 20, this, 3f, 4f, 0.25f);
-        colliders.add(hitBox);
+        new Collider(new Vector2(-20, 0), 20, 20, this, 3f, 4f, 0.25f, 0);
     }
 
     @Override
     void airUp() {
-        Collider hitBox = new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4f, 0.5f);
-        colliders.add(hitBox);
+        new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4f, 0.5f, 0);
     }
 
     @Override
     void airDown() {
+        new Collider(new Vector2(10, -20), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f);
     }
 }

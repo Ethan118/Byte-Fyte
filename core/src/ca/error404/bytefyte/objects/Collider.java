@@ -1,13 +1,14 @@
 package ca.error404.bytefyte.objects;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.Tags;
-import ca.error404.bytefyte.scene.TestScene;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class Collider {
+public class Collider extends GameObject {
     public Vector2 pos;
     public Vector2 offset;
 
@@ -17,14 +18,17 @@ public class Collider {
     public Character parent;
     private final World world;
 
-    public Body b2body;
-
     public float power;
     public float damage;
 
     public float hitStun;
 
-    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun) {
+    private float delay;
+    private float timer;
+
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay) {
+        super();
+
         this.pos = parent.pos;
         this.offset = new Vector2(offset.x / Main.PPM, offset.y / Main.PPM);
         this.width = width;
@@ -36,10 +40,32 @@ public class Collider {
 
         this.hitStun = hitStun;
 
-        this.world = parent.world;
+        this.delay = delay;
+        this.timer = Float.POSITIVE_INFINITY;
 
-        define();
+        this.world = parent.world;
     }
+
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, float timer) {
+        super();
+
+        this.pos = parent.pos;
+        this.offset = new Vector2(offset.x / Main.PPM, offset.y / Main.PPM);
+        this.width = width;
+        this.height = height;
+        this.parent = parent;
+
+        this.power = power;
+        this.damage = damage;
+
+        this.hitStun = hitStun;
+
+        this.delay = delay;
+        this.timer = timer;
+
+        this.world = parent.world;
+    }
+
 
     private void define() {
         BodyDef bdef = new BodyDef();
@@ -58,11 +84,31 @@ public class Collider {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    public void setPosition(Vector2 pos, float direction) {
-        b2body.setTransform(pos.x + (offset.x * direction), pos.y + (offset.y), 0);
+    @Override
+    public void update(float delta) {
+        if (!remove && (delay <= 0)) {
+            if (b2body == null) {
+                define();
+            }
+
+            timer -= delta;
+
+            if (parent.facingLeft) {
+                b2body.setTransform(parent.pos.x + (offset.x * -1), parent.pos.y + (offset.y), 0);
+            } else {
+                b2body.setTransform(parent.pos.x + offset.x, parent.pos.y + (offset.y), 0);
+            }
+
+            if (parent.attackAnimation == null || timer <= 0) {
+                destroy();
+            }
+        } else {
+            delay -= delta;
+        }
     }
 
-    public void destroy() {
-        world.destroyBody(b2body);
+    @Override
+    public void draw(SpriteBatch batch) {
+
     }
 }

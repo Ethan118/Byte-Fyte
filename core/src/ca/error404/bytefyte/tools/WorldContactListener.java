@@ -3,8 +3,10 @@ package ca.error404.bytefyte.tools;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.Character;
+import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.Projectile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -16,7 +18,9 @@ public class WorldContactListener implements ContactListener {
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         Character chara;
-        Character charb;
+        Projectile projectile;
+        DeathWall wall;
+        Collider collider;
 
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
@@ -39,7 +43,6 @@ public class WorldContactListener implements ContactListener {
                 chara.vel.y = 0;
                 break;
             case Tags.PLAYER_BIT | Tags.DEATH_BARRIER_BIT:
-                DeathWall wall;
                 if (fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
                     wall = ((DeathWall) fixA.getUserData());
                     chara = ((Character) fixB.getUserData());
@@ -51,7 +54,6 @@ public class WorldContactListener implements ContactListener {
                 wall.contact(chara);
                 break;
             case Tags.ATTACK_BIT | Tags.PLAYER_BIT:
-                Collider collider;
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     collider = (Collider) fixB.getUserData();
@@ -69,6 +71,38 @@ public class WorldContactListener implements ContactListener {
                     chara.Hit(collider.damage, force, collider.hitStun);
                 }
                 break;
+
+            case Tags.PROJECTILE_BIT | Tags.PLAYER_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
+                    chara = (Character) fixA.getUserData();
+                    projectile = (Projectile) fixB.getUserData();
+                } else {
+                    chara = (Character) fixB.getUserData();
+                    projectile = (Projectile) fixA.getUserData();
+                }
+
+                if (!(projectile.parent == chara)) {
+                    Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (projectile.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (projectile.parent.pos.y)) * 100.0f) / 100.0f);
+                    direction.x = Math.signum(direction.x);
+                    direction.y = Math.signum(direction.y);
+
+                    Vector2 force = new Vector2(direction.x * projectile.power, direction.y * projectile.power);
+                    chara.Hit(projectile.damage, force, projectile.hitStun);
+
+                    projectile.destroy();
+                }
+                break;
+
+            case Tags.PROJECTILE_BIT | Tags.GROUND_BIT:
+            case Tags.PROJECTILE_BIT | Tags.DEATH_BARRIER_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.PROJECTILE_BIT) {
+                    projectile = (Projectile) fixA.getUserData();
+                } else {
+                    projectile = (Projectile) fixB.getUserData();
+                }
+
+                projectile.destroy();
+                break;
         }
     }
 
@@ -82,7 +116,6 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             // if player left the ground, tell them that they have left the ground
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
-            // case Tags.PLAYER_BIT | Tags.PLAYER_FEET_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
                     ((Character) fixA.getUserData()).grounded = false;
                 } else {
@@ -91,6 +124,7 @@ public class WorldContactListener implements ContactListener {
         }
     }
 
+    // These are required for the ContactListener class to work, they do not do anything
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
 

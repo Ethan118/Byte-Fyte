@@ -1,24 +1,21 @@
 package ca.error404.bytefyte.chars;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-import java.util.ArrayList;
-
-public abstract class Character extends Sprite {
+public abstract class Character extends GameObject {
     public World world;
-    public Body b2body;
-
-    protected ArrayList<Collider> colliders = new ArrayList<>();
 
     public Controller controller;
     public float deadzone = Main.deadZone;
@@ -74,7 +71,7 @@ public abstract class Character extends Sprite {
 
     protected float elapsedTime = 0f;
 
-    protected Animation<TextureRegion> attackAnimation;
+    public Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
     private final Animation<TextureRegion> idle;
@@ -110,6 +107,11 @@ public abstract class Character extends Sprite {
     protected double moveTimer = 0;
 
     private boolean afterUpB = false;
+
+    protected int stockCount = 3;
+
+    protected boolean dead = false;
+    protected boolean knockedOff = false;
 
     protected enum MovementState {
         IDLE,
@@ -168,9 +170,15 @@ public abstract class Character extends Sprite {
     protected AnimationState animState;
     private AnimationState prevAnimState;
 
-    public Character(TestScene screen, Vector2 spawnPoint, Controller controller) {
+    protected int playerNumber;
+
+    public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
+        super();
+        this.playerNumber = playerNumber;
         this.world = screen.getWorld();
         this.controller = controller;
+
+//        new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -183,37 +191,37 @@ public abstract class Character extends Sprite {
 
         goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/shyguy.atlas"));
+        TextureAtlas textureAtlas = Main.manager.get("sprites/shyguy.atlas", TextureAtlas.class);
 
-        idle = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
-        walk = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
-        run = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
+        idle = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
+        walk = new Animation<TextureRegion>(1f/120f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
+        run = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
 
-        jump = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
-        fall = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
-        hit = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_hit"), Animation.PlayMode.LOOP);
+        jump = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
+        fall = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
+        hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_hit"), Animation.PlayMode.LOOP);
 
-        neutralAttack = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral"), Animation.PlayMode.NORMAL);
-        sideTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.NORMAL);
-        upTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.NORMAL);
-        downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
+        neutralAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral"), Animation.PlayMode.NORMAL);
+        sideTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.NORMAL);
+        upTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.NORMAL);
+        downTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
 
-        neutralB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
-        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
-        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
-        sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
+        neutralB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
+        sideB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
 
-        nair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
-        dair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
-        fair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
-        bair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
-        uair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
+        nair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
+        dair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
+        fair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
+        bair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
+        uair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
 
-        upSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_smash"), Animation.PlayMode.NORMAL);
-        downSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
-        sideSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
+        upSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_smash"), Animation.PlayMode.NORMAL);
+        downSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
+        sideSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
 
-        dashAttack = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
+        dashAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
@@ -239,7 +247,7 @@ public abstract class Character extends Sprite {
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
-        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT;
+        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -274,7 +282,7 @@ public abstract class Character extends Sprite {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-            rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
+            rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
             rStick.y = Math.abs(controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS) : 0;
 
             if (!afterUpB) {
@@ -356,7 +364,6 @@ public abstract class Character extends Sprite {
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
-            percent = 0;
         }
         prevGoToPos = goToPos;
 
@@ -366,13 +373,6 @@ public abstract class Character extends Sprite {
 
         if (!lockAnim && stunTimer <= 0) {
             handleInput();
-        }
-
-        if (attackAnimation == null) {
-            for (Collider collider : colliders) {
-                collider.destroy();
-            }
-            colliders.clear();
         }
 
         if (grounded) {
@@ -427,7 +427,7 @@ public abstract class Character extends Sprite {
             ground();
         }
 
-        if (!lockAnim) {
+        if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
                 getState();
             } else {
@@ -435,17 +435,9 @@ public abstract class Character extends Sprite {
             }
         }
 
-        for (Collider collider : colliders) {
-            if (facingLeft) {
-                collider.setPosition(pos, -1);
-            } else {
-                collider.setPosition(pos, 1);
-            }
-        }
-
         b2body.setLinearVelocity(vel);
         setRegion(getFrame(deltaTime));
-        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM)  - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+        setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
 
@@ -569,11 +561,11 @@ public abstract class Character extends Sprite {
                     smashDown();
                 } else if (vec.x < 0) {
                     //side
-                    facingLeft = false;
+                    facingLeft = true;
                     animState = AnimationState.SMASH_S;
                     smashSide();
                 } else if (vec.x > 0) {
-                    facingLeft = true;
+                    facingLeft = false;
                     animState = AnimationState.SMASH_S;
                     smashSide();
                 }
@@ -589,7 +581,6 @@ public abstract class Character extends Sprite {
     }
 
     public TextureRegion getFrame(float deltaTime) {
-        elapsedTime += deltaTime;
         TextureRegion region;
 
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
@@ -683,6 +674,7 @@ public abstract class Character extends Sprite {
             case ULTIMATE:
             case HIT:
                 region = hit.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case IDLE:
             default:
@@ -723,6 +715,8 @@ public abstract class Character extends Sprite {
     }
 
     public void Hit(float damage, Vector2 force, float hitStun) {
+        animState = AnimationState.HIT;
+
         percent = Math.min(percent + damage, 999.9f);
         vel.set(force.scl(((percent / 100) + 1) / weight));
 
@@ -732,7 +726,21 @@ public abstract class Character extends Sprite {
     }
 
     public void setPos(int x, int y) {
-        goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+        System.out.println("Reset");
+        percent = 0;
+        animDuration = -1;
+        lockAnim = false;
+        stunTimer = 0;
+        moveVector.x = 0;
+        moveVector.y = 0;
+        knockedOff = true;
+
+        if (stockCount != 1) {
+            goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+            stockCount -= 1;
+        } else {
+            dead = true;
+        }
     }
 
     //    Basic Attacks
@@ -776,6 +784,4 @@ public abstract class Character extends Sprite {
     abstract void airUp();
 
     abstract void airDown();
-
-
 }

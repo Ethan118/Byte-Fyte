@@ -14,6 +14,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -21,6 +22,7 @@ import java.util.Scanner;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -43,11 +45,15 @@ public class Main extends Game {
 	public double songLoopStart = Double.POSITIVE_INFINITY;
 	public double songLoopEnd = Double.POSITIVE_INFINITY;
 
-	public AssetManager manager;
+	public static AssetManager audioManager;
+	public static AssetManager manager;
 
 	public static Array<Controller> controllers = new Array<>();
 	public static Hashtable<Controller, Array<Integer>> recentButtons = new Hashtable<>();
 
+	public static ArrayList<GameObject> gameObjects = new ArrayList<>();
+	public static ArrayList<GameObject> objectsToAdd = new ArrayList<>();
+	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
 
 
@@ -62,8 +68,12 @@ public class Main extends Game {
 
 		batch = new SpriteBatch();
 
-		manager = new AssetManager();
+		 audioManager = new AssetManager();
 		loadSongs();
+		audioManager.finishLoading();
+
+		manager = new AssetManager();
+		manager.load("sprites/shyguy.atlas", TextureAtlas.class);
 		manager.finishLoading();
 
 		if (Controllers.getControllers().size > 0) {
@@ -103,7 +113,7 @@ public class Main extends Game {
 			while ((oneData = br.readLine()) != null) {
 				String[] data = oneData.split("	");
 
-				if (i > 0) manager.load("audio/music/" + data[0] + ".wav", Music.class);
+				if (i > 0) audioManager.load("audio/music/" + data[0] + ".wav", Music.class);
 				i++;
 			}
 		} catch (Exception e) {
@@ -147,7 +157,7 @@ public class Main extends Game {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
 
-		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
+		Music music = audioManager.get("audio/music/" + songName + ".wav", Music.class);
 		music.setLooping(true);
 		return music;
 	}
@@ -199,7 +209,7 @@ public class Main extends Game {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
 
-		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
+		Music music = audioManager.get("audio/music/" + songName + ".wav", Music.class);
 		music.setLooping(true);
 		return music;
 	}
@@ -251,7 +261,7 @@ public class Main extends Game {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
 
-		Music music = manager.get("audio/music/" + songName + ".wav", Music.class);
+		Music music = audioManager.get("audio/music/" + songName + ".wav", Music.class);
 		music.setLooping(true);
 		return music;
 	}
