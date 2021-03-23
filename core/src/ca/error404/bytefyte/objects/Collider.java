@@ -24,6 +24,7 @@ public class Collider extends GameObject {
     public float hitStun;
 
     private float delay;
+    private float timer;
 
     /**
      * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating
@@ -44,14 +45,36 @@ public class Collider extends GameObject {
         this.hitStun = hitStun;
 
         this.delay = delay;
+        this.timer = Float.POSITIVE_INFINITY;
 
         this.world = parent.world;
     }
+
 
     /**
      * pre:
      * post: defines the physics body and colliders
      */
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, float timer) {
+        super();
+
+        this.pos = parent.pos;
+        this.offset = new Vector2(offset.x / Main.PPM, offset.y / Main.PPM);
+        this.width = width;
+        this.height = height;
+        this.parent = parent;
+
+        this.power = power;
+        this.damage = damage;
+
+        this.hitStun = hitStun;
+
+        this.delay = delay;
+        this.timer = timer;
+
+        this.world = parent.world;
+    }
+
     private void define() {
         // creates a new body definition and sets the position, and type
         BodyDef bdef = new BodyDef();
@@ -90,6 +113,8 @@ public class Collider extends GameObject {
             }
 
             // sets the bodies position and offsets it based on which way the player is facing
+            timer -= delta;
+
             if (parent.facingLeft) {
                 b2body.setTransform(parent.pos.x + (offset.x * -1), parent.pos.y + (offset.y), 0);
             } else {
@@ -97,7 +122,7 @@ public class Collider extends GameObject {
             }
 
             // destroys the player once the animation is done
-            if (parent.attackAnimation == null) {
+            if (parent.attackAnimation == null || timer <= 0) {
                 destroy();
             }
         } else {

@@ -2,6 +2,9 @@ package ca.error404.bytefyte;
 
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
+import ca.error404.bytefyte.scene.MenuScene;
+import ca.error404.bytefyte.scene.SettingsMenu;
+import ca.error404.bytefyte.scene.StoryMenu;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -15,6 +18,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Scanner;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -26,16 +31,16 @@ public class Main extends Game {
 	public static final int WIDTH = 384;
 	public static final int HEIGHT = 216;
 	public static final float PPM = 100;
+	public Music music;
 
 	public static int musicVolume = 5;
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
-	public static float deadZone = 0.5f;
+	public static float deadZone = 0.1f;
 
 	public SpriteBatch batch;
 
-	public Music music;
 	public static String songName = "";
 	public double songLoopStart = Double.POSITIVE_INFINITY;
 	public double songLoopEnd = Double.POSITIVE_INFINITY;
@@ -50,8 +55,17 @@ public class Main extends Game {
 	public static ArrayList<GameObject> objectsToAdd = new ArrayList<>();
 	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
+
+
+	public String action;
+
+
 	@Override
 	public void create () {
+
+
+
+
 		batch = new SpriteBatch();
 
 		 audioManager = new AssetManager();
@@ -62,12 +76,6 @@ public class Main extends Game {
 		manager.load("sprites/shyguy.atlas", TextureAtlas.class);
 		manager.finishLoading();
 
-		checkControllers();
-
-		setScreen(new TestScene(this));
-	}
-
-	public static void checkControllers() {
 		if (Controllers.getControllers().size > 0) {
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
@@ -83,6 +91,8 @@ public class Main extends Game {
 				}
 			}
 		}
+
+		setScreen(new TestScene(this));
 	}
 
 	public void loadSongs() {
@@ -253,7 +263,6 @@ public class Main extends Game {
 
 		Music music = audioManager.get("audio/music/" + songName + ".wav", Music.class);
 		music.setLooping(true);
-
 		return music;
 	}
 

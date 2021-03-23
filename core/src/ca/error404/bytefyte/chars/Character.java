@@ -308,7 +308,7 @@ public abstract class Character extends GameObject {
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
 //            Gets the directionak input of the right controller stick to handle attacks
-            rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
+            rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
             rStick.y = Math.abs(controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS) : 0;
 
 //            If the user hasn't performed an up special ability
@@ -791,6 +791,7 @@ public abstract class Character extends GameObject {
             case ULTIMATE:
             case HIT:
                 region = hit.getKeyFrame(elapsedTime, true);
+                attackAnimation = null;
                 break;
             case IDLE:
             default:

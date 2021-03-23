@@ -6,7 +6,6 @@ import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
-import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
@@ -14,7 +13,6 @@ import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -46,8 +44,6 @@ public class TestScene implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-
-        System.out.println(game.music);
         Character player;
 
         if (Main.controllers.size > 0) {
@@ -76,6 +72,7 @@ public class TestScene implements Screen {
         game.music.play();
     }
 
+    // function is called in between constructor and first render; is required for the Screen class
     @Override
     public void show() {
 
@@ -117,6 +114,7 @@ public class TestScene implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             Main.musicVolume = Main.musicVolume < 10 ? Main.musicVolume + 1 : 10;
 
+            // Writes data to the settings file
             File settings = new File(Globals.workingDirectory + "settings.ini");
 
             try {
@@ -129,6 +127,7 @@ public class TestScene implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             Main.musicVolume = Main.musicVolume > 0 ? Main.musicVolume - 1 : 0;
 
+            // Writes data to the settings file
             File settings = new File(Globals.workingDirectory + "settings.ini");
 
             try {
@@ -140,6 +139,7 @@ public class TestScene implements Screen {
             }
         }
 
+        // Adjusts screen size, then writes screen size to settings file
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             ScreenSizes.screenSize = ScreenSizes.screenSize >= ScreenSizes.screenSizes.size() - 1 ? 0 : ScreenSizes.screenSize + 1;
             Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
@@ -157,6 +157,7 @@ public class TestScene implements Screen {
 
         game.music.setVolume(Main.musicVolume / 10f);
 
+        // toggles fullscreen
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             if (Gdx.graphics.isFullscreen()) {
                 Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
@@ -165,6 +166,7 @@ public class TestScene implements Screen {
             }
         }
 
+        // Scene Switching test
         if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
             game.music.stop();
             System.out.println(game.music);
@@ -185,6 +187,8 @@ public class TestScene implements Screen {
                 }
                 obj.update(deltaTime);
             }
+
+            // Manage which game objects are active
             Main.gameObjects.addAll(Main.objectsToAdd);
             Main.gameObjects.removeAll(Main.objectsToRemove);
             Main.objectsToAdd.clear();
@@ -202,6 +206,7 @@ public class TestScene implements Screen {
         }
     }
 
+    // updates screen size
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);

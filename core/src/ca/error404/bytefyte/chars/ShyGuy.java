@@ -74,14 +74,14 @@ public class ShyGuy extends Character {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        System.out.println(percent);
-
         if (animState == AnimationState.SPECIAL_D) {
             if (animDuration <= 0) {
                 percent = Math.max(percent - (currentSongLength), 0);
             }
         }
-        if (dead || knockedOff) {
+      
+        if (dead || knockedOff || animState == AnimationState.HIT) {
+
             animDuration = 0;
             for (Sound song : healSongs) {
                 song.stop();
@@ -144,13 +144,13 @@ public class ShyGuy extends Character {
 
     @Override
     void smashUp() {
-        new Collider(new Vector2(0, 25), 30, 15, this, 5f, 7f, 0.25f, 12f / 60f);
+        new Collider(new Vector2(0, 25), 30, 15, this, 5f, 7f, 0.25f, 12f / 60f, 7f / 60f);
         resetControls();
     }
 
     @Override
     void smashDown() {
-        new Collider(new Vector2(20, 0), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f);
+        new Collider(new Vector2(20, 0), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f, 19f / 60f);
         new Collider(new Vector2(-20, 0), 25, 25, this, 5f, 7f, 0.25f, 35f / 60f);
         resetControls();
     }

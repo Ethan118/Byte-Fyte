@@ -21,7 +21,6 @@ public class WorldContactListener implements ContactListener {
         Projectile projectile;
         DeathWall wall;
         Collider collider;
-        Character charb;
 
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
@@ -96,13 +95,15 @@ public class WorldContactListener implements ContactListener {
                 break;
 
             case Tags.PROJECTILE_BIT | Tags.GROUND_BIT:
-                if (fixA.getFilterData().categoryBits == Tags.GROUND_BIT) {
-                    projectile = (Projectile) fixB.getUserData();
-                } else {
+            case Tags.PROJECTILE_BIT | Tags.DEATH_BARRIER_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.PROJECTILE_BIT) {
                     projectile = (Projectile) fixA.getUserData();
+                } else {
+                    projectile = (Projectile) fixB.getUserData();
                 }
 
                 projectile.destroy();
+                break;
         }
     }
 
@@ -116,7 +117,6 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             // if player left the ground, tell them that they have left the ground
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
-            // case Tags.PLAYER_BIT | Tags.PLAYER_FEET_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
                     ((Character) fixA.getUserData()).grounded = false;
                 } else {
@@ -125,6 +125,7 @@ public class WorldContactListener implements ContactListener {
         }
     }
 
+    // These are required for the ContactListener class to work, they do not do anything
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
 
