@@ -142,4 +142,12 @@ public class Projectile extends GameObject {
             delay -= delta;
         }
     }
+
+    @Override
+    public void destroy() {
+        remove = true;
+
+//        Removes this projectile from the parent's arraylist
+        parent.projectilesOnScreen.remove(this);
+    }
 }
