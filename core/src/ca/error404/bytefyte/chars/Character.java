@@ -6,6 +6,7 @@ import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.TestScene;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+
+import java.util.ArrayList;
 
 public abstract class Character extends GameObject {
     public World world;
@@ -66,7 +69,7 @@ public abstract class Character extends GameObject {
 
     public int hitboxScale = 18;
     public int spriteScale = 15;
-    private Vector2 spriteOffset = Vector2.Zero;
+    protected Vector2 spriteOffset = Vector2.Zero;
     public Vector2 manualSpriteOffset = Vector2.Zero;
 
     protected float elapsedTime = 0f;
@@ -74,35 +77,39 @@ public abstract class Character extends GameObject {
     public Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
-    private final Animation<TextureRegion> idle;
-    private final Animation<TextureRegion> walk;
-    private final Animation<TextureRegion> run;
+    protected final Animation<TextureRegion> idle;
+    protected final Animation<TextureRegion> walk;
+    protected final Animation<TextureRegion> run;
 
-    private final Animation<TextureRegion> jump;
-    private final Animation<TextureRegion> fall;
-    private final Animation<TextureRegion> hit;
+    protected final Animation<TextureRegion> jump;
+    protected final Animation<TextureRegion> fall;
+    protected final Animation<TextureRegion> hit;
 
-    private final Animation<TextureRegion> neutralAttack;
-    private final Animation<TextureRegion> upTilt;
-    private final Animation<TextureRegion> downTilt;
-    private final Animation<TextureRegion> sideTilt;
+    protected final Animation<TextureRegion> neutralAttack;
+    protected final Animation<TextureRegion> upTilt;
+    protected final Animation<TextureRegion> downTilt;
+    protected final Animation<TextureRegion> sideTilt;
 
-    private final Animation<TextureRegion> neutralB;
-    private final Animation<TextureRegion> upB;
-    private final Animation<TextureRegion> downB;
-    private final Animation<TextureRegion> sideB;
+    protected final Animation<TextureRegion> neutralB;
+    protected final Animation<TextureRegion> upB;
+    protected final Animation<TextureRegion> downB;
+    protected final Animation<TextureRegion> sideB;
 
-    private final Animation<TextureRegion> nair;
-    private final Animation<TextureRegion> dair;
-    private final Animation<TextureRegion> fair;
-    private final Animation<TextureRegion> bair;
-    private final Animation<TextureRegion> uair;
+    protected final Animation<TextureRegion> nair;
+    protected final Animation<TextureRegion> dair;
+    protected final Animation<TextureRegion> fair;
+    protected final Animation<TextureRegion> bair;
+    protected final Animation<TextureRegion> uair;
 
-    private final Animation<TextureRegion> upSmash;
-    private final Animation<TextureRegion> downSmash;
-    private final Animation<TextureRegion> sideSmash;
+    protected final Animation<TextureRegion> upSmash;
+    protected final Animation<TextureRegion> downSmash;
+    protected final Animation<TextureRegion> sideSmash;
 
-    private final Animation<TextureRegion> dashAttack;
+    protected final Animation<TextureRegion> dashAttack;
+
+
+    public ArrayList<Projectile> projectilesOnScreen;
+
 
     protected double moveTimer = 0;
 
@@ -113,6 +120,7 @@ public abstract class Character extends GameObject {
     protected boolean dead = false;
     protected boolean knockedOff = false;
 
+//    Creating an enum to handle the state of movement the player is in
     protected enum MovementState {
         IDLE,
         RUN,
@@ -121,6 +129,7 @@ public abstract class Character extends GameObject {
         FALL
     }
 
+//    Creating an enum to handle the state of attack the player is in
     protected enum AttackState {
         HIT,
         BASIC,
@@ -130,6 +139,7 @@ public abstract class Character extends GameObject {
         NONE
     }
 
+//    Creating an enum to handle the animation being displayed for the player
     protected enum AnimationState {
         IDLE,
         RUN,
@@ -165,13 +175,17 @@ public abstract class Character extends GameObject {
     protected final AttackState prevAttackState;
 
     protected MovementState moveState;
-    private final MovementState prevMoveState;
+    protected final MovementState prevMoveState;
 
     protected AnimationState animState;
-    private AnimationState prevAnimState;
+    protected AnimationState prevAnimState;
 
     protected int playerNumber;
 
+    /**
+     * pre: reference to the scene, position to spawn, controller, player number
+     * post: instantiates a character with the parameters
+     */
     public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
         super();
         this.playerNumber = playerNumber;
@@ -191,6 +205,7 @@ public abstract class Character extends GameObject {
 
         goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
+        // loads animations
         TextureAtlas textureAtlas = Main.manager.get("sprites/shyguy.atlas", TextureAtlas.class);
 
         idle = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
@@ -275,83 +290,136 @@ public abstract class Character extends GameObject {
         grounded = true;
     }
 
+
+    /**
+    * pre: None
+    * post: Handles any and all controller or keyboard inputs for a specific player
+    */
     private void handleInput() {
+
+//        Sets the movement vector of the player to 0 (directional input)
         moveVector.set(0f, 0f);
 
+//        If there is a controller detected by the game
         if (controller != null) {
+
+//            Sets the movement vector of the player to the inputted stick values (to handle directional input)
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
+//            Gets the directionak input of the right controller stick to handle attacks
             rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
             rStick.y = Math.abs(controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS) : 0;
 
+//            If the user hasn't performed an up special ability
             if (!afterUpB) {
+
+//                Jumping is true if the user is pressing the jump button
                 jumping = Main.contains(Main.recentButtons.get(controller), ControllerButtons.Y) || Main.contains(Main.recentButtons.get(controller), ControllerButtons.X);
             }
 
+//            Running is true if the right bumper is clicked
             running = controller.getButton(ControllerButtons.R_BUMPER) || controller.getButton(ControllerButtons.L_BUMPER);
 
+//            Checks if the special ability button was clicked
             if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.A)) {
+
+//                Checks if the user can use their ultimate ability, and if they have no directional input
                 if (ultMeter >= 100 && moveVector == Vector2.Zero) {
+
+//                    Use the ultimate ability
                     attackState = AttackState.ULTIMATE;
                 } else {
+
+//                    Otherwise, the user can perform a special ability
                     attackState = AttackState.SPECIAL;
                 }
+
+//                Checks if the user presses the buttons for basic or smash attacks, and responds if either
+//                is pressed
             } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
                 attackState = AttackState.BASIC;
             } else if (Math.abs(rStick.x) >= deadzone || Math.abs(rStick.y) >= deadzone) {
                 attackState = AttackState.SMASH;
+
+//                Otherwise the user is not attacking
             } else {
                 attackState = AttackState.NONE;
             }
+
+//            If there is no connected controller
         } else {
+
+//            The x and y vectors are based on key inputs (if a key is pressed)
             moveVector.x += Gdx.input.isKeyPressed(Keys.MOVE_RIGHT) ? 1 : 0;
             moveVector.x -= Gdx.input.isKeyPressed(Keys.MOVE_LEFT) ? 1 : 0;
             moveVector.y += Gdx.input.isKeyPressed(Keys.MOVE_UP) ? 1 : 0;
             moveVector.y -= Gdx.input.isKeyPressed(Keys.MOVE_DOWN) ? 1 : 0;
 
+//            User is running if the running key is pressed
             running = Gdx.input.isKeyPressed(Keys.RUN);
 
+//            If the user did not just up special, and they pressed the jump key, they jump
             if (!afterUpB) {
                 jumping = Gdx.input.isKeyJustPressed(Keys.JUMP);
             }
 
-            if (Gdx.input.isKeyJustPressed(Keys.EMPTY_METER)) ultMeter = 0;
+//            Next two lines are for testing purposes, will be removed in final game
+//            if (Gdx.input.isKeyJustPressed(Keys.EMPTY_METER)) ultMeter = 0;
+//            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) ultMeter = 100;
 
-            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) ultMeter = 100;
-
+//            Checks if the user pressed the key corresponding to a special move
             if (Gdx.input.isKeyJustPressed(Keys.SPECIAL)) {
+
+//                Checks if the user can use their ultimate ability, and if they have no directional input
                 if (ultMeter >= 100 && moveVector == Vector2.Zero) {
+
+//                    Uses the ultimate ability
                     attackState = AttackState.ULTIMATE;
+
                 } else {
+//                    Otherwise, a normal special attack is performed
                     attackState = AttackState.SPECIAL;
                 }
+
+//                Checks if the user clicks the key for a basic or smash attack, and responds accordingly
             } else if (Gdx.input.isKeyJustPressed(Keys.BASIC)) {
                 attackState = AttackState.BASIC;
             } else if (Gdx.input.isKeyJustPressed(Keys.SMASH)) {
                 attackState = AttackState.SMASH;
+
+//                If no attack keys are pressed, the user is not attacking
             } else {
                 attackState = AttackState.NONE;
             }
         }
     }
 
+    /**
+     * pre: deltaTime, the time between frames
+     * post: updates the players state, including physics and rendering
+     */
     public void update(float deltaTime) {
+
+        // counts the animation duration down to zero
         if (animDuration > 0) {
             animDuration -= deltaTime;
         } else {
             animDuration = 0;
         }
 
+        // checks if the player is on the ground
         if (grounded) {
             afterUpB = false;
         }
 
+        // checks if the player is currently using up special
         if (animState == AnimationState.SPECIAL_U) {
             afterUpB = true;
 
         }
 
+        // counts down move timer
         if (moveTimer >= 0) {
             moveTimer -= deltaTime;
         }
@@ -367,20 +435,28 @@ public abstract class Character extends GameObject {
         }
         prevGoToPos = goToPos;
 
+        // counts down stun timer
         if (stunTimer > 0) {
             stunTimer -= deltaTime;
         }
 
+        // locks the player control if the character is stunned or playing an attack animation
         if (!lockAnim && stunTimer <= 0) {
             handleInput();
         }
 
+        // checks if the player is on the ground
         if (grounded) {
+
+            // sets the player's max speed to the run speed if running and the walk speed otherwise
             maxSpeed = running ? runSpeed : walkSpeed;
         } else {
+
+            // sets the player's max speed to the air speed
             maxSpeed = airSpeed;
         }
 
+        // updates the players velocity up to the maximum speed
         if (Math.abs(vel.x) <= maxSpeed) {
             if (grounded) {
                 if (!(moveVector.x < 0 && vel.x > 0) && !(moveVector.x > 0 && vel.x < 0)) {
@@ -393,18 +469,28 @@ public abstract class Character extends GameObject {
 
         applyFriction(deltaTime);
 
+        // checks if the player is pressing down
         if (moveVector.y < 0) {
+
+            // player falls at the fast fall speed
             maxFallSpeed = fastFallSpeed;
             if (vel.y > 0) {
                 vel.y = 0;
             }
         } else {
+
+            // player falls at normal speed
             maxFallSpeed = fallSpeed;
         }
 
+        // checks if the player is moving up or down
         if (vel.y > 0 && !grounded) {
+
+            // up gravity accelerates player down
             vel.y -= upGravity * deltaTime;
         } else if (vel.y > maxFallSpeed && !grounded) {
+
+            // down gravity accelerates player down
             vel.y -= downGravity * deltaTime;
         }
 
@@ -427,6 +513,7 @@ public abstract class Character extends GameObject {
             ground();
         }
 
+        // locks animation state if the player is stunned or an attack animation is playing
         if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
                 getState();
@@ -435,7 +522,10 @@ public abstract class Character extends GameObject {
             }
         }
 
+        // sets the physics body's velocity
         b2body.setLinearVelocity(vel);
+
+        // updates character graphics
         setRegion(getFrame(deltaTime));
         setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
@@ -450,24 +540,39 @@ public abstract class Character extends GameObject {
         }
     }
 
+    /**
+     * pre:
+     * post: gets the current state of the player
+     */
     public void getState() {
+
+//        If the user is not on the ground with a y velocity above 0, user jumped
         if (vel.y > 0 && !grounded) {
             moveState = MovementState.JUMP;
             animState = AnimationState.JUMP;
+
+//        If they are not on the ground with a y velocity below 0, user is falling
         } else if (vel.y <= 0 && !grounded) {
             moveState = MovementState.FALL;
             animState = AnimationState.FALL;
+
+//        If they have an x velocity above 0 but aren't running, user is walking
         } else if (Math.abs(vel.x) > 0 && !running) {
             moveState = MovementState.WALK;
             animState = AnimationState.WALK;
+
+//        If they have an x velocity above 0 and are running, user is running
         } else if (Math.abs(vel.x) > 0 && running) {
             moveState = MovementState.RUN;
             animState = AnimationState.RUN;
+
+//        Otherwise, they are idle
         } else {
             moveState = MovementState.IDLE;
             animState = AnimationState.IDLE;
         }
 
+//        Ensures attacks are disabled directly after an up special ability
         if (!afterUpB) {
             // basic attacks
             if (attackState == AttackState.BASIC) {
@@ -498,7 +603,7 @@ public abstract class Character extends GameObject {
                         }
                     }
 
-                    // air attacks
+                // air attacks
                 } else {
                     if (moveVector.isZero()) {
                         // neutral
@@ -522,7 +627,8 @@ public abstract class Character extends GameObject {
                         airBack();
                     }
                 }
-                // special attacks
+
+            // special attacks
             } else if (attackState == AttackState.SPECIAL) {
                 if (moveVector.isZero()) {
                     //neutral
@@ -547,7 +653,8 @@ public abstract class Character extends GameObject {
                         ultimate();
                     }
                 }
-                // smash attacks
+
+            // smash attacks
             } else if (attackState == AttackState.SMASH) {
                 Vector2 vec = controller == null ? moveVector : rStick;
 
@@ -573,6 +680,10 @@ public abstract class Character extends GameObject {
         }
     }
 
+    /**
+     * pre:
+     * post: resets player state and control
+     */
     public void resetControls() {
         moveVector = new Vector2(0, 0);
         rStick = new Vector2(0, 0);
@@ -580,12 +691,18 @@ public abstract class Character extends GameObject {
         running = false;
     }
 
+    /**
+     * pre: deltaTime, the time between frames
+     * post: sets the animation based on the player's animation state
+     */
     public TextureRegion getFrame(float deltaTime) {
         TextureRegion region;
 
+        // sets elapsedTime
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
         prevAnimState = animState;
 
+        // switch case to set the animation
         switch (animState) {
             case WALK:
                 region = walk.getKeyFrame(elapsedTime, true);
@@ -706,14 +823,20 @@ public abstract class Character extends GameObject {
             }
         }
 
+        // offsets sprite
         spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
         spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
 
+        // sets the lock animation if the attack animation is set and the move timer is still counting or the animation is not finished
         lockAnim = attackAnimation != null && (moveTimer > 0 || !attackAnimation.isAnimationFinished(elapsedTime));
 
         return region;
     }
 
+    /**
+     * pre: damage to deal, force to apply, amount to stun
+     * post: sets animation to hit, deals damage, applies knock-back, sets stun timer
+     */
     public void Hit(float damage, Vector2 force, float hitStun) {
         animState = AnimationState.HIT;
 
@@ -725,8 +848,13 @@ public abstract class Character extends GameObject {
         moveVector.x = 0;
     }
 
+    /**
+     * pre: x position, y position
+     * post: reset player, set position
+     */
     public void setPos(int x, int y) {
-        System.out.println("Reset");
+
+//        Resets player for a potential respawn
         percent = 0;
         animDuration = -1;
         lockAnim = false;
@@ -735,13 +863,22 @@ public abstract class Character extends GameObject {
         moveVector.y = 0;
         knockedOff = true;
 
+//        Checks if the user has stocks (lives) left
         if (stockCount != 1) {
+
+//            If they do, their position is reset and they lose a stock
             goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
             stockCount -= 1;
+
+//        Otherwise, the user's character dies
         } else {
             dead = true;
         }
     }
+
+//    The following are abstract methods meant to be overwritten for each character, and replaced with
+//    their specific abilities and attacks.
+
 
     //    Basic Attacks
     abstract void basicNeutral();

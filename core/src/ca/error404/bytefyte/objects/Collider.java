@@ -26,6 +26,10 @@ public class Collider extends GameObject {
     private float delay;
     private float timer;
 
+    /**
+     * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating
+     * post: instantiates a new collided with the parameters
+     */
     public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay) {
         super();
 
@@ -46,6 +50,11 @@ public class Collider extends GameObject {
         this.world = parent.world;
     }
 
+
+    /**
+     * pre:
+     * post: defines the physics body and colliders
+     */
     public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, float timer) {
         super();
 
@@ -66,31 +75,44 @@ public class Collider extends GameObject {
         this.world = parent.world;
     }
 
-
     private void define() {
+        // creates a new body definition and sets the position, and type
         BodyDef bdef = new BodyDef();
         bdef.position.set((pos.x + offset.x) / Main.PPM, (pos.y + offset.y) / Main.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
+        // defines the shape of the body
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
 
         shape.setAsBox(width / 2 / Main.PPM,height / 2 / Main.PPM);
 
         fdef.shape = shape;
+
+        // sets the body as a sensor (no collision physics)
         fdef.isSensor = true;
+
+        // sets tags to define the body
         fdef.filter.categoryBits = Tags.ATTACK_BIT;
         b2body.createFixture(fdef).setUserData(this);
     }
 
+    /**
+     * pre: delta time, the amount of time between frames
+     * post: updates the projectiles position, orientation and graphics
+     */
     @Override
     public void update(float delta) {
+        // checks if the body has been removed or the delay is still active
         if (!remove && (delay <= 0)) {
+
+            // if the body is not defined, define it
             if (b2body == null) {
                 define();
             }
 
+            // sets the bodies position and offsets it based on which way the player is facing
             timer -= delta;
 
             if (parent.facingLeft) {
@@ -99,6 +121,7 @@ public class Collider extends GameObject {
                 b2body.setTransform(parent.pos.x + offset.x, parent.pos.y + (offset.y), 0);
             }
 
+            // destroys the player once the animation is done
             if (parent.attackAnimation == null || timer <= 0) {
                 destroy();
             }

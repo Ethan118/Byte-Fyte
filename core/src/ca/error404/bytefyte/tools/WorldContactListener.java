@@ -57,6 +57,7 @@ public class WorldContactListener implements ContactListener {
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     collider = (Collider) fixB.getUserData();
+
                 } else {
                     chara = (Character) fixB.getUserData();
                     collider = (Collider) fixA.getUserData();
