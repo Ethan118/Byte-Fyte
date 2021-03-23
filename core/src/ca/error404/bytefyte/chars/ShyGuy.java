@@ -2,11 +2,14 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import org.apache.commons.io.FileUtils;
 
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ShyGuy extends Character {
-    private  ArrayList<Sound> healSongs;
+    private ArrayList<Sound> healSongs;
     private ArrayList<Float> healSongLengths;
     private int hovertimer = 2;
     private int timer = 2;
@@ -32,7 +35,7 @@ public class ShyGuy extends Character {
         manualSpriteOffset = new Vector2(2200, 300);
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
-
+        projectilesOnScreen = new ArrayList<>(1);
 
         int i = 0;
         while (true) {
@@ -60,18 +63,18 @@ public class ShyGuy extends Character {
 
 
                 healSongLengths.add(durationInSeconds);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 break;
             }
         }
     }
-    
+
     public void update(float deltaTime) {
         super.update(deltaTime);
 
         if (dead || knockedOff) {
             animDuration = 0;
-            for (Sound song: healSongs) {
+            for (Sound song : healSongs) {
                 song.stop();
             }
         }
@@ -88,6 +91,13 @@ public class ShyGuy extends Character {
             specialUp();
             hasHovered = true;
         }
+
+        if (attackState == AttackState.SPECIAL && moveState == MovementState.WALK) {
+            animDuration = 0.075f;
+        }
+
+        System.out.println(percent);
+
     }
 
     @Override
@@ -145,11 +155,20 @@ public class ShyGuy extends Character {
 
     @Override
     void specialSide() {
-        if (facingLeft) {
-            new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f);
-        } else {
-            new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f);
+//        if (projectilesOnScreen.isEmpty()) {
+
+//        If the delay timer (animation timer) is done
+        if (animDuration == 0) {
+
+//            Create a projectile based on the inputted user direction
+            if (facingLeft) {
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+            } else {
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+            }
         }
+
+//        Reset the user controls
         resetControls();
     }
 
@@ -193,15 +212,21 @@ public class ShyGuy extends Character {
 
     @Override
     void airNeutral() {
-        new Collider(new Vector2(0, 0), 40, 40, this, 4f, 5f, 0.25f, 0);
+//        A new multihit is created which will hit the opponent multiple times, as per the ability should
+        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 2f, 5, 15);
     }
 
     @Override
     void airForward() {
-        if (facingLeft) {
-            new Projectile(this, new Vector2(pos.x - 0.2f, pos.y + 0.1f), new Vector2(-4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f);
-        } else {
-            new Projectile(this, new Vector2(pos.x + 0.2f, pos.y + 0.1f), new Vector2(4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f);
+//        If there are less than two of this projectile on the screen
+        if (projectilesOnScreen.size() <= 2) {
+
+//            Create a projectile based on the user direction
+            if (facingLeft) {
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x - 0.2f, pos.y + 0.1f), new Vector2(-4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
+            } else {
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x + 0.2f, pos.y + 0.1f), new Vector2(4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
+            }
         }
     }
 
@@ -219,4 +244,5 @@ public class ShyGuy extends Character {
     void airDown() {
         new Collider(new Vector2(10, -20), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f);
     }
+
 }
