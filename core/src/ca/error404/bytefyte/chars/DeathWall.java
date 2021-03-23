@@ -15,6 +15,7 @@ public class DeathWall extends Wall {
     }
 
     public void contact(Character chara) {
+        System.out.println("R");
         chara.setPos(0, 30);
         chara.vel = new Vector2(0, 0);
         chara.prevVel = new Vector2(0, 0);

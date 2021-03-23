@@ -78,6 +78,16 @@ public class ShyGuy extends Character {
                 percent = Math.max(percent - (currentSongLength), 0);
             }
         }
+        if (dead || knockedOff) {
+            animDuration = 0;
+            for (Sound song: healSongs) {
+                song.stop();
+            }
+        }
+
+        if (knockedOff && stockCount != 0) {
+            knockedOff = false;
+        }
 
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;

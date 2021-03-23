@@ -5,7 +5,6 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
-import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.scene.TestScene;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
@@ -108,6 +107,11 @@ public abstract class Character extends GameObject {
 
     private boolean afterUpB = false;
 
+    protected int stockCount = 3;
+
+    protected boolean dead = false;
+    protected boolean knockedOff = false;
+
     protected enum MovementState {
         IDLE,
         RUN,
@@ -167,13 +171,17 @@ public abstract class Character extends GameObject {
 
     protected int playerNumber;
 
+    /**
+     * pre: reference to the scene, position to spawn, controller, player number
+     * post: instantiates a character with the parameters
+     */
     public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
         super();
         this.playerNumber = playerNumber;
         this.world = screen.getWorld();
         this.controller = controller;
 
-        //new PlayerHealth(playerNumber, charname);
+//        new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -186,37 +194,38 @@ public abstract class Character extends GameObject {
 
         goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
+        // loads animations
         TextureAtlas textureAtlas = Main.manager.get("sprites/shyguy.atlas", TextureAtlas.class);
 
-        idle = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
-        walk = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
-        run = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
+        idle = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
+        walk = new Animation<TextureRegion>(1f/120f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
+        run = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
 
-        jump = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
-        fall = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
-        hit = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_hit"), Animation.PlayMode.LOOP);
+        jump = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
+        fall = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
+        hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_hit"), Animation.PlayMode.LOOP);
 
-        neutralAttack = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral"), Animation.PlayMode.NORMAL);
-        sideTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.NORMAL);
-        upTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.NORMAL);
-        downTilt = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
+        neutralAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral"), Animation.PlayMode.NORMAL);
+        sideTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.NORMAL);
+        upTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.NORMAL);
+        downTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
 
-        neutralB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
-        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
-        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
-        sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
+        neutralB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
+        sideB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
 
-        nair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
-        dair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
-        fair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
-        bair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
-        uair = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
+        nair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
+        dair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
+        fair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
+        bair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
+        uair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
 
-        upSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_up_smash"), Animation.PlayMode.NORMAL);
-        downSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
-        sideSmash = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
+        upSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_smash"), Animation.PlayMode.NORMAL);
+        downSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
+        sideSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
 
-        dashAttack = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
+        dashAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
@@ -331,22 +340,31 @@ public abstract class Character extends GameObject {
         }
     }
 
+    /**
+     * pre: deltaTime, the time between frames
+     * post: updates the players state, including physics and rendering
+     */
     public void update(float deltaTime) {
+
+        // counts the animation duration down to zero
         if (animDuration > 0) {
             animDuration -= deltaTime;
         } else {
             animDuration = 0;
         }
 
+        // checks if the player is on the ground
         if (grounded) {
             afterUpB = false;
         }
 
+        // checks if the player is currently using up special
         if (animState == AnimationState.SPECIAL_U) {
             afterUpB = true;
 
         }
 
+        // counts down move timer
         if (moveTimer >= 0) {
             moveTimer -= deltaTime;
         }
@@ -359,24 +377,31 @@ public abstract class Character extends GameObject {
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
-            percent = 0;
         }
         prevGoToPos = goToPos;
 
+        // counts down stun timer
         if (stunTimer > 0) {
             stunTimer -= deltaTime;
         }
 
+        // locks the player control if the character is stunned or playing an attack animation
         if (!lockAnim && stunTimer <= 0) {
             handleInput();
         }
 
+        // checks if the player is on the ground
         if (grounded) {
+
+            // sets the player's max speed to the run speed if running and the walk speed otherwise
             maxSpeed = running ? runSpeed : walkSpeed;
         } else {
+
+            // sets the player's max speed to the air speed
             maxSpeed = airSpeed;
         }
 
+        // updates the players velocity up to the maximum speed
         if (Math.abs(vel.x) <= maxSpeed) {
             if (grounded) {
                 if (!(moveVector.x < 0 && vel.x > 0) && !(moveVector.x > 0 && vel.x < 0)) {
@@ -389,18 +414,28 @@ public abstract class Character extends GameObject {
 
         applyFriction(deltaTime);
 
+        // checks if the player is pressing down
         if (moveVector.y < 0) {
+
+            // player falls at the fast fall speed
             maxFallSpeed = fastFallSpeed;
             if (vel.y > 0) {
                 vel.y = 0;
             }
         } else {
+
+            // player falls at normal speed
             maxFallSpeed = fallSpeed;
         }
 
+        // checks if the player is moving up or down
         if (vel.y > 0 && !grounded) {
+
+            // up gravity accelerates player down
             vel.y -= upGravity * deltaTime;
         } else if (vel.y > maxFallSpeed && !grounded) {
+
+            // down gravity accelerates player down
             vel.y -= downGravity * deltaTime;
         }
 
@@ -423,6 +458,7 @@ public abstract class Character extends GameObject {
             ground();
         }
 
+        // locks animation state if the player is stunned or an attack animation is playing
         if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
                 getState();
@@ -431,7 +467,10 @@ public abstract class Character extends GameObject {
             }
         }
 
+        // sets the physics body's velocity
         b2body.setLinearVelocity(vel);
+
+        // updates character graphics
         setRegion(getFrame(deltaTime));
         setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
@@ -446,19 +485,32 @@ public abstract class Character extends GameObject {
         }
     }
 
+    /**
+     * pre:
+     * post: gets the current state of the player
+     */
     public void getState() {
+        // jumping
         if (vel.y > 0 && !grounded) {
             moveState = MovementState.JUMP;
             animState = AnimationState.JUMP;
+
+        // falling
         } else if (vel.y <= 0 && !grounded) {
             moveState = MovementState.FALL;
             animState = AnimationState.FALL;
+
+        // walking
         } else if (Math.abs(vel.x) > 0 && !running) {
             moveState = MovementState.WALK;
             animState = AnimationState.WALK;
+
+        // running
         } else if (Math.abs(vel.x) > 0 && running) {
             moveState = MovementState.RUN;
             animState = AnimationState.RUN;
+
+        // idling
         } else {
             moveState = MovementState.IDLE;
             animState = AnimationState.IDLE;
@@ -494,7 +546,7 @@ public abstract class Character extends GameObject {
                         }
                     }
 
-                    // air attacks
+                // air attacks
                 } else {
                     if (moveVector.isZero()) {
                         // neutral
@@ -518,7 +570,8 @@ public abstract class Character extends GameObject {
                         airBack();
                     }
                 }
-                // special attacks
+
+            // special attacks
             } else if (attackState == AttackState.SPECIAL) {
                 if (moveVector.isZero()) {
                     //neutral
@@ -543,7 +596,8 @@ public abstract class Character extends GameObject {
                         ultimate();
                     }
                 }
-                // smash attacks
+
+            // smash attacks
             } else if (attackState == AttackState.SMASH) {
                 Vector2 vec = controller == null ? moveVector : rStick;
 
@@ -569,6 +623,10 @@ public abstract class Character extends GameObject {
         }
     }
 
+    /**
+     * pre:
+     * post: resets player state and control
+     */
     public void resetControls() {
         moveVector = new Vector2(0, 0);
         rStick = new Vector2(0, 0);
@@ -576,13 +634,18 @@ public abstract class Character extends GameObject {
         running = false;
     }
 
+    /**
+     * pre: deltaTime, the time between frames
+     * post: sets the animation based on the player's animation state
+     */
     public TextureRegion getFrame(float deltaTime) {
-        elapsedTime += deltaTime;
         TextureRegion region;
 
+        // sets elapsedTime
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
         prevAnimState = animState;
 
+        // switch case to set the animation
         switch (animState) {
             case WALK:
                 region = walk.getKeyFrame(elapsedTime, true);
@@ -702,14 +765,20 @@ public abstract class Character extends GameObject {
             }
         }
 
+        // offsets sprite
         spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
         spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
 
+        // sets the lock animation if the attack animation is set and the move timer is still counting or the animation is not finished
         lockAnim = attackAnimation != null && (moveTimer > 0 || !attackAnimation.isAnimationFinished(elapsedTime));
 
         return region;
     }
 
+    /**
+     * pre: damage to deal, force to apply, amount to stun
+     * post: sets animation to hit, deals damage, applies knock-back, sets stun timer
+     */
     public void Hit(float damage, Vector2 force, float hitStun) {
         animState = AnimationState.HIT;
 
@@ -721,8 +790,26 @@ public abstract class Character extends GameObject {
         moveVector.x = 0;
     }
 
+    /**
+     * pre: x position, y position
+     * post: reset player, set position
+     */
     public void setPos(int x, int y) {
-        goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+        System.out.println("Reset");
+        percent = 0;
+        animDuration = -1;
+        lockAnim = false;
+        stunTimer = 0;
+        moveVector.x = 0;
+        moveVector.y = 0;
+        knockedOff = true;
+
+        if (stockCount != 1) {
+            goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+            stockCount -= 1;
+        } else {
+            dead = true;
+        }
     }
 
     //    Basic Attacks
