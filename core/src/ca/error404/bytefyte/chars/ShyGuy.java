@@ -96,8 +96,6 @@ public class ShyGuy extends Character {
             animDuration = 0.075f;
         }
 
-        System.out.println(percent);
-
     }
 
     @Override
