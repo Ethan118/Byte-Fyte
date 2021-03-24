@@ -5,11 +5,10 @@ import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import org.apache.commons.io.FileUtils;
 
@@ -38,6 +37,8 @@ public class ShyGuy extends Character {
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
         projectilesOnScreen = new ArrayList<>(1);
+
+        new PlayerHealth(playernumber, "shyguy");
 
         int i = 0;
         while (true) {

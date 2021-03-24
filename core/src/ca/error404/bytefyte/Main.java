@@ -56,10 +56,6 @@ public class Main extends Game {
 	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
 
-
-	public String action;
-
-
 	@Override
 	public void create () {
 
@@ -68,7 +64,7 @@ public class Main extends Game {
 
 		batch = new SpriteBatch();
 
-		 audioManager = new AssetManager();
+		audioManager = new AssetManager();
 		loadSongs();
 		audioManager.finishLoading();
 
