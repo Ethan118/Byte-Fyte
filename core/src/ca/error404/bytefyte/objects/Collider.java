@@ -23,6 +23,8 @@ public class Collider extends GameObject {
 
     public float hitStun;
 
+    public boolean lifeSteal;
+
     private float delay;
     private float timer;
 
@@ -52,7 +54,7 @@ public class Collider extends GameObject {
 
 
     /**
-     * pre:
+     * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating, amount of time
      * post: defines the physics body and colliders
      */
     public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, float timer) {
@@ -71,6 +73,32 @@ public class Collider extends GameObject {
 
         this.delay = delay;
         this.timer = timer;
+
+        this.world = parent.world;
+    }
+
+    /**
+     * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, should take health?, duration before instantiating
+     * post: instantiates a new collided with the parameters
+     */
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, boolean lifeSteal, float delay) {
+        super();
+
+        this.pos = parent.pos;
+        this.offset = new Vector2(offset.x / Main.PPM, offset.y / Main.PPM);
+        this.width = width;
+        this.height = height;
+        this.parent = parent;
+
+        this.power = power;
+        this.damage = damage;
+
+        this.hitStun = hitStun;
+
+        this.delay = delay;
+        this.timer = Float.POSITIVE_INFINITY;
+
+        this.lifeSteal = lifeSteal;
 
         this.world = parent.world;
     }

@@ -70,6 +70,10 @@ public class WorldContactListener implements ContactListener {
 
                     Vector2 force = new Vector2(direction.x * collider.power, direction.y * collider.power);
                     chara.Hit(collider.damage, force, collider.hitStun);
+
+                    if (collider.lifeSteal) {
+                        collider.parent.percent -= collider.damage;
+                    }
                 }
                 break;
 
