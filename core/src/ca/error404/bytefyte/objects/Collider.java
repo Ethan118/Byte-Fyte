@@ -126,7 +126,7 @@ public class Collider extends GameObject {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    /**
+    /*
      * pre: delta time, the amount of time between frames
      * post: updates the projectiles position, orientation and graphics
      */
