@@ -77,6 +77,7 @@ public class ControllerButtons
      */
     public static boolean isXboxController(Controller controller) {
         String name = controller.getName().toLowerCase(Locale.ROOT);
-        return name.contains("xbox");
+
+        return (name.contains("xbox") || name.contains("bluetooth xinput compatible input device"));
     }
 }
