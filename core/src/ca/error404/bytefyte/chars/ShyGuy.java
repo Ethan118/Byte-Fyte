@@ -133,6 +133,7 @@ public class ShyGuy extends Character {
 
     @Override
     void dashAttack() {
+        new Collider(new Vector2(40, 0), 25, 30, this, 3f, 6f, 0.25f, 9f/60f);
         resetControls();
     }
 
@@ -157,6 +158,7 @@ public class ShyGuy extends Character {
 
     @Override
     void specialNeutral() {
+        new Collider(new Vector2(20, 0), 25, 30, this, 0f, 4f, 70f / 60f, true, 0);
         resetControls();
     }
 
