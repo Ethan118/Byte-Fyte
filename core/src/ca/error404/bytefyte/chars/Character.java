@@ -790,6 +790,7 @@ public abstract class Character extends GameObject {
                 break;
             case ULTIMATE:
             case HIT:
+                afterUpB = false;
                 region = hit.getKeyFrame(elapsedTime, true);
                 attackAnimation = null;
                 break;
