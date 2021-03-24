@@ -70,9 +70,6 @@ public class MultiHit extends GameObject {
 
 //        Setting the world to the world of the parent character
         this.world = parent.world;
-
-
-
     }
 
     /*
