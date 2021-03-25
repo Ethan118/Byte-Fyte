@@ -140,7 +140,7 @@ public abstract class Character extends GameObject {
     }
 
 //    Creating an enum to handle the animation being displayed for the player
-    protected enum AnimationState {
+    public enum AnimationState {
         IDLE,
         RUN,
         WALK,
@@ -177,8 +177,8 @@ public abstract class Character extends GameObject {
     protected MovementState moveState;
     protected final MovementState prevMoveState;
 
-    protected AnimationState animState;
-    protected AnimationState prevAnimState;
+    public AnimationState animState;
+    public AnimationState prevAnimState;
 
     protected int playerNumber;
 
