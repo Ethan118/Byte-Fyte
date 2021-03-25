@@ -212,8 +212,6 @@ public class ShyGuy extends Character {
         moveTimer = healSongLengths.get(i);
         currentSongLength = healSongLengths.get(i);
 
-        lockAnim = true;
-
         resetControls();
     }
 
