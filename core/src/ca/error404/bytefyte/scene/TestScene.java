@@ -36,6 +36,8 @@ public class TestScene implements Screen {
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
+    TMap map;
+
     public TestScene(Main game) {
         // sets up variables
         this.game = game;
@@ -46,12 +48,14 @@ public class TestScene implements Screen {
 
         Character player;
 
+        map = new TMap("sprites/Cavi Cape Room 2", 1, game);
+
         if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0), 1);
-            new ShyGuy(this, new Vector2(38, 150),  null, 2);
+            player = new ShyGuy(map, new Vector2(-38, 150), Main.controllers.get(0), 1);
+            new ShyGuy(map, new Vector2(38, 150),  null, 2);
         } else {
-            player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
-            new ShyGuy(this, new Vector2(38, 150), null, 2);
+            player = new ShyGuy(map, new Vector2(-38, 150), null, 1);
+            new ShyGuy(map, new Vector2(38, 150), null, 2);
         }
 
         player.facingLeft = false;
@@ -85,6 +89,9 @@ public class TestScene implements Screen {
         // draw everything to the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        map.render(deltaTime);
+
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
         if (videoPlayer.isPlaying()) {
