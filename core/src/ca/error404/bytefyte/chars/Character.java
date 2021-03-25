@@ -138,7 +138,7 @@ public abstract class Character extends GameObject {
     }
 
 //    Creating an enum to handle the animation being displayed for the player
-    protected enum AnimationState {
+    public enum AnimationState {
         IDLE,
         RUN,
         WALK,
@@ -175,8 +175,8 @@ public abstract class Character extends GameObject {
     protected MovementState moveState;
     protected final MovementState prevMoveState;
 
-    protected AnimationState animState;
-    protected AnimationState prevAnimState;
+    public AnimationState animState;
+    public AnimationState prevAnimState;
 
     protected int playerNumber;
 
@@ -305,7 +305,7 @@ public abstract class Character extends GameObject {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-//            Gets the directionak input of the right controller stick to handle attacks
+//            Gets the directional input of the right controller stick to handle attacks
             rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
             rStick.y = Math.abs(controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS) : 0;
 
@@ -338,7 +338,11 @@ public abstract class Character extends GameObject {
             } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
                 attackState = AttackState.BASIC;
             } else if (Math.abs(rStick.x) >= deadzone || Math.abs(rStick.y) >= deadzone) {
-                attackState = AttackState.SMASH;
+                if (attackState != AttackState.SMASH) {
+                    attackState = AttackState.SMASH;
+                } else {
+                    attackState = AttackState.NONE;
+                }
 
 //                Otherwise the user is not attacking
             } else {
@@ -511,6 +515,8 @@ public abstract class Character extends GameObject {
             ground();
         }
 
+        prevAnimState = animState;
+
         // locks animation state if the player is stunned or an attack animation is playing
         if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
@@ -543,7 +549,6 @@ public abstract class Character extends GameObject {
      * post: gets the current state of the player
      */
     public void getState() {
-
 //        If the user is not on the ground with a y velocity above 0, user jumped
         if (vel.y > 0 && !grounded) {
             moveState = MovementState.JUMP;
@@ -698,7 +703,6 @@ public abstract class Character extends GameObject {
 
         // sets elapsedTime
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
-        prevAnimState = animState;
 
         // switch case to set the animation
         switch (animState) {
@@ -788,6 +792,7 @@ public abstract class Character extends GameObject {
                 break;
             case ULTIMATE:
             case HIT:
+                afterUpB = false;
                 region = hit.getKeyFrame(elapsedTime, true);
                 attackAnimation = null;
                 afterUpB = false;

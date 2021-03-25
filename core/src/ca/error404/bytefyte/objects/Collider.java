@@ -150,7 +150,7 @@ public class Collider extends GameObject {
             }
 
             // destroys the player once the animation is done
-            if (parent.attackAnimation == null || timer <= 0) {
+            if (parent.animState != parent.prevAnimState || timer <= 0) {
                 destroy();
             }
         } else {

@@ -48,6 +48,7 @@ public class DesktopLauncher {
 			config.width = 1280;
 			config.height = 720;
 		}
+
 		config.title = "Byte Fyte";
 		config.resizable = false;
 		config.addIcon("icons/windows + linux.png", Files.FileType.Internal);

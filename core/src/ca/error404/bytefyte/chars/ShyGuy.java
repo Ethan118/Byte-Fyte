@@ -5,6 +5,8 @@ import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.TMap;
+import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
@@ -37,6 +39,8 @@ public class ShyGuy extends Character {
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
         projectilesOnScreen = new ArrayList<>(1);
+
+        new PlayerHealth(playernumber, "shyguy");
 
         int i = 0;
         while (true) {
@@ -226,8 +230,6 @@ public class ShyGuy extends Character {
         animDuration = healSongLengths.get(i);
         moveTimer = healSongLengths.get(i);
         currentSongLength = healSongLengths.get(i);
-
-        lockAnim = true;
 
         resetControls();
     }
