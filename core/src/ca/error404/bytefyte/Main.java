@@ -2,10 +2,7 @@ package ca.error404.bytefyte;
 
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
-import ca.error404.bytefyte.scene.MenuScene;
-import ca.error404.bytefyte.scene.SettingsMenu;
-import ca.error404.bytefyte.scene.StoryMenu;
-import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.scene.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -68,7 +65,7 @@ public class Main extends Game {
 
 		batch = new SpriteBatch();
 
-		 audioManager = new AssetManager();
+		audioManager = new AssetManager();
 		loadSongs();
 		audioManager.finishLoading();
 
@@ -92,7 +89,7 @@ public class Main extends Game {
 			}
 		}
 
-		setScreen(new TestScene(this));
+		setScreen(new TMap("sprites/Cavi Cape Room 2", 1, this));
 	}
 
 	public void loadSongs() {

@@ -4,12 +4,10 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.scene.TMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import org.apache.commons.io.FileUtils;
 
@@ -32,7 +30,8 @@ public class ShyGuy extends Character {
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
 
-    public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+//    Constructor
+    public ShyGuy(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "marioluigi");
         manualSpriteOffset = new Vector2(2200, 300);
         healSongs = new ArrayList<>();
@@ -43,6 +42,7 @@ public class ShyGuy extends Character {
         while (true) {
             i++;
 
+//            Load all songs
             try {
                 healSongs.add(Gdx.audio.newSound(Gdx.files.internal(String.format("audio/sound effects/shyguy_song_%d.wav", i))));
 
@@ -71,15 +71,21 @@ public class ShyGuy extends Character {
         }
     }
 
+    /*
+    * Pre: Delta time
+    * Post: Updates character
+    * */
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+//        Heals shy guy for song duration
         if (animState == AnimationState.SPECIAL_D) {
             if (animDuration <= 0) {
                 percent = Math.max(percent - (currentSongLength), 0);
             }
         }
-      
+
+//        Ensuring shy guy's song stop if dead
         if (dead || knockedOff || animState == AnimationState.HIT) {
 
             animDuration = 0;
@@ -88,25 +94,30 @@ public class ShyGuy extends Character {
             }
         }
 
+//        Ensuring he respawns
         if (knockedOff && stockCount != 0) {
             knockedOff = false;
         }
 
+//        Allowing the animation of up b to play
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
             lockAnim = false;
         }
 
+//        Hovering for up b
         if (animState == AnimationState.SPECIAL_U) {
             specialUp();
             hasHovered = true;
         }
 
+//        Sets cooldown for side b
         if (attackState == AttackState.SPECIAL && moveState == MovementState.WALK) {
             animDuration = 0.075f;
         }
 
     }
 
+//    All abilities.  Will add colliders or move shy guy as applicable
     @Override
     void basicNeutral() {
         new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5f, 0.25f, 0);
@@ -183,6 +194,8 @@ public class ShyGuy extends Character {
 
     @Override
     void specialUp() {
+
+//        Hovers him for a frame
         if (animDuration == 0) {
             if (!hasHovered && !grounded) {
                 vel.y = -3;
@@ -193,9 +206,11 @@ public class ShyGuy extends Character {
             animDuration = 1.4f;
         }
 
+//        Exponentially flies him up after the initial frame
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;
 
+//        Gets direction being faced
         if (moveVector.x > deadzone) {
             facingLeft = false;
         } else if (moveVector.x < -deadzone) {
