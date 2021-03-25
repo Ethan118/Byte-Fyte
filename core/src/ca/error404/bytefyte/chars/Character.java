@@ -140,7 +140,7 @@ public abstract class Character extends GameObject {
     }
 
 //    Creating an enum to handle the animation being displayed for the player
-    protected enum AnimationState {
+    public enum AnimationState {
         IDLE,
         RUN,
         WALK,
@@ -794,6 +794,7 @@ public abstract class Character extends GameObject {
                 break;
             case ULTIMATE:
             case HIT:
+                afterUpB = false;
                 region = hit.getKeyFrame(elapsedTime, true);
                 attackAnimation = null;
                 break;

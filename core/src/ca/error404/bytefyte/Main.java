@@ -56,19 +56,11 @@ public class Main extends Game {
 	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
 
-
-	public String action;
-
-
 	@Override
 	public void create () {
-
-
-
-
 		batch = new SpriteBatch();
 
-		 audioManager = new AssetManager();
+		audioManager = new AssetManager();
 		loadSongs();
 		audioManager.finishLoading();
 

@@ -31,7 +31,11 @@ public class WorldContactListener implements ContactListener {
                     chara = ((Character) fixB.getUserData());
                 }
 
-                if (chara.vel.y <= 0) chara.ground();
+                if (chara.vel.y <= 0) {
+                    chara.ground();
+                } else if (chara.animState == Character.AnimationState.SPECIAL_U) {
+                    chara.ground();
+                }
                 break;
             case Tags.PLAYER_HEAD_BIT | Tags.GROUND_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_HEAD_BIT) {
