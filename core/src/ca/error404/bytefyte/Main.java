@@ -1,8 +1,14 @@
 package ca.error404.bytefyte;
 
+import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.scene.*;
+import ca.error404.bytefyte.scene.MenuScene;
+import ca.error404.bytefyte.scene.SettingsMenu;
+import ca.error404.bytefyte.scene.StoryMenu;
+import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -14,8 +20,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.Scanner;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +38,7 @@ public class Main extends Game {
 	public static int sfxVolume = 5;
 	public static int cutsceneVolume = 5;
 
-	public static float deadZone = 0.1f;
+	public static float deadZone = 0.25f;
 
 	public SpriteBatch batch;
 
@@ -49,9 +53,13 @@ public class Main extends Game {
 	public static Hashtable<Controller, Array<Integer>> recentButtons = new Hashtable<>();
 
 	public static ArrayList<GameObject> gameObjects = new ArrayList<>();
+	public static ArrayList<Character> players = new ArrayList<>();
 	public static ArrayList<GameObject> objectsToAdd = new ArrayList<>();
 	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
+	public static ArrayList<PlayerHealth> ui = new ArrayList<>();
+	public static ArrayList<PlayerHealth> uiToAdd = new ArrayList<>();
+	public static ArrayList<PlayerHealth> uiToRemove = new ArrayList<>();
 
 	@Override
 	public void create () {
@@ -81,7 +89,7 @@ public class Main extends Game {
 			}
 		}
 
-		setScreen(new TMap("sprites/Cavi Cape Room 2", 1, this));
+		setScreen(new TestScene(this));
 	}
 
 	public void loadSongs() {

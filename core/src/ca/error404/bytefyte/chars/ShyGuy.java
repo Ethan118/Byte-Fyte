@@ -7,6 +7,7 @@ import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.TMap;
 import ca.error404.bytefyte.scene.TestScene;
 import ca.error404.bytefyte.ui.PlayerHealth;
+import ca.error404.bytefyte.scene.TMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
@@ -32,15 +33,12 @@ public class ShyGuy extends Character {
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
 
-//    Constructor
-    public ShyGuy(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "marioluigi");
+    public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        super(screen, spawnPoint, controller, playernumber, "shyguy");
         manualSpriteOffset = new Vector2(2200, 300);
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
         projectilesOnScreen = new ArrayList<>(1);
-
-        new PlayerHealth(playernumber, "shyguy");
 
         int i = 0;
         while (true) {
@@ -242,6 +240,7 @@ public class ShyGuy extends Character {
     void airNeutral() {
 //        A new multihit is created which will hit the opponent multiple times, as per the ability should
         new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 2f, 5, 15);
+        resetControls();
     }
 
     @Override
@@ -266,11 +265,13 @@ public class ShyGuy extends Character {
     @Override
     void airUp() {
         new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4f, 0.5f, 0);
+        resetControls();
     }
 
     @Override
     void airDown() {
         new Collider(new Vector2(10, -20), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f);
+        resetControls();
     }
 
 }

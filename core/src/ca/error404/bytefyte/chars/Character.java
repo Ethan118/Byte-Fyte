@@ -6,7 +6,8 @@ import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
+import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -179,18 +180,23 @@ public abstract class Character extends GameObject {
     public AnimationState prevAnimState;
 
     protected int playerNumber;
+    public String charname;
+    public float width;
+    public float height;
 
     /**
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
+    public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
         super();
+        Main.players.add(this);
         this.playerNumber = playerNumber;
+        this.charname = charname;
         this.world = screen.getWorld();
         this.controller = controller;
 
-//        new PlayerHealth(playerNumber, charname);
+        new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -257,6 +263,8 @@ public abstract class Character extends GameObject {
         PolygonShape shape = new PolygonShape();
 
         shape.setAsBox((float) getRegionWidth() / hitboxScale / 2 / Main.PPM,(float) getRegionHeight() / hitboxScale / 2 / Main.PPM);
+        width = getRegionWidth() / hitboxScale / 2 / Main.PPM;
+        height = getRegionHeight() / hitboxScale / 2 / Main.PPM;
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
@@ -402,6 +410,10 @@ public abstract class Character extends GameObject {
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
+        if (dead) {
+            Main.players.remove(this);
+            destroy();
+        }
 
         // counts the animation duration down to zero
         if (animDuration > 0) {
@@ -586,15 +598,7 @@ public abstract class Character extends GameObject {
                         // neutral
                         animState = AnimationState.BASIC_N;
                         basicNeutral();
-                    } else if (moveVector.y > 0) {
-                        // up
-                        animState = AnimationState.BASIC_U;
-                        basicUp();
-                    } else if (moveVector.y < 0) {
-                        // down
-                        animState = AnimationState.BASIC_D;
-                        basicDown();
-                    } else if (Math.abs(moveVector.x) > 0) {
+                    } else if (Math.abs(moveVector.x) > deadzone) {
                         if (moveState == MovementState.RUN) {
                             //dash
                             animState = AnimationState.DASH;
@@ -604,6 +608,14 @@ public abstract class Character extends GameObject {
                             animState = AnimationState.BASIC_S;
                             basicSide();
                         }
+                    } else if (moveVector.y > 0) {
+                        // up
+                        animState = AnimationState.BASIC_U;
+                        basicUp();
+                    } else if (moveVector.y < 0) {
+                        // down
+                        animState = AnimationState.BASIC_D;
+                        basicDown();
                     }
 
                 // air attacks
@@ -612,14 +624,6 @@ public abstract class Character extends GameObject {
                         // neutral
                         animState = AnimationState.AIR_N;
                         airNeutral();
-                    } else if (moveVector.y > 0) {
-                        // up
-                        animState = AnimationState.AIR_U;
-                        airUp();
-                    } else if (moveVector.y < 0) {
-                        // down
-                        animState = AnimationState.AIR_D;
-                        airDown();
                     } else if ((!facingLeft && moveVector.x >= deadzone) || (facingLeft && moveVector.x <= -deadzone)) {
                         // forward
                         animState = AnimationState.AIR_F;
@@ -628,6 +632,14 @@ public abstract class Character extends GameObject {
                         // backward
                         animState = AnimationState.AIR_B;
                         airBack();
+                    } else if (moveVector.y > 0) {
+                        // up
+                        animState = AnimationState.AIR_U;
+                        airUp();
+                    } else if (moveVector.y < 0) {
+                        // down
+                        animState = AnimationState.AIR_D;
+                        airDown();
                     }
                 }
 
@@ -637,7 +649,11 @@ public abstract class Character extends GameObject {
                     //neutral
                     animState = AnimationState.SPECIAL_N;
                     specialNeutral();
-                } else if (moveVector.y > 0) {
+                } else if (Math.abs(moveVector.x) > deadzone) {
+                    //side
+                    animState = AnimationState.SPECIAL_S;
+                    specialSide();
+                } else if (moveVector.y > deadzone) {
                     //up
                     animState = AnimationState.SPECIAL_U;
                     specialUp();
@@ -645,10 +661,6 @@ public abstract class Character extends GameObject {
                     //down
                     animState = AnimationState.SPECIAL_D;
                     specialDown();
-                } else if (Math.abs(moveVector.x) > 0) {
-                    //side
-                    animState = AnimationState.SPECIAL_S;
-                    specialSide();
                 } else if (attackState == AttackState.ULTIMATE) {
                     if (ultMeter >= 100) {
                         //ult
@@ -661,7 +673,16 @@ public abstract class Character extends GameObject {
             } else if (attackState == AttackState.SMASH) {
                 Vector2 vec = controller == null ? moveVector : rStick;
 
-                if (vec.y > 0) {
+                 if (vec.x < deadzone) {
+                    //side
+                    facingLeft = true;
+                    animState = AnimationState.SMASH_S;
+                    smashSide();
+                } else if (vec.x > deadzone) {
+                    facingLeft = false;
+                    animState = AnimationState.SMASH_S;
+                    smashSide();
+                } else if (vec.y > 0) {
                     //up
                     animState = AnimationState.SMASH_U;
                     smashUp();
@@ -669,15 +690,6 @@ public abstract class Character extends GameObject {
                     //down
                     animState = AnimationState.SMASH_D;
                     smashDown();
-                } else if (vec.x < 0) {
-                    //side
-                    facingLeft = true;
-                    animState = AnimationState.SMASH_S;
-                    smashSide();
-                } else if (vec.x > 0) {
-                    facingLeft = false;
-                    animState = AnimationState.SMASH_S;
-                    smashSide();
                 }
             }
         }
@@ -868,7 +880,7 @@ public abstract class Character extends GameObject {
         knockedOff = true;
 
 //        Checks if the user has stocks (lives) left
-        if (stockCount != 1) {
+        if (stockCount >= 1) {
 
 //            If they do, their position is reset and they lose a stock
             goToPos = new Vector2(x / Main.PPM, y / Main.PPM);

@@ -14,6 +14,7 @@ public class PlayerHealth extends GameObject {
 
     private Vector2 headOffset = new Vector2();
     private Vector2 baseOffset = new Vector2();
+    private Vector2 pos = new Vector2();
 
     TextureRegion playerBase;
     TextureRegion playerHead;
@@ -21,8 +22,15 @@ public class PlayerHealth extends GameObject {
     public PlayerHealth(int number, String charname) {
         super();
         Main.objectsToAdd.remove(this);
+        Main.uiToAdd.add(this);
         this.playerNum = number;
         this.charname = charname;
+
+        if (number == 1) {
+            pos = new Vector2(328, 25);
+        } else if (number == 2) {
+            pos = new Vector2(735, 25);
+        }
 
         TextureAtlas textureAtlas = new TextureAtlas("sprites/ui.atlas");
 
@@ -42,7 +50,7 @@ public class PlayerHealth extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(playerBase, 0 + (baseOffset.x / 15 / Main.PPM), 0 + (baseOffset.y / 15 / Main.PPM), playerBase.getRegionWidth() / Main.PPM / 15, playerBase.getRegionHeight() / Main.PPM / 15);
-        batch.draw(playerHead, 0 + (headOffset.x / 15 / Main.PPM), 0 + (headOffset.y / 15 / Main.PPM), playerHead.getRegionWidth() / Main.PPM / 15, playerHead.getRegionHeight() / Main.PPM / 15);
+        batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
+        batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
     }
 }
