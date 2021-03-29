@@ -243,6 +243,7 @@ public class ShyGuy extends Character {
     void airNeutral() {
 //        A new multihit is created which will hit the opponent multiple times, as per the ability should
         new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 2f, 5, 15);
+        resetControls();
     }
 
     @Override
@@ -267,11 +268,13 @@ public class ShyGuy extends Character {
     @Override
     void airUp() {
         new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4f, 0.5f, 0);
+        resetControls();
     }
 
     @Override
     void airDown() {
         new Collider(new Vector2(10, -20), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f);
+        resetControls();
     }
 
 }
