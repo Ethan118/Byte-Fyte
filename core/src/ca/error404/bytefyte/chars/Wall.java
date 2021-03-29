@@ -2,21 +2,22 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.scene.TMap;
 import ca.error404.bytefyte.scene.TestScene;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Wall {
     public World world;
-    public TestScene scene;
+    public TMap scene;
 
     public int x;
     public int y;
-    public int w;
-    public int h;
+    public float w;
+    public float h;
 
     public Fixture fix;
 
-    public Wall(int x, int y, int w, int h, TestScene screen) {
+    public Wall(int x, int y, float w, float h, TMap screen) {
         this.world = screen.getWorld();
         this.scene = screen;
 

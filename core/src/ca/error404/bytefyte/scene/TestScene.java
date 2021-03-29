@@ -48,26 +48,27 @@ public class TestScene implements Screen {
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
+        TMap map = new TMap("sprites/test", 1, game);
 
         if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0), 1);
-            new ShyGuy(this, new Vector2(38, 150),  null, 2);
+            player = new ShyGuy(map, new Vector2(-38, 150), Main.controllers.get(0), 1);
+            new ShyGuy(map, new Vector2(38, 150),  null, 2);
         } else {
-            player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
-            new ShyGuy(this, new Vector2(38, 150), null, 2);
+            player = new ShyGuy(map, new Vector2(-38, 150), null, 1);
+            new ShyGuy(map, new Vector2(38, 150), null, 2);
         }
 
         player.facingLeft = false;
 
         world.setContactListener(new WorldContactListener());
 
-        new Wall(0, -30, 100, 10, this);
-        new Wall(-75, 65, 20, 20, this);
-        new Wall(75, 65, 20, 20, this);
-        new DeathWall(0, -400, 1000, 10, this);
-        new DeathWall(0, 500, 1000, 10, this);
-        new DeathWall(-225, 0, 10, 1000, this);
-        new DeathWall(225, 0, 10, 1000, this);
+        new Wall(0, -30, 100, 10, map);
+        new Wall(-75, 65, 20, 20, map);
+        new Wall(75, 65, 20, 20, map);
+        new DeathWall(0, -400, 1000, 10, map);
+        new DeathWall(0, 500, 1000, 10, map);
+        new DeathWall(-225, 0, 10, 1000, map);
+        new DeathWall(225, 0, 10, 1000, map);
 
         // plays a song so I can hear things
         game.music = game.newSong();
