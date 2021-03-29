@@ -180,7 +180,8 @@ public abstract class Character extends GameObject {
     public AnimationState animState;
     public AnimationState prevAnimState;
 
-    protected int playerNumber;
+    public int playerNumber;
+    public String charname;
 
     /**
      * pre: reference to the scene, position to spawn, controller, player number
@@ -189,10 +190,11 @@ public abstract class Character extends GameObject {
     public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
         super();
         this.playerNumber = playerNumber;
+        this.charname = charname;
         this.world = screen.getWorld();
         this.controller = controller;
 
-//        new PlayerHealth(playerNumber, charname);
+        new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;

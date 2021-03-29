@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.GameObject;
+import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
@@ -30,6 +31,9 @@ public class TestScene implements Screen {
     private final Main game;
     private final OrthographicCamera cam;
     private final Viewport viewport;
+    private final HUD hud;
+
+    public Character player;
 
     private final World world;
     private final Box2DDebugRenderer b2dr;
@@ -43,8 +47,6 @@ public class TestScene implements Screen {
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
-
-        Character player;
 
         if (Main.controllers.size > 0) {
             player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0), 1);
@@ -70,6 +72,8 @@ public class TestScene implements Screen {
         game.music = game.newSong();
         game.music.setVolume(Main.musicVolume / 10f);
         game.music.play();
+
+        hud = new HUD(game.batch);
     }
 
     // function is called in between constructor and first render; is required for the Screen class
@@ -86,17 +90,22 @@ public class TestScene implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(cam.combined);
+
         game.batch.begin();
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
         viewport.apply();
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
+        hud.draw(game.batch);
         game.batch.end();
 
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
         }
+
+        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
     }
 
     public void update(float deltaTime) {
@@ -188,6 +197,8 @@ public class TestScene implements Screen {
                 obj.update(deltaTime);
             }
 
+            hud.update(deltaTime);
+
             // Manage which game objects are active
             Main.gameObjects.addAll(Main.objectsToAdd);
             Main.gameObjects.removeAll(Main.objectsToRemove);
@@ -230,7 +241,9 @@ public class TestScene implements Screen {
 
     @Override
     public void dispose() {
-
+        world.dispose();
+        b2dr.dispose();
+        hud.dispose();
     }
 
     public World getWorld() {

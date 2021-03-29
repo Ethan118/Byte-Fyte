@@ -6,6 +6,7 @@ import ca.error404.bytefyte.scene.MenuScene;
 import ca.error404.bytefyte.scene.SettingsMenu;
 import ca.error404.bytefyte.scene.StoryMenu;
 import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -55,6 +56,9 @@ public class Main extends Game {
 	public static ArrayList<GameObject> objectsToAdd = new ArrayList<>();
 	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
+	public static ArrayList<PlayerHealth> ui = new ArrayList<>();
+	public static ArrayList<PlayerHealth> uiToAdd = new ArrayList<>();
+	public static ArrayList<PlayerHealth> uiToRemove = new ArrayList<>();
 
 	@Override
 	public void create () {
