@@ -106,8 +106,8 @@ public class TMap implements Screen {
             player = new ShyGuy(this, new Vector2(1000, 1000), Main.controllers.get(0), 1);
             new ShyGuy(this, new Vector2(1000, 1000),  null, 2);
         } else {
-            player = new ShyGuy(this, new Vector2(200, 200), null, 1);
-            new ShyGuy(this, new Vector2(250, 250), null, 2);
+            player = new ShyGuy(this, new Vector2(1000, 1000), null, 1);
+            new ShyGuy(this, new Vector2(1000, 1000), null, 2);
         }
 
         player.facingLeft = false;

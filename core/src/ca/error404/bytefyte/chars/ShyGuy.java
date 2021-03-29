@@ -79,7 +79,7 @@ public class ShyGuy extends Character {
     * */
     public void update(float deltaTime) {
         super.update(deltaTime);
-
+        System.out.println(percent);
 //        Heals shy guy for song duration
         if (animState == AnimationState.SPECIAL_D) {
             if (animDuration <= 0) {
@@ -171,7 +171,8 @@ public class ShyGuy extends Character {
 
     @Override
     void specialNeutral() {
-        new Collider(new Vector2(20, 0), 25, 30, this, 0f, 4f, 70f / 60f, true, 0);
+        new MultiHit(new Vector2(20, 0), 25, 30, this, 1f, 0f, 9, 0, 3, 0.25f, 2, true);
+//        new Collider(new Vector2(20, 0), 25, 30, this, 0f, 4f, 70f / 60f, true, 0);
         resetControls();
     }
 
@@ -184,9 +185,9 @@ public class ShyGuy extends Character {
 
 //            Create a projectile based on the inputted user direction
             if (facingLeft) {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             } else {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, 10f, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             }
         }
 
@@ -239,7 +240,7 @@ public class ShyGuy extends Character {
     @Override
     void airNeutral() {
 //        A new multihit is created which will hit the opponent multiple times, as per the ability should
-        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 2f, 5, 15);
+        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 2f, 5, 15, false);
         resetControls();
     }
 
@@ -250,9 +251,9 @@ public class ShyGuy extends Character {
 
 //            Create a projectile based on the user direction
             if (facingLeft) {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x - 0.2f, pos.y + 0.1f), new Vector2(-4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x - 0.2f, pos.y + 0.1f), new Vector2(-4, -4), 0, 10, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
             } else {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x + 0.2f, pos.y + 0.1f), new Vector2(4, -4), 0, 10, 5f, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x + 0.2f, pos.y + 0.1f), new Vector2(4, -4), 0, 10, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
             }
         }
     }
