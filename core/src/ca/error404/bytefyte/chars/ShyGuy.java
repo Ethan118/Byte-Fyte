@@ -33,13 +33,11 @@ public class ShyGuy extends Character {
     private float flyAcceleration = 0f;
 
     public ShyGuy(TestScene screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "marioluigi");
+        super(screen, spawnPoint, controller, playernumber, "shyguy");
         manualSpriteOffset = new Vector2(2200, 300);
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();
         projectilesOnScreen = new ArrayList<>(1);
-
-        new PlayerHealth(playernumber, "shyguy");
 
         int i = 0;
         while (true) {
@@ -229,8 +227,6 @@ public class ShyGuy extends Character {
         animDuration = healSongLengths.get(i);
         moveTimer = healSongLengths.get(i);
         currentSongLength = healSongLengths.get(i);
-
-        lockAnim = true;
 
         resetControls();
     }

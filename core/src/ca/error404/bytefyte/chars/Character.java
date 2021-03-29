@@ -178,10 +178,10 @@ public abstract class Character extends GameObject {
     public AnimationState animState;
     public AnimationState prevAnimState;
 
+    protected int playerNumber;
+    public String charname;
     public float width;
     public float height;
-
-    protected int playerNumber;
 
     /**
      * pre: reference to the scene, position to spawn, controller, player number
@@ -191,10 +191,11 @@ public abstract class Character extends GameObject {
         super();
         Main.players.add(this);
         this.playerNumber = playerNumber;
+        this.charname = charname;
         this.world = screen.getWorld();
         this.controller = controller;
 
-//        new PlayerHealth(playerNumber, charname);
+        new PlayerHealth(playerNumber, charname);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -311,7 +312,7 @@ public abstract class Character extends GameObject {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-//            Gets the directionak input of the right controller stick to handle attacks
+//            Gets the directional input of the right controller stick to handle attacks
             rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
             rStick.y = Math.abs(controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS) : 0;
 
@@ -344,7 +345,11 @@ public abstract class Character extends GameObject {
             } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
                 attackState = AttackState.BASIC;
             } else if (Math.abs(rStick.x) >= deadzone || Math.abs(rStick.y) >= deadzone) {
-                attackState = AttackState.SMASH;
+                if (attackState != AttackState.SMASH) {
+                    attackState = AttackState.SMASH;
+                } else {
+                    attackState = AttackState.NONE;
+                }
 
 //                Otherwise the user is not attacking
             } else {
@@ -521,6 +526,8 @@ public abstract class Character extends GameObject {
             ground();
         }
 
+        prevAnimState = animState;
+
         // locks animation state if the player is stunned or an attack animation is playing
         if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
@@ -553,7 +560,6 @@ public abstract class Character extends GameObject {
      * post: gets the current state of the player
      */
     public void getState() {
-
 //        If the user is not on the ground with a y velocity above 0, user jumped
         if (vel.y > 0 && !grounded) {
             moveState = MovementState.JUMP;
@@ -708,7 +714,6 @@ public abstract class Character extends GameObject {
 
         // sets elapsedTime
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
-        prevAnimState = animState;
 
         // switch case to set the animation
         switch (animState) {

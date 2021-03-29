@@ -21,6 +21,7 @@ public class PlayerHealth extends GameObject {
     public PlayerHealth(int number, String charname) {
         super();
         Main.objectsToAdd.remove(this);
+        Main.uiToAdd.add(this);
         this.playerNum = number;
         this.charname = charname;
 
