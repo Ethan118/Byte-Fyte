@@ -27,9 +27,13 @@ public class PlayerHealth extends GameObject {
         this.charname = charname;
 
         if (number == 1) {
-            pos = new Vector2(328, 25);
+            pos = new Vector2(172, 25);
         } else if (number == 2) {
-            pos = new Vector2(735, 25);
+            pos = new Vector2(574, 25);
+        } else if (number == 3) {
+            pos = new Vector2(975, 25);
+        } else if (number == 4) {
+            pos = new Vector2(1366, 25);
         }
 
         TextureAtlas textureAtlas = new TextureAtlas("sprites/ui.atlas");

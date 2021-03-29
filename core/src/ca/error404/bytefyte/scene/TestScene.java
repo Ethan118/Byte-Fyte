@@ -55,6 +55,8 @@ public class TestScene implements Screen {
         } else {
             player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
             new ShyGuy(this, new Vector2(38, 150), null, 2);
+            new ShyGuy(this, new Vector2(60, 150), null, 3);
+            new ShyGuy(this, new Vector2(-60, 150), null, 4);
         }
 
         player.facingLeft = false;
