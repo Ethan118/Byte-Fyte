@@ -673,7 +673,7 @@ public abstract class Character extends GameObject {
             } else if (attackState == AttackState.SMASH) {
                 Vector2 vec = controller == null ? moveVector : rStick;
 
-                 if (vec.x < deadzone) {
+                 if (vec.x < -deadzone) {
                     //side
                     facingLeft = true;
                     animState = AnimationState.SMASH_S;

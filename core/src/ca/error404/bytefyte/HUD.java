@@ -51,20 +51,15 @@ public class HUD implements Disposable {
         Table footer = new Table();
 
         header.top();
-        //header.setDebug(true);
         header.setFillParent(true);
 
         footer.bottom();
-        footer.setDebug(true);
         footer.setFillParent(true);
 
         timerLabel = new Label(String.format("%.2f", timeCount), style);
         timerLabel.setAlignment(Align.left);
 
         header.add(timerLabel).growX().pad(10, 10, 0, 0);
-
-        footer.add(new Label("fwef", style)).expandX().padBottom(10);
-        footer.add(new Label("fwef", style)).expandX().padBottom(10);
 
         stage.addActor(header);
         stage.addActor(footer);
