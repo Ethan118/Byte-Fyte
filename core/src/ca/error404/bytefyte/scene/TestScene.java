@@ -74,7 +74,7 @@ public class TestScene implements Screen {
         game.music.setVolume(Main.musicVolume / 10f);
         game.music.play();
 
-        hud = new HUD(game.batch);
+        hud = new HUD();
     }
 
     // function is called in between constructor and first render; is required for the Screen class
@@ -99,8 +99,9 @@ public class TestScene implements Screen {
         }
         viewport.apply();
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
-        hud.draw(game.batch);
         game.batch.end();
+
+        hud.draw();
 
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);

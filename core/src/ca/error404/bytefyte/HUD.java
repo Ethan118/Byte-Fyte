@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class HUD implements Disposable {
     public Stage stage;
     private Viewport viewport;
+    private SpriteBatch batch;
 
     private float timeCount;
 
@@ -29,12 +30,13 @@ public class HUD implements Disposable {
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private BitmapFont font;
 
-    public HUD(SpriteBatch batch) {
+    public HUD() {
+        batch = new SpriteBatch();
         timeCount = 300f;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.otf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        fontParameter.size = 15;
+        fontParameter.size = 80;
         fontParameter.color = Color.WHITE;
 
         font = fontGenerator.generateFont(fontParameter);
@@ -42,7 +44,7 @@ public class HUD implements Disposable {
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = font;
 
-        viewport = new FitViewport(Main.WIDTH, Main.HEIGHT, new OrthographicCamera());
+        viewport = new FitViewport(1920, 1080, new OrthographicCamera());
         stage = new Stage(viewport, batch);
 
         Table header = new Table();
@@ -81,10 +83,12 @@ public class HUD implements Disposable {
         timerLabel.setText(String.format("%.2f", timeCount));
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw() {
+        batch.begin();
         for (PlayerHealth playerUI : Main.ui) {
             playerUI.draw(batch);
         }
+        batch.end();
     }
 
     @Override
