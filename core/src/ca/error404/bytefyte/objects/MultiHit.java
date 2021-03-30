@@ -22,6 +22,7 @@ public class MultiHit extends GameObject {
     private float lastHitPower;
     private float leadUpDamage;
     private float lastHitDamage;
+    private boolean lifesteal;
 
     public Vector2 offset;
 
@@ -38,13 +39,15 @@ public class MultiHit extends GameObject {
 
     private float delay;
 
+    private float timer = 0;
+
 
     /*
     * Constructor
     * Pre: Parameters to create desired collisions
     * Post: An attack which hits the opponent multiple times
     * */
-    public MultiHit(Vector2 offset, float width, float height, Character parent, float hitStun, float delay, int numOfCollisions, float leadUpPower, float lastHitPower, float leadUpDamage, float lastHitDamage) {
+    public MultiHit(Vector2 offset, float width, float height, Character parent, float hitStun, float delay, int numOfCollisions, float leadUpPower, float lastHitPower, float leadUpDamage, float lastHitDamage, boolean lifesteal) {
 //        Calls all methods of the super class
         super();
 
@@ -67,6 +70,7 @@ public class MultiHit extends GameObject {
         this.parent = parent;
         this.hitStun = hitStun;
         this.delay = delay;
+        this.lifesteal = lifesteal;
 
 //        Setting the world to the world of the parent character
         this.world = parent.world;
@@ -82,19 +86,23 @@ public class MultiHit extends GameObject {
 //        Clears the arraylist
         collisions.clear();
 
+        if (timer % 5 == 0) {
+            System.out.println("hit");
 //        If the user isn't on the last hit of the ability
-        if (numOfCollisions > 1) {
+            if (numOfCollisions > 1) {
 //            Hit the opponent with the weaker hits, reduce the collision count by 1
-            collisions.add(new Collider(offset, width, height, parent, leadUpPower, leadUpDamage, hitStun, delay));
-            numOfCollisions -= 1;
+                collisions.add(new Collider(offset, width, height, parent, leadUpPower, leadUpDamage, hitStun, lifesteal, delay));
+                numOfCollisions -= 1;
 
 //            If they are on the last hit
-        } else if (numOfCollisions == 1) {
+            } else if (numOfCollisions == 1) {
 
 //            Hit the opponent with the strong hit, reduce the collision count by 1
-            collisions.add(new Collider(offset, width, height, parent, lastHitPower, lastHitDamage, hitStun, delay));
-            numOfCollisions -= 1;
+                collisions.add(new Collider(offset, width, height, parent, lastHitPower, lastHitDamage, hitStun, lifesteal, delay));
+                numOfCollisions -= 1;
+            }
         }
+        timer += 1;
     }
 
     /*

@@ -6,6 +6,7 @@ import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Projectile;
+import ca.error404.bytefyte.scene.TMap;
 import ca.error404.bytefyte.scene.TestScene;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
@@ -188,7 +189,7 @@ public abstract class Character extends GameObject {
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
+    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
         super();
         Main.players.add(this);
         this.playerNumber = playerNumber;
@@ -376,7 +377,11 @@ public abstract class Character extends GameObject {
 
 //            Next two lines are for testing purposes, will be removed in final game
 //            if (Gdx.input.isKeyJustPressed(Keys.EMPTY_METER)) ultMeter = 0;
-//            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) ultMeter = 100;
+            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) {
+                ultMeter = 100;
+                System.out.println(Gdx.input.getX());
+                System.out.println(Gdx.input.getY());
+            }
 
 //            Checks if the user pressed the key corresponding to a special move
             if (Gdx.input.isKeyJustPressed(Keys.SPECIAL)) {
