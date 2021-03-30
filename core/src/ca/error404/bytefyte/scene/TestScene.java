@@ -103,11 +103,11 @@ public class TestScene implements Screen {
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
-        hud.draw();
-
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
         }
+
+        hud.draw();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();

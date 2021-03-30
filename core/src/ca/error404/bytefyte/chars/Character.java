@@ -114,7 +114,7 @@ public abstract class Character extends GameObject {
 
     private boolean afterUpB = false;
 
-    protected int stockCount = 3;
+    public int stockCount = 3;
 
     protected boolean dead = false;
     protected boolean knockedOff = false;
@@ -196,7 +196,7 @@ public abstract class Character extends GameObject {
         this.world = screen.getWorld();
         this.controller = controller;
 
-        new PlayerHealth(playerNumber, charname);
+        new PlayerHealth(playerNumber, charname, this);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -880,15 +880,15 @@ public abstract class Character extends GameObject {
         knockedOff = true;
 
 //        Checks if the user has stocks (lives) left
-        if (stockCount >= 1) {
-
-//            If they do, their position is reset and they lose a stock
+        if (stockCount > 1) {
+//          If they do, their position is reset and they lose a stock
             goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
             stockCount -= 1;
 
 //        Otherwise, the user's character dies
         } else {
             dead = true;
+            stockCount = 0;
         }
     }
 
