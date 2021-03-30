@@ -24,6 +24,8 @@ public class PlayerHealth extends GameObject {
     TextureRegion playerHead;
     TextureRegion country;
     TextureRegion stock;
+    TextureRegion fsCharge;
+    TextureRegion fsFull;
 
     public PlayerHealth(int number, String charname, Character chara) {
         super();
@@ -49,6 +51,8 @@ public class PlayerHealth extends GameObject {
         playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
         stock = new TextureRegion(textureAtlas.findRegion(String.format("%s_stock", charname)));
         country = new TextureRegion(textureAtlas.findRegion(String.format("%s_%d_country", charname, number)));
+        fsCharge = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"));
+        fsFull = new TextureRegion(textureAtlas.findRegion("fs_meter_full"));
 
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;

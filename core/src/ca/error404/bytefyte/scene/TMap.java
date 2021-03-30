@@ -98,16 +98,14 @@ public class TMap implements Screen {
             Character chara;
             try {
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i), (int) object.getProperties().get("player"));
-                i += 1;
+                i++;
             } catch (Exception e) {
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, (int) object.getProperties().get("player"));
-
             }
-                chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+            chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
         }
 
         float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
-        System.out.println(width);
         float height = (mProp.get("height", Integer.class) * mProp.get("tileheight", Integer.class)) / Main.PPM;
 
         gamecam.max = new Vector2(width, height);

@@ -53,8 +53,8 @@ public class BattleCam extends OrthographicCamera {
 
         cameraPosition.x = Math.max(cameraPosition.x, width / 2);
         cameraPosition.y = Math.max(cameraPosition.y, height / 2);
-        cameraPosition.x = Math.max(cameraPosition.x, max.x - width / 2);
-        cameraPosition.y = Math.max(cameraPosition.y, max.y - height / 2);
+        cameraPosition.x = Math.min(cameraPosition.x, this.max.x - width / 2);
+        cameraPosition.y = Math.min(cameraPosition.y, this.max.y - height / 2);
 
         position.set(cameraPosition);
 
