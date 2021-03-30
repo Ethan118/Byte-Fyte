@@ -48,16 +48,14 @@ public class TestScene implements Screen {
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
-        TMap map = new TMap("sprites/test", 1, game);
+        TMap map = new TMap("sprites/test", game);
 
         if (Main.controllers.size > 0) {
             player = new ShyGuy(map, new Vector2(-38, 150), Main.controllers.get(0), 1);
             new ShyGuy(map, new Vector2(38, 150),  null, 2);
         } else {
-            player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
-            new ShyGuy(this, new Vector2(38, 150), null, 2);
-            new ShyGuy(this, new Vector2(60, 150), null, 3);
-            new ShyGuy(this, new Vector2(-60, 150), null, 4);
+            player = new ShyGuy(map, new Vector2(-38, 150), null, 1);
+            new ShyGuy(map, new Vector2(38, 150), null, 2);
         }
 
         player.facingLeft = false;
@@ -109,9 +107,6 @@ public class TestScene implements Screen {
         }
 
         hud.draw();
-
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
     }
 
     public void update(float deltaTime) {

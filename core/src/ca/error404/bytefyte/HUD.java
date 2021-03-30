@@ -79,6 +79,7 @@ public class HUD implements Disposable {
     }
 
     public void draw() {
+        stage.draw();
         batch.begin();
         for (PlayerHealth playerUI : Main.ui) {
             playerUI.draw(batch);

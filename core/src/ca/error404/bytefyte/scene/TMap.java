@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.GameObject;
+import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.DeathWall;
@@ -36,10 +37,11 @@ import java.io.IOException;
 import java.util.Set;
 
 public class TMap implements Screen {
-    private OrthographicCamera gamecam;
+    private BattleCam gamecam;
     private Viewport viewport;
 
     private final Main game;
+    private final HUD hud;
 
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -52,12 +54,10 @@ public class TMap implements Screen {
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
 
-    public TMap(String mapName, int objectLayer, Main game) {
+    public TMap(String mapName, Main game) {
         this.game = game;
 
         gamecam = new BattleCam();
-
-        gamecam.position.set(200, 200, 0);
 
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT/ Main.PPM, gamecam);
 
@@ -71,62 +71,47 @@ public class TMap implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-//        gamecam.position.set((mProp.get("width", Integer.class)) , (mProp.get("height", Integer.class)), 0);
+        Vector2 pos = Vector2.Zero;
 
+        for (MapObject object: map.getLayers().get("Respawn Point").getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            pos = new Vector2(rect.getX(), rect.getY());
+        }
 
-        BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-        Body body;
+        gamecam.position.set(pos.x / Main.PPM, pos.y / Main.PPM, 0);
 
-        for (MapObject object: map.getLayers().get(objectLayer).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object: map.getLayers().get("Ground").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new Wall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),(int) rect.getWidth() / 2f, (int)rect.getHeight() / 2f, this);
-            System.out.println(rect.getX());
-            System.out.println(rect.getY());
-            System.out.println(rect.getWidth());
-            System.out.println(rect.getHeight());
-//
-//            bdef.type = BodyDef.BodyType.StaticBody;
-//            bdef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
-//
-//            body = world.createBody(bdef);
-//
-//            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
-//            fdef.shape = shape;
-//
-//            body.createFixture(fdef);
-//            System.out.println(fdef);
+            new Wall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
-        Character player;
+        for (MapObject object: map.getLayers().get("Death Barrier").getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-        if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(1000, 1000), Main.controllers.get(0), 1);
-            new ShyGuy(this, new Vector2(1000, 1000),  null, 2);
-        } else {
-            player = new ShyGuy(this, new Vector2(1000, 1000), null, 1);
-            new ShyGuy(this, new Vector2(1000, 1000), null, 2);
+            new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
-        player.facingLeft = false;
+        for (MapObject object: map.getLayers().get("Spawn Points").getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            Character chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, (int) object.getProperties().get("player"));
+            chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+        }
+
+        float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
+        System.out.println(width);
+        float height = (mProp.get("height", Integer.class) * mProp.get("tileheight", Integer.class)) / Main.PPM;
+
+        gamecam.max = new Vector2(width, height);
 
         world.setContactListener(new WorldContactListener());
-
-        new Wall(0, -30, 20000, 10, this);
-        new Wall(-75, 65, 20, 20, this);
-        new Wall(75, 65, 20, 20, this);
-        new DeathWall(0, -400, 1000, 10, this);
-        new DeathWall(0, 5000, 1000, 10, this);
-        new DeathWall(-225, 0, 10, 1000, this);
-        new DeathWall(225, 0, 10, 1000, this);
 
         // plays a song so I can hear things
         game.music = game.newSong();
         game.music.setVolume(Main.musicVolume / 10f);
         game.music.play();
-        System.out.println("Loaded");
+
+        hud = new HUD();
     }
 
     @Override
@@ -136,7 +121,6 @@ public class TMap implements Screen {
 
     public void update(float deltaTime) {
 
-//        gamecam.zoom = 0.08f;
         gamecam.update();
         renderer.setView(gamecam);
 
@@ -208,7 +192,6 @@ public class TMap implements Screen {
         // Scene Switching test
         if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
             game.music.stop();
-            System.out.println(game.music);
             game.setScreen(new TestScene2(game));
         }
 
@@ -236,6 +219,8 @@ public class TMap implements Screen {
             if (!game.music.isPlaying()) {
                 game.music.play();
             }
+
+            hud.update(deltaTime);
         }
 
         // clear all controller inputs
@@ -250,7 +235,6 @@ public class TMap implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         renderer.render();
 
         game.batch.setProjectionMatrix(gamecam.combined);
@@ -258,17 +242,17 @@ public class TMap implements Screen {
         viewport.apply();
 
         game.batch.begin();
+
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
+
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
-
         b2dr.render(world, gamecam.combined);
 
-
-
+        hud.draw();
     }
 
     @Override

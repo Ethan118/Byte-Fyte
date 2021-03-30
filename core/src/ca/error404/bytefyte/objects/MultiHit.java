@@ -87,7 +87,6 @@ public class MultiHit extends GameObject {
         collisions.clear();
 
         if (timer % 5 == 0) {
-            System.out.println("hit");
 //        If the user isn't on the last hit of the ability
             if (numOfCollisions > 1) {
 //            Hit the opponent with the weaker hits, reduce the collision count by 1
@@ -100,6 +99,10 @@ public class MultiHit extends GameObject {
 //            Hit the opponent with the strong hit, reduce the collision count by 1
                 collisions.add(new Collider(offset, width, height, parent, lastHitPower, lastHitDamage, hitStun, lifesteal, delay));
                 numOfCollisions -= 1;
+            }
+
+            if (parent.animState != parent.prevAnimState || timer <= 0) {
+                destroy();
             }
         }
         timer += 1;

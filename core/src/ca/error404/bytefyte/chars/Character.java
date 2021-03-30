@@ -116,6 +116,7 @@ public abstract class Character extends GameObject {
     private boolean afterUpB = false;
 
     public int stockCount = 3;
+    public Vector2 respawnPos = new Vector2();
 
     protected boolean dead = false;
     protected boolean knockedOff = false;
@@ -379,8 +380,6 @@ public abstract class Character extends GameObject {
 //            if (Gdx.input.isKeyJustPressed(Keys.EMPTY_METER)) ultMeter = 0;
             if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) {
                 ultMeter = 100;
-                System.out.println(Gdx.input.getX());
-                System.out.println(Gdx.input.getY());
             }
 
 //            Checks if the user pressed the key corresponding to a special move
@@ -451,8 +450,8 @@ public abstract class Character extends GameObject {
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
+            prevGoToPos = goToPos;
         }
-        prevGoToPos = goToPos;
 
         // counts down stun timer
         if (stunTimer > 0) {
@@ -873,7 +872,7 @@ public abstract class Character extends GameObject {
      * pre: x position, y position
      * post: reset player, set position
      */
-    public void setPos(int x, int y) {
+    public void die() {
 
 //        Resets player for a potential respawn
         percent = 0;
@@ -885,9 +884,11 @@ public abstract class Character extends GameObject {
         knockedOff = true;
 
 //        Checks if the user has stocks (lives) left
+        prevGoToPos = new Vector2(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
         if (stockCount > 1) {
+            System.out.println("a");
 //          If they do, their position is reset and they lose a stock
-            goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+            goToPos = respawnPos;
             stockCount -= 1;
 
 //        Otherwise, the user's character dies
