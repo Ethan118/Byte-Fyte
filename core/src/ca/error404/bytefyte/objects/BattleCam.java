@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public class BattleCam extends OrthographicCamera {
     final float speed = 0.1f, ispeed = 1.0f-speed, hRatio = 0.5625f, vRatio = 1.777777778f;
     ArrayList<Vector2> sizes = new ArrayList<>();
+    public Vector2 min = new Vector2(0, 0);
+    public Vector2 max = new Vector2();
 
     public BattleCam() {
         super();
@@ -32,8 +34,6 @@ public class BattleCam extends OrthographicCamera {
         targetPos.scl(speed);
         cameraPosition.add(targetPos);
 
-        position.set(cameraPosition);
-
         float width = 2.5f, height = width * hRatio;
 
         Vector2 max = max(pos);
@@ -51,19 +51,43 @@ public class BattleCam extends OrthographicCamera {
         viewportWidth = width;
         viewportHeight = height;
 
+        cameraPosition.x = Math.max(cameraPosition.x, width / 2);
+        cameraPosition.y = Math.max(cameraPosition.y, height / 2);
+        cameraPosition.x = Math.max(cameraPosition.x, max.x - width / 2);
+        cameraPosition.y = Math.max(cameraPosition.y, max.y - height / 2);
+
+        position.set(cameraPosition);
+
         super.update();
     }
 
     private Vector3 average(ArrayList<Vector3> list) {
-        Vector3 result = new Vector3();
-
+        Vector2 min = new Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
         for (Vector3 item : list) {
-            result.x += item.x;
-            result.y += item.y;
+            if (min.x > item.x) {
+                min.x = item.x;
+            }
+
+            if (min.y > item.y) {
+                min.y = item.y;
+            }
         }
 
-        result.x /= list.size();
-        result.y /= list.size();
+        Vector2 max = new Vector2(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+        for (Vector3 item : list) {
+            if (max.x < item.x) {
+                max.x = item.x;
+            }
+
+            if (max.y < item.y) {
+                max.y = item.y;
+            }
+        }
+
+        Vector3 result = new Vector3(min.x + max.x, min.y + max.y, 0);
+
+        result.x /= 2;
+        result.y /= 2;
 
         return result;
     }
@@ -77,6 +101,14 @@ public class BattleCam extends OrthographicCamera {
             if (list.get(i).y + sizes.get(i).y > y) y = list.get(i).y + sizes.get(i).y;
         }
 
+        if (x > max.x) {
+            x = max.x;
+        }
+
+        if (y > max.y) {
+            y = max.y;
+        }
+
         return new Vector2(x, y);
     }
 
@@ -87,6 +119,15 @@ public class BattleCam extends OrthographicCamera {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).x - sizes.get(i).x < x) x = list.get(i).x - sizes.get(i).x;
             if (list.get(i).y - sizes.get(i).y < y) y = list.get(i).y - sizes.get(i).y;
+        }
+
+        if (x < min.x) {
+            System.out.println(x);
+            x = min.x;
+        }
+
+        if (y < min.y) {
+            y = min.y;
         }
 
         return new Vector2(x, y);

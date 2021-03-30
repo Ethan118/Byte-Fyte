@@ -89,7 +89,7 @@ public class Main extends Game {
 			}
 		}
 
-		setScreen(new TMap("sprites/test", 1, this));
+		setScreen(new TMap("sprites/test", this));
 	}
 
 	public void loadSongs() {

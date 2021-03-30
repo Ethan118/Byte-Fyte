@@ -79,7 +79,6 @@ public class ShyGuy extends Character {
     * */
     public void update(float deltaTime) {
         super.update(deltaTime);
-        System.out.println(percent);
 //        Heals shy guy for song duration
         if (animState == AnimationState.SPECIAL_D) {
             if (animDuration <= 0) {
