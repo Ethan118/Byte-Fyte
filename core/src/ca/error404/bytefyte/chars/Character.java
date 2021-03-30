@@ -488,7 +488,7 @@ public abstract class Character extends GameObject {
         applyFriction(deltaTime);
 
         // checks if the player is pressing down
-        if (moveVector.y < 0) {
+        if (moveVector.y < -deadzone) {
 
             // player falls at the fast fall speed
             maxFallSpeed = fastFallSpeed;
@@ -886,7 +886,6 @@ public abstract class Character extends GameObject {
 //        Checks if the user has stocks (lives) left
         prevGoToPos = new Vector2(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
         if (stockCount > 1) {
-            System.out.println("a");
 //          If they do, their position is reset and they lose a stock
             goToPos = respawnPos;
             stockCount -= 1;
@@ -900,7 +899,6 @@ public abstract class Character extends GameObject {
 
 //    The following are abstract methods meant to be overwritten for each character, and replaced with
 //    their specific abilities and attacks.
-
 
     //    Basic Attacks
     abstract void basicNeutral();
