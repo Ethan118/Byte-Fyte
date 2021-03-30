@@ -71,6 +71,7 @@ public class Main extends Game {
 
 		manager = new AssetManager();
 		manager.load("sprites/shyguy.atlas", TextureAtlas.class);
+		manager.load("sprites/masterchief.atlas", TextureAtlas.class);
 		manager.finishLoading();
 
 		if (Controllers.getControllers().size > 0) {

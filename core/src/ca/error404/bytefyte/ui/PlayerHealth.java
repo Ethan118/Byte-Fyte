@@ -73,7 +73,7 @@ public class PlayerHealth extends GameObject {
         batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
         batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
         for (int i=0; i < chara.stockCount; i++) {
-            batch.draw(stock, pos.x + (30 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
+            batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
         }
     }
 }

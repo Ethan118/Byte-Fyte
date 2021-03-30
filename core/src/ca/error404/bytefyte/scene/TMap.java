@@ -3,10 +3,8 @@ package ca.error404.bytefyte.scene;
 import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.chars.*;
 import ca.error404.bytefyte.chars.Character;
-import ca.error404.bytefyte.chars.DeathWall;
-import ca.error404.bytefyte.chars.ShyGuy;
-import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.objects.BattleCam;
@@ -97,10 +95,10 @@ public class TMap implements Screen {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             Character chara;
             try {
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i), (int) object.getProperties().get("player"));
+                chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i), (int) object.getProperties().get("player"));
                 i++;
             } catch (Exception e) {
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, (int) object.getProperties().get("player"));
+                chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, (int) object.getProperties().get("player"));
             }
             chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
         }
