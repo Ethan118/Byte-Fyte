@@ -292,6 +292,7 @@ public class TMap implements Screen {
 
     }
 
+//  Gets the world
     public World getWorld() {
         return world;
     }
