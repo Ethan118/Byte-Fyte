@@ -183,6 +183,7 @@ public abstract class Character extends GameObject {
 
     protected int playerNumber;
     public String charname;
+    public String playerName;
     public float width;
     public float height;
 
@@ -190,11 +191,12 @@ public abstract class Character extends GameObject {
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
+    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         super();
         Main.players.add(this);
         this.playerNumber = playerNumber;
         this.charname = charname;
+        this.playerName = playerName;
         this.world = screen.getWorld();
         this.controller = controller;
 
