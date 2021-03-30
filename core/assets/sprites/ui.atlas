@@ -76,21 +76,21 @@ repeat: none
   index: -1
 comma
   rotate: false
-  xy: 4707, 242
+  xy: 7520, 855
   size: 126, 166
   orig: 142, 170
   offset: 8, 2
   index: -1
 decimal
   rotate: false
-  xy: 5022, 487
+  xy: 7758, 1129
   size: 126, 128
   orig: 142, 170
   offset: 8, 40
   index: -1
 hp
   rotate: false
-  xy: 4707, 410
+  xy: 7090, 539
   size: 313, 205
   orig: 315, 213
   offset: 1, 4
@@ -118,7 +118,7 @@ masterchief_ingame
   index: -1
 percent
   rotate: false
-  xy: 6660, 1073
+  xy: 7520, 1023
   size: 236, 234
   orig: 241, 241
   offset: 2, 4
@@ -158,10 +158,52 @@ sans_ingame
   orig: 2835, 1701
   offset: 158, 222
   index: -1
+shyguy_1_country
+  rotate: false
+  xy: 4707, 104
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
+shyguy_2_country
+  rotate: false
+  xy: 5137, 104
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
+shyguy_3_country
+  rotate: false
+  xy: 6660, 746
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
+shyguy_4_country
+  rotate: false
+  xy: 6660, 233
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
+shyguy_country
+  rotate: false
+  xy: 7090, 746
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
 shyguy_ingame
   rotate: false
   xy: 7072, 2748
   size: 1013, 1273
   orig: 2835, 1701
   offset: 354, 222
+  index: -1
+shyguy_stock
+  rotate: false
+  xy: 7090, 286
+  size: 203, 251
+  orig: 203, 251
+  offset: 0, 0
   index: -1

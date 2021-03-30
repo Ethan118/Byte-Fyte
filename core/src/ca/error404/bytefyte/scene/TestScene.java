@@ -54,8 +54,10 @@ public class TestScene implements Screen {
             player = new ShyGuy(map, new Vector2(-38, 150), Main.controllers.get(0), 1);
             new ShyGuy(map, new Vector2(38, 150),  null, 2);
         } else {
-            player = new ShyGuy(map, new Vector2(-38, 150), null, 1);
-            new ShyGuy(map, new Vector2(38, 150), null, 2);
+            player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
+            new ShyGuy(this, new Vector2(38, 150), null, 2);
+            new ShyGuy(this, new Vector2(60, 150), null, 3);
+            new ShyGuy(this, new Vector2(-60, 150), null, 4);
         }
 
         player.facingLeft = false;
@@ -102,11 +104,11 @@ public class TestScene implements Screen {
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
-        hud.draw();
-
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
         }
+
+        hud.draw();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
