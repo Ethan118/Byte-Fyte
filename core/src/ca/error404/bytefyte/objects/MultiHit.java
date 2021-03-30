@@ -101,9 +101,9 @@ public class MultiHit extends GameObject {
                 numOfCollisions -= 1;
             }
 
-            if (parent.animState != parent.prevAnimState || timer <= 0) {
-                destroy();
-            }
+//            if (parent.animState != parent.prevAnimState) {
+//                destroy();
+//            }
         }
         timer += 1;
     }

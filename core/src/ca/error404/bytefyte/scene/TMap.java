@@ -92,10 +92,18 @@ public class TMap implements Screen {
             new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
+        int i = 0;
         for (MapObject object: map.getLayers().get("Spawn Points").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            Character chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, (int) object.getProperties().get("player"));
-            chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+            Character chara;
+            try {
+                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i), (int) object.getProperties().get("player"));
+                i += 1;
+            } catch (Exception e) {
+                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, (int) object.getProperties().get("player"));
+
+            }
+                chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
         }
 
         float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
@@ -278,6 +286,11 @@ public class TMap implements Screen {
 
     @Override
     public void dispose() {
+        world.dispose();
+        b2dr.dispose();
+        hud.dispose();
+        renderer.dispose();
+        map.dispose();
 
     }
 
