@@ -33,6 +33,10 @@ public class PlayerHealth extends GameObject {
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
 
     private GlyphLayout layout = new GlyphLayout();
+    private float numSpeed = 20f;
+    private float margain = 0.1f;
+    private float num;
+    private float prevNum = 0f;
 
     BitmapFont name;
     BitmapFont percent;
@@ -101,7 +105,18 @@ public class PlayerHealth extends GameObject {
 
     @Override
     public void update(float delta) {
-
+        margain = delta * numSpeed;
+        if (num > chara.percent + margain) {
+            numSpeed = Math.abs(chara.percent - prevNum) * 4;
+            num -= margain;
+        } else if (num < chara.percent - margain) {
+            numSpeed = Math.abs(chara.percent - prevNum) * 4;
+            num += margain;
+        } else {
+            num = chara.percent;
+            prevNum = num;
+            numSpeed = 0;
+        }
     }
 
     @Override
@@ -119,8 +134,8 @@ public class PlayerHealth extends GameObject {
         layout.setText(name, chara.playerName, Color.WHITE, 0, Align.center, false);
         name.draw(batch, layout, pos.x + 250, pos.y + 70);
 
-        if (chara.stockCount > 0) {
-            layout.setText(percentNum, String.format("%.0f", chara.percent), color, 0, Align.right, false);
+        if (chara.stockCount > 0 || num != 0) {
+            layout.setText(percentNum, String.format("%d", (int) num), color, 0, Align.right, false);
             percentNum.draw(batch, layout, pos.x + 340, pos.y + 155);
             layout.setText(percent, "%", color, 0, Align.right, false);
             percent.draw(batch, layout, pos.x + 350, pos.y + 107);
