@@ -32,7 +32,7 @@ public class MasterChief extends Character {
     private float flyAcceleration = 0f;
 
     public MasterChief(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "masterchief");
+        super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF");
         manualSpriteOffset = new Vector2(1100, 350);
         healSongs = new ArrayList<>();
         healSongLengths = new ArrayList<>();

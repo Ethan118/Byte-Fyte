@@ -36,6 +36,7 @@ public class PlayerHealth extends GameObject {
 
     BitmapFont name;
     BitmapFont percent;
+    BitmapFont percentNum;
 
     private Color color;
 
@@ -56,12 +57,16 @@ public class PlayerHealth extends GameObject {
         name = fontGenerator.generateFont(fontParameter);
 
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Gilroy-ExtraboldItalic.ttf"));
-        fontParameter.size = 60;
+        fontParameter.size = 90;
         fontParameter.borderWidth = 5;
         fontParameter.borderColor = Color.BLACK;
-        fontParameter.shadowColor = new Color(0, 0, 0, 1);
+        fontParameter.shadowColor = new Color(28 / 255f, 28 / 255f, 28 / 255f, 1);
         fontParameter.shadowOffsetX = 5;
         fontParameter.shadowOffsetY = 5;
+
+        percentNum = fontGenerator.generateFont(fontParameter);
+
+        fontParameter.size = 20;
 
         percent = fontGenerator.generateFont(fontParameter);
 
@@ -111,10 +116,15 @@ public class PlayerHealth extends GameObject {
             batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
         }
 
-        name.draw(batch, chara.playerName, pos.x + 200, pos.y + 70);
+        layout.setText(name, chara.playerName, Color.WHITE, 0, Align.center, false);
+        name.draw(batch, layout, pos.x + 250, pos.y + 70);
 
-        layout.setText(percent, String.format("%.0f", chara.percent) + "%", color, 0, Align.right, false);
-        percent.draw(batch, layout, pos.x + 350, pos.y + 135);
+        if (chara.stockCount > 0) {
+            layout.setText(percentNum, String.format("%.0f", chara.percent), color, 0, Align.right, false);
+            percentNum.draw(batch, layout, pos.x + 340, pos.y + 155);
+            layout.setText(percent, "%", color, 0, Align.right, false);
+            percent.draw(batch, layout, pos.x + 350, pos.y + 107);
+        }
     }
 
     private void setColor() {

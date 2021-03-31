@@ -95,11 +95,11 @@ public class TMap implements Screen {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             Character chara;
             try {
-                chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i), (int) object.getProperties().get("player"));
-                i++;
+                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i), (int) object.getProperties().get("player"));
             } catch (Exception e) {
                 chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, (int) object.getProperties().get("player"));
             }
+            i++;
             chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
         }
 
@@ -243,13 +243,13 @@ public class TMap implements Screen {
 
         game.batch.setProjectionMatrix(gamecam.combined);
 
-        viewport.apply();
-
         game.batch.begin();
 
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
+
+        viewport.apply();
 
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
