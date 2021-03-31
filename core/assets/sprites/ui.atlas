@@ -76,14 +76,14 @@ repeat: none
   index: -1
 comma
   rotate: false
-  xy: 7072, 6798
+  xy: 5472, 4515
   size: 126, 166
   orig: 142, 170
   offset: 8, 2
   index: -1
 decimal
   rotate: false
-  xy: 8056, 7959
+  xy: 6846, 6633
   size: 126, 128
   orig: 142, 170
   offset: 8, 40
@@ -104,7 +104,7 @@ fs_meter_full
   index: -1
 hp
   rotate: false
-  xy: 2839, 1345
+  xy: 2304, 557
   size: 313, 205
   orig: 315, 213
   offset: 1, 4
@@ -123,12 +123,54 @@ marioluigi_ingame
   orig: 2835, 1701
   offset: 194, 222
   index: -1
+masterchief_1_country
+  rotate: false
+  xy: 7072, 6715
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_2_country
+  rotate: false
+  xy: 7588, 6715
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_3_country
+  rotate: false
+  xy: 2839, 1301
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_4_country
+  rotate: false
+  xy: 4072, 3216
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_country
+  rotate: false
+  xy: 1501, 513
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
 masterchief_ingame
   rotate: false
   xy: 5676, 5325
   size: 1168, 1436
   orig: 2835, 1701
   offset: 241, 222
+  index: -1
+masterchief_stock
+  rotate: false
+  xy: 2017, 507
+  size: 285, 255
+  orig: 285, 255
+  offset: 0, 0
   index: -1
 percent
   rotate: false
@@ -216,7 +258,7 @@ shyguy_ingame
   index: -1
 shyguy_stock
   rotate: false
-  xy: 6846, 6510
+  xy: 6617, 5072
   size: 203, 251
   orig: 203, 251
   offset: 0, 0

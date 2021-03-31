@@ -183,6 +183,7 @@ public abstract class Character extends GameObject {
 
     protected int playerNumber;
     public String charname;
+    public String playerName;
     public float width;
     public float height;
 
@@ -190,11 +191,12 @@ public abstract class Character extends GameObject {
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
+    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         super();
         Main.players.add(this);
         this.playerNumber = playerNumber;
         this.charname = charname;
+        this.playerName = playerName;
         this.world = screen.getWorld();
         this.controller = controller;
 
@@ -212,37 +214,37 @@ public abstract class Character extends GameObject {
         goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
         // loads animations
-        TextureAtlas textureAtlas = Main.manager.get("sprites/shyguy.atlas", TextureAtlas.class);
+        TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", charname), TextureAtlas.class);
 
-        idle = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
-        walk = new Animation<TextureRegion>(1f/120f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
-        run = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
+        idle = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("idle"), Animation.PlayMode.LOOP);
+        walk = new Animation<TextureRegion>(1f/120f, textureAtlas.findRegions("walk"), Animation.PlayMode.LOOP);
+        run = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("run"), Animation.PlayMode.LOOP);
 
-        jump = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
-        fall = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
-        hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_hit"), Animation.PlayMode.LOOP);
+        jump = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("jump"), Animation.PlayMode.LOOP);
+        fall = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("fall"), Animation.PlayMode.LOOP);
+        hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("hit"), Animation.PlayMode.NORMAL);
 
-        neutralAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral"), Animation.PlayMode.NORMAL);
-        sideTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.NORMAL);
-        upTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.NORMAL);
-        downTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
+        neutralAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
+        sideTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("stilt"), Animation.PlayMode.NORMAL);
+        upTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("utilt"), Animation.PlayMode.NORMAL);
+        downTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dtilt"), Animation.PlayMode.NORMAL);
 
-        neutralB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
-        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
-        downB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
-        sideB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
+        neutralB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("down_b"), Animation.PlayMode.LOOP);
+        sideB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("side_b"), Animation.PlayMode.NORMAL);
 
-        nair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
-        dair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
-        fair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
-        bair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
-        uair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
+        nair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("nair"), Animation.PlayMode.NORMAL);
+        dair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dair"), Animation.PlayMode.NORMAL);
+        fair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("fair"), Animation.PlayMode.NORMAL);
+        bair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("bair"), Animation.PlayMode.NORMAL);
+        uair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("uair"), Animation.PlayMode.NORMAL);
 
-        upSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_smash"), Animation.PlayMode.NORMAL);
-        downSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
-        sideSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
+        upSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_smash"), Animation.PlayMode.NORMAL);
+        downSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("down_smash"), Animation.PlayMode.NORMAL);
+        sideSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("side_smash"), Animation.PlayMode.NORMAL);
 
-        dashAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
+        dashAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dash_attack"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;

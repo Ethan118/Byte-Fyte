@@ -48,6 +48,14 @@ public class BattleCam extends OrthographicCamera {
             height = width * hRatio;
         }
 
+        if (width > this.max.x) {
+            width = Math.min(width, this.max.x);
+            height = width * hRatio;
+        } else if (height > this.max.y) {
+            height = Math.min(height, this.max.y);
+            width = height * vRatio;
+        }
+
         viewportWidth = width;
         viewportHeight = height;
 

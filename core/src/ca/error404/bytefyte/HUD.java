@@ -37,6 +37,8 @@ public class HUD implements Disposable {
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
         fontParameter.size = 80;
+        fontParameter.borderWidth = 5;
+        fontParameter.borderColor = Color.BLACK;
         fontParameter.color = Color.WHITE;
 
         font = fontGenerator.generateFont(fontParameter);
