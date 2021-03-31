@@ -5,10 +5,13 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+
+import java.text.DecimalFormat;
 
 public class PlayerHealth extends GameObject {
 
@@ -76,6 +79,10 @@ public class PlayerHealth extends GameObject {
 
         fontGenerator.dispose();
 
+        name.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        percent.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        percentNum.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
         if (number == 1) {
             pos = new Vector2(172, 25);
         } else if (number == 2) {
@@ -135,10 +142,11 @@ public class PlayerHealth extends GameObject {
         name.draw(batch, layout, pos.x + 250, pos.y + 70);
 
         if (chara.stockCount > 0 || num != 0) {
+            DecimalFormat form = new DecimalFormat(".#");
             layout.setText(percentNum, String.format("%d", (int) num), color, 0, Align.right, false);
-            percentNum.draw(batch, layout, pos.x + 340, pos.y + 155);
-            layout.setText(percent, "%", color, 0, Align.right, false);
-            percent.draw(batch, layout, pos.x + 350, pos.y + 107);
+            percentNum.draw(batch, layout, pos.x + 325, pos.y + 155);
+            layout.setText(percent, form.format(num - (int) num) + "%", color, 0, Align.right, false);
+            percent.draw(batch, layout, pos.x + 360, pos.y + 107);
         }
     }
 

@@ -121,56 +121,56 @@ public class ShyGuy extends Character {
 //    All abilities.  Will add colliders or move shy guy as applicable
     @Override
     void basicNeutral() {
-        new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5f, 0.25f, 0);
+        new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5.2f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicSide() {
-        new Collider(new Vector2(20, 0), 25, 30, this, 3f, 7f, 0.25f, 0);
+        new Collider(new Vector2(20, 0), 25, 30, this, 3f, 7.9f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicUp() {
-        new Collider(new Vector2(0, 20), 30, 5, this, 3f, 7f, 0.25f, 0);
+        new Collider(new Vector2(0, 20), 30, 5, this, 3f, 7.4f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicDown() {
-        new Collider(new Vector2(0, -10), 40, 20, this, 3f, 6f, 0.25f, 0);
+        new Collider(new Vector2(0, -10), 40, 20, this, 3f, 5.7f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void dashAttack() {
-        new Collider(new Vector2(40, 0), 25, 30, this, 3f, 6f, 0.25f, 9f/60f);
+        new Collider(new Vector2(40, 0), 25, 30, this, 3f, 6.8f, 0.25f, 9f/60f);
         resetControls();
     }
 
     @Override
     void smashSide() {
-        new Collider(new Vector2(40, 0), 50, 30, this, 5f, 7f, 0.25f, 13f / 60f);
+        new Collider(new Vector2(40, 0), 50, 30, this, 5f, 7.1f, 0.25f, 13f / 60f);
         resetControls();
     }
 
     @Override
     void smashUp() {
-        new Collider(new Vector2(0, 25), 30, 15, this, 5f, 7f, 0.25f, 12f / 60f, 7f / 60f);
+        new Collider(new Vector2(0, 25), 30, 15, this, 5f, 7.3f, 0.25f, 12f / 60f, 7f / 60f);
         resetControls();
     }
 
     @Override
     void smashDown() {
-        new Collider(new Vector2(20, 0), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f, 19f / 60f);
-        new Collider(new Vector2(-20, 0), 25, 25, this, 5f, 7f, 0.25f, 35f / 60f);
+        new Collider(new Vector2(20, 0), 25, 25, this, 5f, 7.2f, 0.25f, 6f / 60f, 19f / 60f);
+        new Collider(new Vector2(-20, 0), 25, 25, this, 5f, 6.9f, 0.25f, 35f / 60f);
         resetControls();
     }
 
     @Override
     void specialNeutral() {
-        new MultiHit(new Vector2(20, 0), 25, 30, this, 1f, 0f, 9, 0, 3, 0.25f, 2, true);
+        new MultiHit(new Vector2(20, 0), 25, 30, this, 1f, 0f, 9, 0, 3, 0.25f, 2.2f, true);
 //        new Collider(new Vector2(20, 0), 25, 30, this, 0f, 4f, 70f / 60f, true, 0);
         resetControls();
     }
@@ -184,9 +184,9 @@ public class ShyGuy extends Character {
 
 //            Create a projectile based on the inputted user direction
             if (facingLeft) {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7.5f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             } else {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7.5f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             }
         }
 
@@ -239,7 +239,7 @@ public class ShyGuy extends Character {
     @Override
     void airNeutral() {
 //        A new multihit is created which will hit the opponent multiple times, as per the ability should
-        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 2f, 5, 15, false);
+        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 1.8f, 5, 15, false);
         resetControls();
     }
 
@@ -259,18 +259,18 @@ public class ShyGuy extends Character {
 
     @Override
     void airBack() {
-        new Collider(new Vector2(-20, 0), 20, 20, this, 3f, 4f, 0.25f, 0);
+        new Collider(new Vector2(-20, 0), 20, 20, this, 3f, 4.2f, 0.25f, 0);
     }
 
     @Override
     void airUp() {
-        new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4f, 0.5f, 0);
+        new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4.1f, 0.5f, 0);
         resetControls();
     }
 
     @Override
     void airDown() {
-        new Collider(new Vector2(10, -20), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f);
+        new Collider(new Vector2(10, -20), 25, 25, this, 5f, 6.8f, 0.25f, 6f / 60f);
         resetControls();
     }
 
