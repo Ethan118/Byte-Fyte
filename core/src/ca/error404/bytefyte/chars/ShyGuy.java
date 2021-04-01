@@ -1,29 +1,24 @@
 package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
-import ca.error404.bytefyte.scene.TestScene;
-import ca.error404.bytefyte.ui.PlayerHealth;
 import ca.error404.bytefyte.scene.TMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
-import org.apache.commons.io.FileUtils;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class ShyGuy extends Character {
-    private ArrayList<Sound> healSongs;
-    private ArrayList<Float> healSongLengths;
+    private static ArrayList<Sound> healSongs;
+    private static ArrayList<Float> healSongLengths;
 
     private float currentSongLength;
     private int hovertimer = 2;
@@ -36,39 +31,29 @@ public class ShyGuy extends Character {
     public ShyGuy(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY");
         manualSpriteOffset = new Vector2(2200, 300);
-        healSongs = new ArrayList<>();
-        healSongLengths = new ArrayList<>();
         projectilesOnScreen = new ArrayList<>(1);
 
-        int i = 0;
-        while (true) {
-            i++;
+        if (healSongs == null) {
+            healSongs = new ArrayList<>();
+            healSongLengths = new ArrayList<>();
 
+            for (int i=0; i < 24; i++) {
 //            Load all songs
-            try {
-                healSongs.add(Gdx.audio.newSound(Gdx.files.internal(String.format("audio/sound effects/shyguy_song_%d.wav", i))));
+                try {
+                    healSongs.add(Main.audioManager.get(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1), Sound.class));
 
-                String fileName = String.format("audio/sound effects/shyguy_song_%d.wav", i);
+                    File file = Globals.healSongWAV2.get(i);
+                    AudioFormat format = Globals.healSongWAV1.get(i);
 
-                File file = new File("bye-bye.world");
+                    long audioFileLength = file.length();
+                    int frameSize = format.getFrameSize();
+                    float frameRate = format.getFrameRate();
+                    float durationInSeconds = (audioFileLength / (frameSize * frameRate));
 
-                ClassLoader classLoader = Main.class.getClassLoader();
-                InputStream inputStream = classLoader.getResourceAsStream(fileName);
-
-                FileUtils.copyInputStreamToFile(inputStream, file);
-
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-                AudioFormat format = audioInputStream.getFormat();
-
-                long audioFileLength = file.length();
-                int frameSize = format.getFrameSize();
-                float frameRate = format.getFrameRate();
-                float durationInSeconds = (audioFileLength / (frameSize * frameRate));
-
-
-                healSongLengths.add(durationInSeconds);
-            } catch (Exception e) {
-                break;
+                    healSongLengths.add(durationInSeconds);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
