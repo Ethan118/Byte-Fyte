@@ -99,6 +99,8 @@ public class PlayerHealth extends GameObject {
         setColor();
 
         batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
+        batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
+        batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
 
         if (chara.stockCount > 0 || num != 0) {
             DecimalFormat form = new DecimalFormat(".#");
@@ -107,9 +109,6 @@ public class PlayerHealth extends GameObject {
             layout.setText(Main.percentFont, form.format(num -  Math.floor(num)) + "%", color, 0, Align.right, false);
             Main.percentFont.draw(batch, layout, pos.x + 360, pos.y + 107);
         }
-
-        batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
-        batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
 
         for (int i=0; i < chara.stockCount; i++) {
             batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);

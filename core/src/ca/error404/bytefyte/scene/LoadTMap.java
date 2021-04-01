@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class LoadTMap implements Screen {
+    OrthographicCamera cam;
     Main game;
     String tmap;
     Viewport viewport;
@@ -37,7 +38,8 @@ public class LoadTMap implements Screen {
         this.tmap = tmap;
         this.game = game;
         game.music = this.game.music;
-        viewport = new FitViewport(1280, 720, new OrthographicCamera());
+        cam = new OrthographicCamera();
+        viewport = new FitViewport(1920, 1080, cam);
 
         for (int i=1; i < 25; i++) {
             Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i), Sound.class);
@@ -82,10 +84,11 @@ public class LoadTMap implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        game.batch.setProjectionMatrix(cam.combined);
+        //viewport.apply();
         game.batch.begin();
-        viewport.apply();
-        game.batch.draw(new TextureRegion(loadTex), 1920 - (loadTex.getWidth()) - 52.5f, 50f);
-        game.batch.draw(new TextureRegion(loadTexSpin), 1920 - (loadTexSpin.getWidth()) - 20f, 20f, (float) loadTexSpin.getWidth() / 2f, (float) loadTexSpin.getHeight() / 2f, (float) loadTexSpin.getWidth(), (float) loadTexSpin.getHeight(), 1f, 1f, rotation);
+        game.batch.draw(new TextureRegion(loadTex), (1920 / 2f) - (loadTex.getWidth()) - 52.5f, -(1080 /2f) + 50);
+        game.batch.draw(new TextureRegion(loadTexSpin), (1920 / 2f) - (loadTexSpin.getWidth()) - 20f, -(1080 /2f) + 20, (float) loadTexSpin.getWidth() / 2f, (float) loadTexSpin.getHeight() / 2f, (float) loadTexSpin.getWidth(), (float) loadTexSpin.getHeight(), 1f, 1f, rotation);
         game.batch.end();
     }
 
