@@ -184,9 +184,9 @@ public class ShyGuy extends Character {
 
 //            Create a projectile based on the inputted user direction
             if (facingLeft) {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(-5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0.1f), new Vector2(-5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             } else {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x, pos.y + 0.1f), new Vector2(5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0.1f), new Vector2(5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             }
         }
 
@@ -250,9 +250,9 @@ public class ShyGuy extends Character {
 
 //            Create a projectile based on the user direction
             if (facingLeft) {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x - 0.2f, pos.y + 0.1f), new Vector2(-4, -4), 0, 10, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(-0.2f, 0.1f), new Vector2(-4, -4), 0, 10, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
             } else {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(pos.x + 0.2f, pos.y + 0.1f), new Vector2(4, -4), 0, 10, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(0.2f, 0.1f), new Vector2(4, -4), 0, 10, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "shoe", "sprites/shyguy.atlas", 9f / 60f));
             }
         }
     }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Projectile extends GameObject {
     public Vector2 pos;
     public Vector2 vel;
+    public Vector2 offset;
 
     private float maxDistance;
 
@@ -39,13 +40,14 @@ public class Projectile extends GameObject {
      * pre: parent Character, position, velocity, gravity, spin, max distance to travel, force applied on hit, damage dealt, duration of stun on hit, path to the animation, path to the atlas containing animation, duration before spawned
      * post: instantiates a new projectile with given parameters
      */
-    public Projectile(Character parent, Vector2 pos, Vector2 vel, float gravity, float spin, float maxDistance, float power, float damage, float hitStun, String animPath, String atlasPath, float delay) {
+    public Projectile(Character parent, Vector2 offset, Vector2 vel, float gravity, float spin, float maxDistance, float power, float damage, float hitStun, String animPath, String atlasPath, float delay) {
         super();
 
         this.parent = parent;
         this.world = parent.world;
+        this.offset = offset;
 
-        this.pos = pos;
+        this.pos = new Vector2(parent.pos.x + offset.x, parent.pos.y + offset.y);
         this.vel = vel;
         this.maxDistance = maxDistance;
 
@@ -108,7 +110,7 @@ public class Projectile extends GameObject {
 
             // if the body is not defined, define it
             if (b2body == null) {
-                pos = parent.pos;
+                pos = new Vector2(parent.pos.x + offset.x, parent.pos.y + offset.y);
                 define();
             }
 
