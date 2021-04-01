@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.objects;
 
 import ca.error404.bytefyte.GameObject;
+import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -99,9 +100,7 @@ public class MultiHit extends GameObject {
 //            Hit the opponent with the strong hit, reduce the collision count by 1
                 collisions.add(new Collider(offset, width, height, parent, lastHitPower, lastHitDamage, hitStun, lifesteal, delay));
                 numOfCollisions -= 1;
-            }
-
-            if (parent.animState != parent.prevAnimState || timer <= 0) {
+            } else {
                 destroy();
             }
         }
@@ -115,6 +114,11 @@ public class MultiHit extends GameObject {
     @Override
     public void draw(SpriteBatch batch) {
 
+    }
+
+    @Override
+    public void destroy() {
+        Main.objectsToRemove.add(this);
     }
 }
 

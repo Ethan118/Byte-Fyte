@@ -48,13 +48,21 @@ public class BattleCam extends OrthographicCamera {
             height = width * hRatio;
         }
 
+        if (width > this.max.x) {
+            width = Math.min(width, this.max.x);
+            height = width * hRatio;
+        } else if (height > this.max.y) {
+            height = Math.min(height, this.max.y);
+            width = height * vRatio;
+        }
+
         viewportWidth = width;
         viewportHeight = height;
 
         cameraPosition.x = Math.max(cameraPosition.x, width / 2);
         cameraPosition.y = Math.max(cameraPosition.y, height / 2);
-        cameraPosition.x = Math.max(cameraPosition.x, max.x - width / 2);
-        cameraPosition.y = Math.max(cameraPosition.y, max.y - height / 2);
+        cameraPosition.x = Math.min(cameraPosition.x, this.max.x - width / 2);
+        cameraPosition.y = Math.min(cameraPosition.y, this.max.y - height / 2);
 
         position.set(cameraPosition);
 
@@ -122,7 +130,6 @@ public class BattleCam extends OrthographicCamera {
         }
 
         if (x < min.x) {
-            System.out.println(x);
             x = min.x;
         }
 

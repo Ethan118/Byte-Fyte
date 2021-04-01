@@ -1,29 +1,24 @@
 package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
-import ca.error404.bytefyte.scene.TestScene;
-import ca.error404.bytefyte.ui.PlayerHealth;
 import ca.error404.bytefyte.scene.TMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
-import org.apache.commons.io.FileUtils;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class ShyGuy extends Character {
-    private ArrayList<Sound> healSongs;
-    private ArrayList<Float> healSongLengths;
+    private static ArrayList<Sound> healSongs;
+    private static ArrayList<Float> healSongLengths;
 
     private float currentSongLength;
     private int hovertimer = 2;
@@ -36,39 +31,29 @@ public class ShyGuy extends Character {
     public ShyGuy(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY");
         manualSpriteOffset = new Vector2(2200, 300);
-        healSongs = new ArrayList<>();
-        healSongLengths = new ArrayList<>();
         projectilesOnScreen = new ArrayList<>(1);
 
-        int i = 0;
-        while (true) {
-            i++;
+        if (healSongs == null) {
+            healSongs = new ArrayList<>();
+            healSongLengths = new ArrayList<>();
 
+            for (int i=0; i < 24; i++) {
 //            Load all songs
-            try {
-                healSongs.add(Gdx.audio.newSound(Gdx.files.internal(String.format("audio/sound effects/shyguy_song_%d.wav", i))));
+                try {
+                    healSongs.add(Main.audioManager.get(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1), Sound.class));
 
-                String fileName = String.format("audio/sound effects/shyguy_song_%d.wav", i);
+                    File file = Globals.healSongWAV2.get(i);
+                    AudioFormat format = Globals.healSongWAV1.get(i);
 
-                File file = new File("bye-bye.world");
+                    long audioFileLength = file.length();
+                    int frameSize = format.getFrameSize();
+                    float frameRate = format.getFrameRate();
+                    float durationInSeconds = (audioFileLength / (frameSize * frameRate));
 
-                ClassLoader classLoader = Main.class.getClassLoader();
-                InputStream inputStream = classLoader.getResourceAsStream(fileName);
-
-                FileUtils.copyInputStreamToFile(inputStream, file);
-
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-                AudioFormat format = audioInputStream.getFormat();
-
-                long audioFileLength = file.length();
-                int frameSize = format.getFrameSize();
-                float frameRate = format.getFrameRate();
-                float durationInSeconds = (audioFileLength / (frameSize * frameRate));
-
-
-                healSongLengths.add(durationInSeconds);
-            } catch (Exception e) {
-                break;
+                    healSongLengths.add(durationInSeconds);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -121,56 +106,56 @@ public class ShyGuy extends Character {
 //    All abilities.  Will add colliders or move shy guy as applicable
     @Override
     void basicNeutral() {
-        new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5f, 0.25f, 0);
+        new Collider(new Vector2(20, 0), 5, 30, this, 2f, 5.2f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicSide() {
-        new Collider(new Vector2(20, 0), 25, 30, this, 3f, 7f, 0.25f, 0);
+        new Collider(new Vector2(20, 0), 25, 30, this, 3f, 7.9f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicUp() {
-        new Collider(new Vector2(0, 20), 30, 5, this, 3f, 7f, 0.25f, 0);
+        new Collider(new Vector2(0, 20), 30, 5, this, 3f, 7.4f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void basicDown() {
-        new Collider(new Vector2(0, -10), 40, 20, this, 3f, 6f, 0.25f, 0);
+        new Collider(new Vector2(0, -10), 40, 20, this, 3f, 5.7f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void dashAttack() {
-        new Collider(new Vector2(40, 0), 25, 30, this, 3f, 6f, 0.25f, 9f/60f);
+        new Collider(new Vector2(40, 0), 25, 30, this, 3f, 6.8f, 0.25f, 9f/60f);
         resetControls();
     }
 
     @Override
     void smashSide() {
-        new Collider(new Vector2(40, 0), 50, 30, this, 5f, 7f, 0.25f, 13f / 60f);
+        new Collider(new Vector2(40, 0), 50, 30, this, 5f, 7.1f, 0.25f, 13f / 60f);
         resetControls();
     }
 
     @Override
     void smashUp() {
-        new Collider(new Vector2(0, 25), 30, 15, this, 5f, 7f, 0.25f, 12f / 60f, 7f / 60f);
+        new Collider(new Vector2(0, 25), 30, 15, this, 5f, 7.3f, 0.25f, 12f / 60f, 7f / 60f);
         resetControls();
     }
 
     @Override
     void smashDown() {
-        new Collider(new Vector2(20, 0), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f, 19f / 60f);
-        new Collider(new Vector2(-20, 0), 25, 25, this, 5f, 7f, 0.25f, 35f / 60f);
+        new Collider(new Vector2(20, 0), 25, 25, this, 5f, 7.2f, 0.25f, 6f / 60f, 19f / 60f);
+        new Collider(new Vector2(-20, 0), 25, 25, this, 5f, 6.9f, 0.25f, 35f / 60f);
         resetControls();
     }
 
     @Override
     void specialNeutral() {
-        new MultiHit(new Vector2(20, 0), 25, 30, this, 1f, 0f, 9, 0, 3, 0.25f, 2, true);
+        new MultiHit(new Vector2(20, 0), 25, 30, this, 1f, 0f, 9, 0, 3, 0.25f, 2.2f, true);
 //        new Collider(new Vector2(20, 0), 25, 30, this, 0f, 4f, 70f / 60f, true, 0);
         resetControls();
     }
@@ -184,9 +169,9 @@ public class ShyGuy extends Character {
 
 //            Create a projectile based on the inputted user direction
             if (facingLeft) {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0.1f), new Vector2(-5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0.1f), new Vector2(-5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7.5f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             } else {
-                projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0.1f), new Vector2(5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
+                projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0.1f), new Vector2(5, 1), 0.025f, 0, Float.POSITIVE_INFINITY, 2f, 7.5f, 0.25f, "spear", "sprites/shyguy.atlas", 12f / 60f));
             }
         }
 
@@ -239,7 +224,7 @@ public class ShyGuy extends Character {
     @Override
     void airNeutral() {
 //        A new multihit is created which will hit the opponent multiple times, as per the ability should
-        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 2f, 5, 15, false);
+        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 1.8f, 5, 15, false);
         resetControls();
     }
 
@@ -259,18 +244,18 @@ public class ShyGuy extends Character {
 
     @Override
     void airBack() {
-        new Collider(new Vector2(-20, 0), 20, 20, this, 3f, 4f, 0.25f, 0);
+        new Collider(new Vector2(-20, 0), 20, 20, this, 3f, 4.2f, 0.25f, 0);
     }
 
     @Override
     void airUp() {
-        new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4f, 0.5f, 0);
+        new Collider(new Vector2(0, 20), 40, 20, this, 4f, 4.1f, 0.5f, 0);
         resetControls();
     }
 
     @Override
     void airDown() {
-        new Collider(new Vector2(10, -20), 25, 25, this, 5f, 7f, 0.25f, 6f / 60f);
+        new Collider(new Vector2(10, -20), 25, 25, this, 5f, 6.8f, 0.25f, 6f / 60f);
         resetControls();
     }
 

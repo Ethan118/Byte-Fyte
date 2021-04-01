@@ -1,11 +1,18 @@
 package ca.error404.bytefyte.constants;
 
+import javax.sound.sampled.AudioFormat;
+import java.io.File;
+import java.util.ArrayList;
+
 public class Globals {
     public static String workingDirectory;
     //here, we assign the name of the OS, according to Java, to a variable...
     public static String OS = (System.getProperty("os.name")).toUpperCase();
     //to determine what the workingDirectory is.
     //if it is some version of Windows
+
+    public static ArrayList<AudioFormat> healSongWAV1 = new ArrayList<>();
+    public static ArrayList<File> healSongWAV2 = new ArrayList<>();
 
     public Globals() {
 

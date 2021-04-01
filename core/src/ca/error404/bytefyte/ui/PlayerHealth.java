@@ -5,10 +5,13 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+
+import java.text.DecimalFormat;
 
 public class PlayerHealth extends GameObject {
 
@@ -26,14 +29,17 @@ public class PlayerHealth extends GameObject {
     TextureRegion playerHead;
     TextureRegion country;
     TextureRegion stock;
+    TextureRegion fsCharge;
+    TextureRegion fsFull;
 
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
 
     private GlyphLayout layout = new GlyphLayout();
-
-    BitmapFont name;
-    BitmapFont percent;
+    private float numSpeed = 20f;
+    private float margain = 0.1f;
+    private float num;
+    private float prevNum = 0f;
 
     private Color color;
 
@@ -45,26 +51,6 @@ public class PlayerHealth extends GameObject {
         this.charname = charname;
         this.chara = chara;
 
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.otf"));
-        fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-
-        fontParameter.size = 20;
-        fontParameter.color = Color.WHITE;
-
-        name = fontGenerator.generateFont(fontParameter);
-
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Gilroy-ExtraboldItalic.ttf"));
-        fontParameter.size = 60;
-        fontParameter.borderWidth = 5;
-        fontParameter.borderColor = Color.BLACK;
-        fontParameter.shadowColor = new Color(0, 0, 0, 1);
-        fontParameter.shadowOffsetX = 5;
-        fontParameter.shadowOffsetY = 5;
-
-        percent = fontGenerator.generateFont(fontParameter);
-
-        fontGenerator.dispose();
-
         if (number == 1) {
             pos = new Vector2(172, 25);
         } else if (number == 2) {
@@ -75,12 +61,14 @@ public class PlayerHealth extends GameObject {
             pos = new Vector2(1366, 25);
         }
 
-        TextureAtlas textureAtlas = new TextureAtlas("sprites/ui.atlas");
+        TextureAtlas textureAtlas = Main.manager.get("sprites/ui.atlas", TextureAtlas.class);
 
         playerBase = new TextureRegion(textureAtlas.findRegion(String.format("player_%d_ingame", number)));
         playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
         stock = new TextureRegion(textureAtlas.findRegion(String.format("%s_stock", charname)));
         country = new TextureRegion(textureAtlas.findRegion(String.format("%s_%d_country", charname, number)));
+        fsCharge = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"));
+        fsFull = new TextureRegion(textureAtlas.findRegion("fs_meter_full"));
 
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
@@ -92,25 +80,43 @@ public class PlayerHealth extends GameObject {
 
     @Override
     public void update(float delta) {
-
+        margain = delta * numSpeed;
+        if (num > chara.percent + margain) {
+            numSpeed = Math.abs(chara.percent - prevNum) * 4;
+            num -= margain;
+        } else if (num < chara.percent - margain) {
+            numSpeed = Math.abs(chara.percent - prevNum) * 4;
+            num += margain;
+        } else {
+            num = chara.percent;
+            prevNum = num;
+            numSpeed = 0;
+        }
     }
 
     @Override
     public void draw(SpriteBatch batch) {
         setColor();
 
-        batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
-        batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
         batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
 
-        for (int i=0; i < chara.stockCount; i++) {
-            batch.draw(stock, pos.x + (30 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
+        if (chara.stockCount > 0 || num != 0) {
+            DecimalFormat form = new DecimalFormat(".#");
+            layout.setText(Main.percentNumFont, String.format("%d", (int) num), color, 0, Align.right, false);
+            Main.percentNumFont.draw(batch, layout, pos.x + 325, pos.y + 159);
+            layout.setText(Main.percentFont, form.format(num -  Math.floor(num)) + "%", color, 0, Align.right, false);
+            Main.percentFont.draw(batch, layout, pos.x + 360, pos.y + 107);
         }
 
-        name.draw(batch, chara.playerName, pos.x + 200, pos.y + 70);
+        batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
+        batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
 
-        layout.setText(percent, String.format("%.0f", chara.percent) + "%", color, 0, Align.right, false);
-        percent.draw(batch, layout, pos.x + 350, pos.y + 135);
+        for (int i=0; i < chara.stockCount; i++) {
+            batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
+        }
+
+        layout.setText(Main.battleNameFont, chara.playerName, Color.WHITE, 0, Align.center, false);
+        Main.battleNameFont.draw(batch, layout, pos.x + 250, pos.y + 70);
     }
 
     private void setColor() {
