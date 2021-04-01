@@ -55,6 +55,8 @@ public class ShyGuy extends Character {
                     e.printStackTrace();
                 }
             }
+
+            System.out.println(healSongLengths);
         }
     }
 

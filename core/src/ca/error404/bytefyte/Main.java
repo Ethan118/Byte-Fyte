@@ -82,7 +82,7 @@ public class Main extends Game {
 			try {
 				String fileName = String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i);
 
-				File file = new File("bye-bye.world");
+				File file = new File(String.valueOf(Gdx.files.internal(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i))));
 
 				ClassLoader classLoader = Main.class.getClassLoader();
 				InputStream inputStream = classLoader.getResourceAsStream(fileName);
