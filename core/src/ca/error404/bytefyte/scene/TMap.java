@@ -97,8 +97,9 @@ public class TMap implements Screen {
                 Controller cont = Main.controllers.get(i - 1);
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), cont, i);
             } catch (Exception e) {
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
             }
+            chara.facingLeft = (boolean) object.getProperties().get("left");
             chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
         }
 
