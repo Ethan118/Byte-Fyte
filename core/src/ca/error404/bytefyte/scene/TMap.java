@@ -95,7 +95,7 @@ public class TMap implements Screen {
             Character chara;
             try {
                 Controller cont = Main.controllers.get(i - 1);
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), cont, i);
+                chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), cont, i);
             } catch (Exception e) {
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
             }
@@ -282,6 +282,7 @@ public class TMap implements Screen {
         hud.dispose();
         renderer.dispose();
         map.dispose();
+
 
     }
 

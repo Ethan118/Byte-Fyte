@@ -34,7 +34,11 @@ public class Projectile extends GameObject {
 
     private float delay;
 
-    private final float spriteScale = 60;
+    private float spriteScale = 60;
+
+    private String animPath;
+
+    private boolean disableEditing = false;
 
     /**
      * pre: parent Character, position, velocity, gravity, spin, max distance to travel, force applied on hit, damage dealt, duration of stun on hit, path to the animation, path to the atlas containing animation, duration before spawned
@@ -60,12 +64,16 @@ public class Projectile extends GameObject {
 
         this.delay = delay;
 
+        this.animPath = animPath;
+
         // creates the atlas and loads the animation from the atlas
         atlas = Main.manager.get(atlasPath, TextureAtlas.class);
         anim = new Animation<TextureRegion>(1f/30f, atlas.findRegions(animPath), Animation.PlayMode.LOOP);
 
         // sets the texture region to the first keyframe
         TextureRegion sprite = anim.getKeyFrame(elapsedTime, true);
+
+
         setRegion(sprite);
     }
 
@@ -140,7 +148,28 @@ public class Projectile extends GameObject {
 
             // resets the rotational origin and rotates the sprite
             setOriginCenter();
-            setRotation((float) Math.toDegrees(b2body.getAngle()));
+            if (animPath.equals("orb")) {
+                if (!disableEditing) {
+                    spriteScale = 20f;
+                    disableEditing = true;
+                }
+            }
+
+            if (animPath.equals("laser") || animPath.equals("bazooka")) {
+                if (parent.facingLeft && !disableEditing) {
+                    setRotation(0);
+                    spriteScale = 20f;
+                    disableEditing = true;
+                } else if (!parent.facingLeft && !disableEditing){
+                    setRotation(180);
+                    spriteScale = 20f;
+                    disableEditing = true;
+                } else if (vel.x == 0) {
+                    setRotation(90);
+                }
+            } else {
+                setRotation((float) Math.toDegrees(b2body.getAngle()));
+            }
         } else {
             delay -= delta;
         }
