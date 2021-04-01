@@ -108,6 +108,7 @@ public class Projectile extends GameObject {
 
             // if the body is not defined, define it
             if (b2body == null) {
+                pos = parent.pos;
                 define();
             }
 
