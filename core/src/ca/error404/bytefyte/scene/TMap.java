@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -41,7 +42,6 @@ public class TMap implements Screen {
     private final Main game;
     private final HUD hud;
 
-    private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
@@ -52,15 +52,14 @@ public class TMap implements Screen {
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
 
-    public TMap(String mapName, Main game) {
+    public TMap(String mapName, Main game, TiledMap map) {
         this.game = game;
 
         gamecam = new BattleCam();
 
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT/ Main.PPM, gamecam);
 
-        mapLoader = new TmxMapLoader();
-        map = mapLoader.load(mapName + ".tmx");
+        this.map = map;
         renderer = new OrthogonalTiledMapRenderer(map, 1/Main.PPM);
 
         mProp = map.getProperties();
@@ -95,7 +94,8 @@ public class TMap implements Screen {
             int i = (int) object.getProperties().get("player");
             Character chara;
             try {
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                Controller cont = Main.controllers.get(i - 1);
+                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), cont, i);
             } catch (Exception e) {
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
             }
@@ -108,11 +108,6 @@ public class TMap implements Screen {
         gamecam.max = new Vector2(width, height);
 
         world.setContactListener(new WorldContactListener());
-
-        // plays a song so I can hear things
-        game.music = game.newSong();
-        game.music.setVolume(Main.musicVolume / 10f);
-        game.music.play();
 
         hud = new HUD();
     }
@@ -258,6 +253,7 @@ public class TMap implements Screen {
         hud.draw();
     }
 
+    // updates screen size
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
@@ -266,12 +262,12 @@ public class TMap implements Screen {
 
     @Override
     public void pause() {
-
+        game.music.pause();
     }
 
     @Override
     public void resume() {
-
+        game.music.play();
     }
 
     @Override
@@ -281,7 +277,9 @@ public class TMap implements Screen {
 
     @Override
     public void dispose() {
-
+        world.dispose();
+        b2dr.dispose();
+        hud.dispose();
     }
 
     public World getWorld() {

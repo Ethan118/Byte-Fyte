@@ -41,10 +41,6 @@ public class PlayerHealth extends GameObject {
     private float num;
     private float prevNum = 0f;
 
-    BitmapFont name;
-    BitmapFont percent;
-    BitmapFont percentNum;
-
     private Color color;
 
     public PlayerHealth(int number, String charname, Character chara) {
@@ -54,34 +50,6 @@ public class PlayerHealth extends GameObject {
         this.playerNum = number;
         this.charname = charname;
         this.chara = chara;
-
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.otf"));
-        fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-
-        fontParameter.size = 20;
-        fontParameter.color = Color.WHITE;
-
-        name = fontGenerator.generateFont(fontParameter);
-
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Gilroy-ExtraboldItalic.ttf"));
-        fontParameter.size = 90;
-        fontParameter.borderWidth = 5;
-        fontParameter.borderColor = Color.BLACK;
-        fontParameter.shadowColor = new Color(28 / 255f, 28 / 255f, 28 / 255f, 1);
-        fontParameter.shadowOffsetX = 5;
-        fontParameter.shadowOffsetY = 5;
-
-        percentNum = fontGenerator.generateFont(fontParameter);
-
-        fontParameter.size = 20;
-
-        percent = fontGenerator.generateFont(fontParameter);
-
-        fontGenerator.dispose();
-
-        name.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        percent.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        percentNum.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         if (number == 1) {
             pos = new Vector2(172, 25);
@@ -93,7 +61,7 @@ public class PlayerHealth extends GameObject {
             pos = new Vector2(1366, 25);
         }
 
-        TextureAtlas textureAtlas = new TextureAtlas("sprites/ui.atlas");
+        TextureAtlas textureAtlas = Main.manager.get("sprites/ui.atlas", TextureAtlas.class);
 
         playerBase = new TextureRegion(textureAtlas.findRegion(String.format("player_%d_ingame", number)));
         playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
@@ -130,24 +98,25 @@ public class PlayerHealth extends GameObject {
     public void draw(SpriteBatch batch) {
         setColor();
 
+        batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
+
+        if (chara.stockCount > 0 || num != 0) {
+            DecimalFormat form = new DecimalFormat(".#");
+            layout.setText(Main.percentNumFont, String.format("%d", (int) num), color, 0, Align.right, false);
+            Main.percentNumFont.draw(batch, layout, pos.x + 325, pos.y + 159);
+            layout.setText(Main.percentFont, form.format(num -  Math.floor(num)) + "%", color, 0, Align.right, false);
+            Main.percentFont.draw(batch, layout, pos.x + 360, pos.y + 107);
+        }
+
         batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
         batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
-        batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
 
         for (int i=0; i < chara.stockCount; i++) {
             batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
         }
 
-        layout.setText(name, chara.playerName, Color.WHITE, 0, Align.center, false);
-        name.draw(batch, layout, pos.x + 250, pos.y + 70);
-
-        if (chara.stockCount > 0 || num != 0) {
-            DecimalFormat form = new DecimalFormat(".#");
-            layout.setText(percentNum, String.format("%d", (int) num), color, 0, Align.right, false);
-            percentNum.draw(batch, layout, pos.x + 325, pos.y + 155);
-            layout.setText(percent, form.format(num - (int) num) + "%", color, 0, Align.right, false);
-            percent.draw(batch, layout, pos.x + 360, pos.y + 107);
-        }
+        layout.setText(Main.battleNameFont, chara.playerName, Color.WHITE, 0, Align.center, false);
+        Main.battleNameFont.draw(batch, layout, pos.x + 250, pos.y + 70);
     }
 
     private void setColor() {
