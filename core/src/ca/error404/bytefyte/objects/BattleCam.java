@@ -130,7 +130,6 @@ public class BattleCam extends OrthographicCamera {
         }
 
         if (x < min.x) {
-            System.out.println(x);
             x = min.x;
         }
 
