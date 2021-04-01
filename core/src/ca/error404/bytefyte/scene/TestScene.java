@@ -194,8 +194,9 @@ public class TestScene implements Screen {
                 if (obj.remove) {
                     world.destroyBody(obj.b2body);
                     Main.objectsToRemove.add(obj);
+                } else {
+                    obj.update(deltaTime);
                 }
-                obj.update(deltaTime);
             }
 
             hud.update(deltaTime);
