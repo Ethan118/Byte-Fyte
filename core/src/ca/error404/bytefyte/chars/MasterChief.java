@@ -84,7 +84,7 @@ public class MasterChief extends Character {
 
     @Override
     void smashSide() {
-        new Collider(new Vector2(40, 20), 100, 80, this, 4f, 18f, 0, 0.4f);
+        new Collider(new Vector2(40, 20), 100, 80, this, 4f, 18f, 0.5f, 0.4f);
         resetControls();
     }
 
