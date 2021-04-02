@@ -20,16 +20,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MasterChief extends Character {
-    private ArrayList<Sound> healSongs;
-    private ArrayList<Float> healSongLengths;
+    private final ArrayList<Sound> healSongs;
+    private final ArrayList<Float> healSongLengths;
 
     private float currentSongLength;
-    private int hovertimer = 2;
-    private int timer = 2;
+    private final int hovertimer = 2;
+    private final int timer = 2;
     Random rand = new Random();
 
-    private boolean hasHovered = false;
-    private float flyAcceleration = 0f;
+    private final boolean hasHovered = false;
+    private final float flyAcceleration = 0f;
 
     public MasterChief(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF");

@@ -19,11 +19,11 @@ public class MultiHit extends GameObject {
 
 //    Creating all necessary variables
     private int numOfCollisions;
-    private float leadUpPower;
-    private float lastHitPower;
-    private float leadUpDamage;
-    private float lastHitDamage;
-    private boolean lifesteal;
+    private final float leadUpPower;
+    private final float lastHitPower;
+    private final float leadUpDamage;
+    private final float lastHitDamage;
+    private final boolean lifesteal;
 
     public Vector2 offset;
 
@@ -38,7 +38,7 @@ public class MultiHit extends GameObject {
 
     public float hitStun;
 
-    private float delay;
+    private final float delay;
 
     private float timer = 0;
 

@@ -8,10 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 public class PlayerUI extends WidgetGroup {
-    private Character player;
+    private final Character player;
 
-    private float percent;
-    private String name;
+    private final float percent;
+    private final String name;
 
     Image base;
     Image head;

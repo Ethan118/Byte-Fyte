@@ -19,17 +19,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class HUD implements Disposable {
     public Stage stage;
-    private Viewport viewport;
-    private SpriteBatch batch;
+    private final Viewport viewport;
+    private final SpriteBatch batch;
 
     private float timeCount;
 
     Label timerLabel;
     Label placeHolder;
 
-    private FreeTypeFontGenerator fontGenerator;
-    private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
-    private BitmapFont font;
+    private final FreeTypeFontGenerator fontGenerator;
+    private final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
+    private final BitmapFont font;
 
     public HUD() {
         batch = new SpriteBatch();

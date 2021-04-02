@@ -15,7 +15,7 @@ public class SettingsMenu implements Screen {
     //delairing variables
     ShapeRenderer shapeRenderer;
     BitmapFont font;
-    private Main game;
+    private final Main game;
 
 
 
