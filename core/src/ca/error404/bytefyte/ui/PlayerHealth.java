@@ -3,10 +3,11 @@ package ca.error404.bytefyte.ui;
 import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -15,12 +16,12 @@ import java.text.DecimalFormat;
 
 public class PlayerHealth extends GameObject {
 
-    private int playerNum;
-    private String charname;
+    private final int playerNum;
+    private final String charname;
 
-    private Vector2 headOffset = new Vector2();
-    private Vector2 baseOffset = new Vector2();
-    private Vector2 countryOffset = new Vector2();
+    private final Vector2 headOffset = new Vector2();
+    private final Vector2 baseOffset = new Vector2();
+    private final Vector2 countryOffset = new Vector2();
     private Vector2 pos = new Vector2();
 
     private final Character chara;
@@ -35,7 +36,7 @@ public class PlayerHealth extends GameObject {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
 
-    private GlyphLayout layout = new GlyphLayout();
+    private final GlyphLayout layout = new GlyphLayout();
     private float numSpeed = 20f;
     private float margain = 0.1f;
     private float num;
@@ -92,6 +93,8 @@ public class PlayerHealth extends GameObject {
             prevNum = num;
             numSpeed = 0;
         }
+
+        num = (float) round(num, 1);
     }
 
     @Override
@@ -104,9 +107,10 @@ public class PlayerHealth extends GameObject {
 
         if (chara.stockCount > 0 || num != 0) {
             DecimalFormat form = new DecimalFormat(".#");
+
             layout.setText(Main.percentNumFont, String.format("%d", (int) num), color, 0, Align.right, false);
             Main.percentNumFont.draw(batch, layout, pos.x + 325, pos.y + 159);
-            layout.setText(Main.percentFont, form.format(num -  Math.floor(num)) + "%", color, 0, Align.right, false);
+            layout.setText(Main.percentFont, form.format(num - Math.floor(num)) + "%", color, 0, Align.right, false);
             Main.percentFont.draw(batch, layout, pos.x + 360, pos.y + 107);
         }
 
@@ -116,6 +120,11 @@ public class PlayerHealth extends GameObject {
 
         layout.setText(Main.battleNameFont, chara.playerName, Color.WHITE, 0, Align.center, false);
         Main.battleNameFont.draw(batch, layout, pos.x + 250, pos.y + 70);
+    }
+
+    private static double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 
     private void setColor() {
