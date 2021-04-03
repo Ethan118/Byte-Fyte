@@ -34,7 +34,7 @@ public class HUD implements Disposable {
     public HUD() {
         batch = new SpriteBatch();
         timeCount = 300f;
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.otf"));
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
         fontParameter.size = 80;

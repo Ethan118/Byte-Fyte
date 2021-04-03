@@ -20,7 +20,7 @@ public class ShowSongName extends GameObject {
         super();
         Main.objectsToAdd.remove(this);
         Main.uiToAdd.add(this);
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.otf"));
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
         fontParameter.size = 40;
