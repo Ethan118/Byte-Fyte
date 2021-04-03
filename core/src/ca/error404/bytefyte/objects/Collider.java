@@ -28,6 +28,8 @@ public class Collider extends GameObject {
     private float delay;
     private float timer;
 
+    private Character.AnimationState parentAnim;
+
     /**
      * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating
      * post: instantiates a new collided with the parameters
@@ -40,6 +42,7 @@ public class Collider extends GameObject {
         this.width = width;
         this.height = height;
         this.parent = parent;
+        this.parentAnim = parent.animState;
 
         this.power = power;
         this.damage = damage;
@@ -65,6 +68,7 @@ public class Collider extends GameObject {
         this.width = width;
         this.height = height;
         this.parent = parent;
+        this.parentAnim = parent.animState;
 
         this.power = power;
         this.damage = damage;
@@ -89,6 +93,7 @@ public class Collider extends GameObject {
         this.width = width;
         this.height = height;
         this.parent = parent;
+        this.parentAnim = parent.animState;
 
         this.power = power;
         this.damage = damage;
@@ -150,7 +155,8 @@ public class Collider extends GameObject {
             }
 
             // destroys the player once the animation is done
-            if (parent.animState != parent.prevAnimState || timer <= 0) {
+            if (parent.animState != parentAnim || timer <= 0) {
+                b2body.setTransform(-5000f, -5000f, 0);
                 destroy();
             }
         } else {

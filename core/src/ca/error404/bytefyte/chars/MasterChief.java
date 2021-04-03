@@ -13,6 +13,9 @@ public class MasterChief extends Character {
 
     public MasterChief(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF");
+        weight = 1.2f;
+        walkSpeed = 0.9f;
+        runSpeed = 1.8f;
         manualSpriteOffset = new Vector2(1100, 350);
 
         projectilesOnScreen = new ArrayList<>(1);
@@ -159,7 +162,7 @@ public class MasterChief extends Character {
     @Override
     void airBack() {
         new Collider(new Vector2(-35, 15), 50, 20, this, 4f, 14f, 0.25f, 0.35f);
-
+        resetControls();
     }
 
     @Override

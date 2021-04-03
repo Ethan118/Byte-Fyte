@@ -34,7 +34,7 @@ public class HUD implements Disposable {
     public HUD() {
         batch = new SpriteBatch();
         timeCount = 300f;
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.otf"));
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
         fontParameter.size = 80;
@@ -63,7 +63,7 @@ public class HUD implements Disposable {
         timerLabel = new Label(String.format("%.2f", timeCount), style);
         timerLabel.setAlignment(Align.left);
 
-        header.add(timerLabel).growX().pad(10, 10, 0, 0);
+        // header.add(timerLabel).growX().pad(10, 10, 0, 0);
 
         stage.addActor(header);
         stage.addActor(footer);
@@ -71,8 +71,8 @@ public class HUD implements Disposable {
     }
 
     public void update(float delta) {
-        for (PlayerHealth playerUI : Main.ui) {
-            playerUI.update(delta);
+        for (GameObject ui : Main.ui) {
+            ui.update(delta);
         }
         Main.ui.addAll(Main.uiToAdd);
         Main.ui.removeAll(Main.uiToRemove);
@@ -86,8 +86,8 @@ public class HUD implements Disposable {
     public void draw() {
         stage.draw();
         batch.begin();
-        for (PlayerHealth playerUI : Main.ui) {
-            playerUI.draw(batch);
+        for (GameObject ui : Main.ui) {
+            ui.draw(batch);
         }
         batch.end();
     }

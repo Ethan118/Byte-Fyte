@@ -53,6 +53,7 @@ public class Main extends Game {
 
 	public SpriteBatch batch;
 
+	public static String internalSongName = "";
 	public static String songName = "";
 	public double songLoopStart = Double.POSITIVE_INFINITY;
 	public double songLoopEnd = Double.POSITIVE_INFINITY;
@@ -68,9 +69,9 @@ public class Main extends Game {
 	public static ArrayList<GameObject> objectsToAdd = new ArrayList<>();
 	public static ArrayList<GameObject> objectsToRemove = new ArrayList<>();
 
-	public static ArrayList<PlayerHealth> ui = new ArrayList<>();
-	public static ArrayList<PlayerHealth> uiToAdd = new ArrayList<>();
-	public static ArrayList<PlayerHealth> uiToRemove = new ArrayList<>();
+	public static ArrayList<GameObject> ui = new ArrayList<>();
+	public static ArrayList<GameObject> uiToAdd = new ArrayList<>();
+	public static ArrayList<GameObject> uiToRemove = new ArrayList<>();
 
 	public static BitmapFont battleNameFont;
 	public static BitmapFont percentNumFont;
@@ -104,11 +105,6 @@ public class Main extends Game {
 		audioManager = new AssetManager();
 
 		manager = new AssetManager();
-		manager.load("sprites/NES - Super Mario Bros - Tileset.png", Texture.class);
-		manager.finishLoading();
-		manager.load("sprites/shyguy.atlas", TextureAtlas.class);
-		manager.load("sprites/masterchief.atlas", TextureAtlas.class);
-		manager.load("sprites/ui.atlas", TextureAtlas.class);
 
 		loadFonts();
 
@@ -128,11 +124,11 @@ public class Main extends Game {
 			}
 		}
 
-		setScreen(new LoadTMap("sprites/test.tmx", this));
+		setScreen(new LoadTMap("Halberd", this, new Vector2(-350, 0)));
 	}
 
 	public void loadFonts() {
-		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.otf"));
+		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
 		fontParameter.size = 20;
@@ -181,7 +177,8 @@ public class Main extends Game {
 				String[] data = oneData.split("	");
 
 				if (i > 0 && data[0].equalsIgnoreCase(song)) {
-					songName = data[0];
+					internalSongName = data[0];
+					songName = data[1];
 					songLoopStart = Double.parseDouble(data[2]);
 					songLoopEnd = Double.parseDouble(data[3]);
 					keepLooping = false;
@@ -197,10 +194,10 @@ public class Main extends Game {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
 
-		audioManager.load("audio/music/" + songName + ".wav", Music.class);
+		audioManager.load("audio/music/" + internalSongName + ".wav", Music.class);
 		audioManager.finishLoading();
 
-		Music music = audioManager.get("audio/music/" + songName + ".wav", Music.class);
+		Music music = audioManager.get("audio/music/" + internalSongName + ".wav", Music.class);
 		music.setLooping(true);
 		return music;
 	}
@@ -218,6 +215,7 @@ public class Main extends Game {
 		String oneData = "";
 		int i = 0;
 		Array<String> names = new Array<>();
+		Array<String> songNames = new Array<>();
 		Array<Double> start = new Array<>();
 		Array<Double> end = new Array<>();
 
@@ -230,6 +228,7 @@ public class Main extends Game {
 				if (i > 0 && data[4].equalsIgnoreCase(series)) {
 					for (int j=0; j < Integer.parseInt(data[6]); j++) {
 						names.add(data[0]);
+						songNames.add(data[1]);
 						start.add(Double.parseDouble(data[2]));
 						end.add(Double.parseDouble(data[3]));
 					}
@@ -241,7 +240,8 @@ public class Main extends Game {
 			// randomly selects song in list
 			i = rand.nextInt(names.size);
 
-			songName = names.get(i);
+			internalSongName = names.get(i);
+			songName = songNames.get(i);
 			songLoopStart = start.get(i);
 			songLoopEnd = end.get(i);
 		} catch (Exception e) {
@@ -252,10 +252,10 @@ public class Main extends Game {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
 
-		audioManager.load("audio/music/" + songName + ".wav", Music.class);
+		audioManager.load("audio/music/" + internalSongName + ".wav", Music.class);
 		audioManager.finishLoading();
 
-		Music music = audioManager.get("audio/music/" + songName + ".wav", Music.class);
+		Music music = audioManager.get("audio/music/" + internalSongName + ".wav", Music.class);
 		music.setLooping(true);
 		return music;
 	}
@@ -273,6 +273,7 @@ public class Main extends Game {
 		String oneData = "";
 		int i = 0;
 		Array<String> names = new Array<>();
+		Array<String> songNames = new Array<>();
 		Array<Double> start = new Array<>();
 		Array<Double> end = new Array<>();
 
@@ -285,6 +286,7 @@ public class Main extends Game {
 				if (i > 0) {
 					for (int j=0; j < Integer.parseInt(data[6]); j++) {
 						names.add(data[0]);
+						songNames.add(data[1]);
 						start.add(Double.parseDouble(data[2]));
 						end.add(Double.parseDouble(data[3]));
 					}
@@ -296,7 +298,8 @@ public class Main extends Game {
 			// randomly selects song in list
 			i = rand.nextInt(names.size);
 
-			songName = names.get(i);
+			internalSongName = names.get(i);
+			songName = songNames.get(i);
 			songLoopStart = start.get(i);
 			songLoopEnd = end.get(i);
 		} catch (Exception e) {
@@ -307,10 +310,10 @@ public class Main extends Game {
 			songLoopEnd = Double.POSITIVE_INFINITY;
 		}
 
-		audioManager.load("audio/music/" + songName + ".wav", Music.class);
+		audioManager.load("audio/music/" + internalSongName + ".wav", Music.class);
 		audioManager.finishLoading();
 
-		Music music = audioManager.get("audio/music/" + songName + ".wav", Music.class);
+		Music music = audioManager.get("audio/music/" + internalSongName + ".wav", Music.class);
 		music.setLooping(true);
 		return music;
 	}
