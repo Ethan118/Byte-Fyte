@@ -65,7 +65,7 @@ public class LoadTMap implements Screen {
         map = mapLoader.loadSync(Main.manager, tmap, Gdx.files.internal(tmap), null);
 
         // plays a song so I can hear things
-        game.music = game.newSong("cornered anime");
+        game.music = game.newSong();
         game.music.setVolume(Main.musicVolume / 10f);
         game.music.play();
 
