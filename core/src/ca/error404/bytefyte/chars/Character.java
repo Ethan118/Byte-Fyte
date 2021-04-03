@@ -5,8 +5,8 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
-import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
+import ca.error404.bytefyte.scene.TMap;
 import ca.error404.bytefyte.scene.TestScene;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
@@ -114,11 +114,15 @@ public abstract class Character extends GameObject {
     protected double moveTimer = 0;
 
     private boolean afterUpB = false;
+    protected Boolean canDownB = true;
 
-    protected int stockCount = 3;
+
+    public int stockCount = 3;
+    public Vector2 respawnPos = new Vector2();
 
     protected boolean dead = false;
     protected boolean knockedOff = false;
+
 
 //    Creating an enum to handle the state of movement the player is in
     protected enum MovementState {
@@ -140,7 +144,7 @@ public abstract class Character extends GameObject {
     }
 
 //    Creating an enum to handle the animation being displayed for the player
-    protected enum AnimationState {
+    public enum AnimationState {
         IDLE,
         RUN,
         WALK,
@@ -177,22 +181,29 @@ public abstract class Character extends GameObject {
     protected MovementState moveState;
     protected final MovementState prevMoveState;
 
-    protected AnimationState animState;
-    protected AnimationState prevAnimState;
+    public AnimationState animState;
+    public AnimationState prevAnimState;
 
     protected int playerNumber;
+    public String charname;
+    public String playerName;
+    public float width;
+    public float height;
 
     /**
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(TestScene screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname) {
+    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         super();
+        Main.players.add(this);
         this.playerNumber = playerNumber;
+        this.charname = charname;
+        this.playerName = playerName;
         this.world = screen.getWorld();
         this.controller = controller;
 
-//        new PlayerHealth(playerNumber, charname);
+        new PlayerHealth(playerNumber, charname, this);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -206,37 +217,37 @@ public abstract class Character extends GameObject {
         goToPos = new Vector2(spawnPoint.x / Main.PPM, spawnPoint.y / Main.PPM);
 
         // loads animations
-        TextureAtlas textureAtlas = Main.manager.get("sprites/shyguy.atlas", TextureAtlas.class);
+        TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", charname), TextureAtlas.class);
 
-        idle = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_idle"), Animation.PlayMode.LOOP);
-        walk = new Animation<TextureRegion>(1f/120f, textureAtlas.findRegions("shyguy_walk"), Animation.PlayMode.LOOP);
-        run = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_run"), Animation.PlayMode.LOOP);
+        idle = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("idle"), Animation.PlayMode.LOOP);
+        walk = new Animation<TextureRegion>(1f/120f, textureAtlas.findRegions("walk"), Animation.PlayMode.LOOP);
+        run = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("run"), Animation.PlayMode.LOOP);
 
-        jump = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_jump"), Animation.PlayMode.LOOP);
-        fall = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fall"), Animation.PlayMode.LOOP);
-        hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_hit"), Animation.PlayMode.LOOP);
+        jump = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("jump"), Animation.PlayMode.LOOP);
+        fall = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("fall"), Animation.PlayMode.LOOP);
+        hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("hit"), Animation.PlayMode.NORMAL);
 
-        neutralAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral"), Animation.PlayMode.NORMAL);
-        sideTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_stilt"), Animation.PlayMode.NORMAL);
-        upTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_utilt"), Animation.PlayMode.NORMAL);
-        downTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dtilt"), Animation.PlayMode.NORMAL);
+        neutralAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
+        sideTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("stilt"), Animation.PlayMode.NORMAL);
+        upTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("utilt"), Animation.PlayMode.NORMAL);
+        downTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dtilt"), Animation.PlayMode.NORMAL);
 
-        neutralB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_neutral_b"), Animation.PlayMode.NORMAL);
-        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_b"), Animation.PlayMode.LOOP);
-        downB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_b"), Animation.PlayMode.LOOP);
-        sideB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_b"), Animation.PlayMode.NORMAL);
+        neutralB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral_b"), Animation.PlayMode.NORMAL);
+        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("down_b"), Animation.PlayMode.LOOP);
+        sideB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("side_b"), Animation.PlayMode.NORMAL);
 
-        nair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_nair"), Animation.PlayMode.NORMAL);
-        dair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dair"), Animation.PlayMode.NORMAL);
-        fair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_fair"), Animation.PlayMode.NORMAL);
-        bair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_bair"), Animation.PlayMode.NORMAL);
-        uair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_uair"), Animation.PlayMode.NORMAL);
+        nair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("nair"), Animation.PlayMode.NORMAL);
+        dair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dair"), Animation.PlayMode.NORMAL);
+        fair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("fair"), Animation.PlayMode.NORMAL);
+        bair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("bair"), Animation.PlayMode.NORMAL);
+        uair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("uair"), Animation.PlayMode.NORMAL);
 
-        upSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_up_smash"), Animation.PlayMode.NORMAL);
-        downSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_down_smash"), Animation.PlayMode.NORMAL);
-        sideSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_side_smash"), Animation.PlayMode.NORMAL);
+        upSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_smash"), Animation.PlayMode.NORMAL);
+        downSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("down_smash"), Animation.PlayMode.NORMAL);
+        sideSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("side_smash"), Animation.PlayMode.NORMAL);
 
-        dashAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("shyguy_dash_attack"), Animation.PlayMode.NORMAL);
+        dashAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dash_attack"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         attackAnimation = null;
@@ -259,6 +270,8 @@ public abstract class Character extends GameObject {
         PolygonShape shape = new PolygonShape();
 
         shape.setAsBox((float) getRegionWidth() / hitboxScale / 2 / Main.PPM,(float) getRegionHeight() / hitboxScale / 2 / Main.PPM);
+        width = getRegionWidth() / hitboxScale / 2 / Main.PPM;
+        height = getRegionHeight() / hitboxScale / 2 / Main.PPM;
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
@@ -307,7 +320,7 @@ public abstract class Character extends GameObject {
             moveVector.x = Math.abs(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0;
             moveVector.y = Math.abs(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0;
 
-//            Gets the directionak input of the right controller stick to handle attacks
+//            Gets the directional input of the right controller stick to handle attacks
             rStick.x = Math.abs(controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS)) >= deadzone ? controller.getAxis(ControllerButtons.R_STICK_HORIZONTAL_AXIS) : 0;
             rStick.y = Math.abs(controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS)) >= deadzone ? -controller.getAxis(ControllerButtons.R_STICK_VERTICAL_AXIS) : 0;
 
@@ -340,7 +353,11 @@ public abstract class Character extends GameObject {
             } else if (Main.contains(Main.recentButtons.get(controller), ControllerButtons.B)) {
                 attackState = AttackState.BASIC;
             } else if (Math.abs(rStick.x) >= deadzone || Math.abs(rStick.y) >= deadzone) {
-                attackState = AttackState.SMASH;
+                if (attackState != AttackState.SMASH) {
+                    attackState = AttackState.SMASH;
+                } else {
+                    attackState = AttackState.NONE;
+                }
 
 //                Otherwise the user is not attacking
             } else {
@@ -366,7 +383,9 @@ public abstract class Character extends GameObject {
 
 //            Next two lines are for testing purposes, will be removed in final game
 //            if (Gdx.input.isKeyJustPressed(Keys.EMPTY_METER)) ultMeter = 0;
-//            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) ultMeter = 100;
+            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) {
+                ultMeter = 100;
+            }
 
 //            Checks if the user pressed the key corresponding to a special move
             if (Gdx.input.isKeyJustPressed(Keys.SPECIAL)) {
@@ -400,6 +419,10 @@ public abstract class Character extends GameObject {
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
+        if (dead) {
+            Main.players.remove(this);
+            destroy();
+        }
 
         // counts the animation duration down to zero
         if (animDuration > 0) {
@@ -432,8 +455,8 @@ public abstract class Character extends GameObject {
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
+            prevGoToPos = goToPos;
         }
-        prevGoToPos = goToPos;
 
         // counts down stun timer
         if (stunTimer > 0) {
@@ -470,7 +493,7 @@ public abstract class Character extends GameObject {
         applyFriction(deltaTime);
 
         // checks if the player is pressing down
-        if (moveVector.y < 0) {
+        if (moveVector.y < -deadzone) {
 
             // player falls at the fast fall speed
             maxFallSpeed = fastFallSpeed;
@@ -513,6 +536,8 @@ public abstract class Character extends GameObject {
             ground();
         }
 
+        prevAnimState = animState;
+
         // locks animation state if the player is stunned or an attack animation is playing
         if (!lockAnim && stunTimer <= 0) {
             if (animDuration <= 0) {
@@ -545,7 +570,6 @@ public abstract class Character extends GameObject {
      * post: gets the current state of the player
      */
     public void getState() {
-
 //        If the user is not on the ground with a y velocity above 0, user jumped
         if (vel.y > 0 && !grounded) {
             moveState = MovementState.JUMP;
@@ -583,15 +607,7 @@ public abstract class Character extends GameObject {
                         // neutral
                         animState = AnimationState.BASIC_N;
                         basicNeutral();
-                    } else if (moveVector.y > 0) {
-                        // up
-                        animState = AnimationState.BASIC_U;
-                        basicUp();
-                    } else if (moveVector.y < 0) {
-                        // down
-                        animState = AnimationState.BASIC_D;
-                        basicDown();
-                    } else if (Math.abs(moveVector.x) > 0) {
+                    } else if (Math.abs(moveVector.x) > deadzone) {
                         if (moveState == MovementState.RUN) {
                             //dash
                             animState = AnimationState.DASH;
@@ -601,6 +617,14 @@ public abstract class Character extends GameObject {
                             animState = AnimationState.BASIC_S;
                             basicSide();
                         }
+                    } else if (moveVector.y > 0) {
+                        // up
+                        animState = AnimationState.BASIC_U;
+                        basicUp();
+                    } else if (moveVector.y < 0) {
+                        // down
+                        animState = AnimationState.BASIC_D;
+                        basicDown();
                     }
 
                 // air attacks
@@ -609,14 +633,6 @@ public abstract class Character extends GameObject {
                         // neutral
                         animState = AnimationState.AIR_N;
                         airNeutral();
-                    } else if (moveVector.y > 0) {
-                        // up
-                        animState = AnimationState.AIR_U;
-                        airUp();
-                    } else if (moveVector.y < 0) {
-                        // down
-                        animState = AnimationState.AIR_D;
-                        airDown();
                     } else if ((!facingLeft && moveVector.x >= deadzone) || (facingLeft && moveVector.x <= -deadzone)) {
                         // forward
                         animState = AnimationState.AIR_F;
@@ -625,6 +641,14 @@ public abstract class Character extends GameObject {
                         // backward
                         animState = AnimationState.AIR_B;
                         airBack();
+                    } else if (moveVector.y > 0) {
+                        // up
+                        animState = AnimationState.AIR_U;
+                        airUp();
+                    } else if (moveVector.y < 0) {
+                        // down
+                        animState = AnimationState.AIR_D;
+                        airDown();
                     }
                 }
 
@@ -634,18 +658,18 @@ public abstract class Character extends GameObject {
                     //neutral
                     animState = AnimationState.SPECIAL_N;
                     specialNeutral();
-                } else if (moveVector.y > 0) {
-                    //up
-                    animState = AnimationState.SPECIAL_U;
-                    specialUp();
-                } else if (moveVector.y < 0) {
-                    //down
-                    animState = AnimationState.SPECIAL_D;
-                    specialDown();
-                } else if (Math.abs(moveVector.x) > 0) {
+                } else if (Math.abs(moveVector.x) > deadzone) {
                     //side
                     animState = AnimationState.SPECIAL_S;
                     specialSide();
+                } else if (moveVector.y > deadzone) {
+                    //up
+                    animState = AnimationState.SPECIAL_U;
+                    specialUp();
+                } else if (moveVector.y < 0 && canDownB) {
+                    //down
+                    animState = AnimationState.SPECIAL_D;
+                    specialDown();
                 } else if (attackState == AttackState.ULTIMATE) {
                     if (ultMeter >= 100) {
                         //ult
@@ -658,7 +682,16 @@ public abstract class Character extends GameObject {
             } else if (attackState == AttackState.SMASH) {
                 Vector2 vec = controller == null ? moveVector : rStick;
 
-                if (vec.y > 0) {
+                 if (vec.x < -deadzone) {
+                    //side
+                    facingLeft = true;
+                    animState = AnimationState.SMASH_S;
+                    smashSide();
+                } else if (vec.x > deadzone) {
+                    facingLeft = false;
+                    animState = AnimationState.SMASH_S;
+                    smashSide();
+                } else if (vec.y > 0) {
                     //up
                     animState = AnimationState.SMASH_U;
                     smashUp();
@@ -666,15 +699,6 @@ public abstract class Character extends GameObject {
                     //down
                     animState = AnimationState.SMASH_D;
                     smashDown();
-                } else if (vec.x < 0) {
-                    //side
-                    facingLeft = true;
-                    animState = AnimationState.SMASH_S;
-                    smashSide();
-                } else if (vec.x > 0) {
-                    facingLeft = false;
-                    animState = AnimationState.SMASH_S;
-                    smashSide();
                 }
             }
         }
@@ -700,7 +724,6 @@ public abstract class Character extends GameObject {
 
         // sets elapsedTime
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
-        prevAnimState = animState;
 
         // switch case to set the animation
         switch (animState) {
@@ -790,8 +813,10 @@ public abstract class Character extends GameObject {
                 break;
             case ULTIMATE:
             case HIT:
+                afterUpB = false;
                 region = hit.getKeyFrame(elapsedTime, true);
                 attackAnimation = null;
+                afterUpB = false;
                 break;
             case IDLE:
             default:
@@ -843,7 +868,7 @@ public abstract class Character extends GameObject {
         percent = Math.min(percent + damage, 999.9f);
         vel.set(force.scl(((percent / 100) + 1) / weight));
 
-        stunTimer = hitStun * ((percent / 100) + 1);
+        stunTimer = hitStun;
 
         moveVector.x = 0;
     }
@@ -852,7 +877,7 @@ public abstract class Character extends GameObject {
      * pre: x position, y position
      * post: reset player, set position
      */
-    public void setPos(int x, int y) {
+    public void die() {
 
 //        Resets player for a potential respawn
         percent = 0;
@@ -864,21 +889,21 @@ public abstract class Character extends GameObject {
         knockedOff = true;
 
 //        Checks if the user has stocks (lives) left
-        if (stockCount != 1) {
-
-//            If they do, their position is reset and they lose a stock
-            goToPos = new Vector2(x / Main.PPM, y / Main.PPM);
+        prevGoToPos = new Vector2(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
+        if (stockCount > 1) {
+//          If they do, their position is reset and they lose a stock
+            goToPos = respawnPos;
             stockCount -= 1;
 
 //        Otherwise, the user's character dies
         } else {
             dead = true;
+            stockCount = 0;
         }
     }
 
 //    The following are abstract methods meant to be overwritten for each character, and replaced with
 //    their specific abilities and attacks.
-
 
     //    Basic Attacks
     abstract void basicNeutral();

@@ -31,7 +31,11 @@ public class WorldContactListener implements ContactListener {
                     chara = ((Character) fixB.getUserData());
                 }
 
-                if (chara.vel.y <= 0) chara.ground();
+                if (chara.vel.y <= 0) {
+                    chara.ground();
+                } else if (chara.animState == Character.AnimationState.SPECIAL_U) {
+                    chara.ground();
+                }
                 break;
             case Tags.PLAYER_HEAD_BIT | Tags.GROUND_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_HEAD_BIT) {
@@ -70,6 +74,14 @@ public class WorldContactListener implements ContactListener {
 
                     Vector2 force = new Vector2(direction.x * collider.power, direction.y * collider.power);
                     chara.Hit(collider.damage, force, collider.hitStun);
+
+                    if (collider.lifeSteal) {
+                        if (collider.parent.percent >= collider.damage) {
+                            collider.parent.percent -= collider.damage;
+                        } else {
+                            collider.parent.percent = 0;
+                        }
+                    }
                 }
                 break;
 

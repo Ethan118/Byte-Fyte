@@ -1,11 +1,13 @@
 package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.GameObject;
+import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
+import ca.error404.bytefyte.objects.BattleCam;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
@@ -30,6 +32,9 @@ public class TestScene implements Screen {
     private final Main game;
     private final OrthographicCamera cam;
     private final Viewport viewport;
+    private final HUD hud;
+
+    public Character player;
 
     private final World world;
     private final Box2DDebugRenderer b2dr;
@@ -39,37 +44,38 @@ public class TestScene implements Screen {
     public TestScene(Main game) {
         // sets up variables
         this.game = game;
-        cam = new OrthographicCamera();
+        cam = new BattleCam();
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, cam);
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
-
-        Character player;
-
-        if (Main.controllers.size > 0) {
-            player = new ShyGuy(this, new Vector2(-38, 150), Main.controllers.get(0), 1);
-            new ShyGuy(this, new Vector2(38, 150),  null, 2);
-        } else {
-            player = new ShyGuy(this, new Vector2(-38, 150), null, 1);
-            new ShyGuy(this, new Vector2(38, 150), null, 2);
-        }
-
-        player.facingLeft = false;
-
-        world.setContactListener(new WorldContactListener());
-
-        new Wall(0, -30, 100, 10, this);
-        new Wall(-75, 65, 20, 20, this);
-        new Wall(75, 65, 20, 20, this);
-        new DeathWall(0, -400, 1000, 10, this);
-        new DeathWall(0, 500, 1000, 10, this);
-        new DeathWall(-225, 0, 10, 1000, this);
-        new DeathWall(225, 0, 10, 1000, this);
+//        TMap map = new TMap("sprites/test", game);
+//
+//        if (Main.controllers.size > 0) {
+//            player = new ShyGuy(map, new Vector2(-38, 150), Main.controllers.get(0), 1);
+//            new ShyGuy(map, new Vector2(38, 150),  null, 2);
+//        } else {
+//            player = new ShyGuy(map, new Vector2(-38, 150), null, 1);
+//            new ShyGuy(map, new Vector2(38, 150), null, 2);
+//        }
+//
+//        player.facingLeft = false;
+//
+//        world.setContactListener(new WorldContactListener());
+//
+//        new Wall(0, -30, 100, 10, map);
+//        new Wall(-75, 65, 20, 20, map);
+//        new Wall(75, 65, 20, 20, map);
+//        new DeathWall(0, -400, 1000, 10, map);
+//        new DeathWall(0, 500, 1000, 10, map);
+//        new DeathWall(-225, 0, 10, 1000, map);
+//        new DeathWall(225, 0, 10, 1000, map);
 
         // plays a song so I can hear things
         game.music = game.newSong();
         game.music.setVolume(Main.musicVolume / 10f);
         game.music.play();
+
+        hud = new HUD();
     }
 
     // function is called in between constructor and first render; is required for the Screen class
@@ -85,7 +91,9 @@ public class TestScene implements Screen {
         // draw everything to the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         game.batch.setProjectionMatrix(cam.combined);
+
         game.batch.begin();
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
@@ -97,6 +105,8 @@ public class TestScene implements Screen {
         if (!videoPlayer.isPlaying()) {
             b2dr.render(world, cam.combined);
         }
+
+        hud.draw();
     }
 
     public void update(float deltaTime) {
@@ -184,9 +194,12 @@ public class TestScene implements Screen {
                 if (obj.remove) {
                     world.destroyBody(obj.b2body);
                     Main.objectsToRemove.add(obj);
+                } else {
+                    obj.update(deltaTime);
                 }
-                obj.update(deltaTime);
             }
+
+            hud.update(deltaTime);
 
             // Manage which game objects are active
             Main.gameObjects.addAll(Main.objectsToAdd);
@@ -230,7 +243,9 @@ public class TestScene implements Screen {
 
     @Override
     public void dispose() {
-
+        world.dispose();
+        b2dr.dispose();
+        hud.dispose();
     }
 
     public World getWorld() {
