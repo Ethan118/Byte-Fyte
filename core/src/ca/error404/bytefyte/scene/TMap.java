@@ -36,18 +36,18 @@ import java.io.IOException;
 import java.util.Set;
 
 public class TMap implements Screen {
-    private BattleCam gamecam;
-    private Viewport viewport;
+    private final BattleCam gamecam;
+    private final Viewport viewport;
 
     private final Main game;
     private final HUD hud;
 
-    private TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
+    private final TiledMap map;
+    private final OrthogonalTiledMapRenderer renderer;
 
-    private MapProperties mProp;
-    private World world;
-    private Box2DDebugRenderer b2dr;
+    private final MapProperties mProp;
+    private final World world;
+    private final Box2DDebugRenderer b2dr;
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 

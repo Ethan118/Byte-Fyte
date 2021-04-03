@@ -15,7 +15,7 @@ public class Projectile extends GameObject {
     public Vector2 vel;
     public Vector2 offset;
 
-    private float maxDistance;
+    private final float maxDistance;
 
     public Character parent;
     private final World world;
@@ -28,9 +28,9 @@ public class Projectile extends GameObject {
 
     public float hitStun;
 
-    private Animation<TextureRegion> anim;
-    private TextureAtlas atlas;
-    private float elapsedTime = 0f;
+    private final Animation<TextureRegion> anim;
+    private final TextureAtlas atlas;
+    private final float elapsedTime = 0f;
 
     private float delay;
 

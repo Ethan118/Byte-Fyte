@@ -15,12 +15,12 @@ import java.text.DecimalFormat;
 
 public class PlayerHealth extends GameObject {
 
-    private int playerNum;
-    private String charname;
+    private final int playerNum;
+    private final String charname;
 
-    private Vector2 headOffset = new Vector2();
-    private Vector2 baseOffset = new Vector2();
-    private Vector2 countryOffset = new Vector2();
+    private final Vector2 headOffset = new Vector2();
+    private final Vector2 baseOffset = new Vector2();
+    private final Vector2 countryOffset = new Vector2();
     private Vector2 pos = new Vector2();
 
     private final Character chara;
@@ -35,7 +35,7 @@ public class PlayerHealth extends GameObject {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
 
-    private GlyphLayout layout = new GlyphLayout();
+    private final GlyphLayout layout = new GlyphLayout();
     private float numSpeed = 20f;
     private float margain = 0.1f;
     private float num;

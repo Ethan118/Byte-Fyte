@@ -26,6 +26,9 @@ public abstract class Character extends GameObject {
     public float percent = 0f;
     private float stunTimer;
 
+    private float respawnTimer;
+    private final float respawnTime = 5.0f;
+
     public Vector2 moveVector = new Vector2();
     public Vector2 rStick = new Vector2();
 
@@ -468,6 +471,16 @@ public abstract class Character extends GameObject {
             handleInput();
         }
 
+        if (respawnTimer > 0) {
+            respawnTimer -= deltaTime;
+            moveState = MovementState.IDLE;
+            animState = AnimationState.IDLE;
+
+            if (!moveVector.isZero() || jumping) {
+                respawnTimer = 0;
+            }
+        }
+
         // checks if the player is on the ground
         if (grounded) {
 
@@ -506,15 +519,17 @@ public abstract class Character extends GameObject {
             maxFallSpeed = fallSpeed;
         }
 
-        // checks if the player is moving up or down
-        if (vel.y > 0 && !grounded) {
+        if (respawnTimer <= 0) {
+            // checks if the player is moving up or down
+            if (vel.y > 0 && !grounded) {
 
-            // up gravity accelerates player down
-            vel.y -= upGravity * deltaTime;
-        } else if (vel.y > maxFallSpeed && !grounded) {
+                // up gravity accelerates player down
+                vel.y -= upGravity * deltaTime;
+            } else if (vel.y > maxFallSpeed && !grounded) {
 
-            // down gravity accelerates player down
-            vel.y -= downGravity * deltaTime;
+                // down gravity accelerates player down
+                vel.y -= downGravity * deltaTime;
+            }
         }
 
         // jumping
@@ -539,7 +554,7 @@ public abstract class Character extends GameObject {
         prevAnimState = animState;
 
         // locks animation state if the player is stunned or an attack animation is playing
-        if (!lockAnim && stunTimer <= 0) {
+        if (!lockAnim && stunTimer <= 0 && respawnTimer <= 0) {
             if (animDuration <= 0) {
                 getState();
             } else {
@@ -863,14 +878,15 @@ public abstract class Character extends GameObject {
      * post: sets animation to hit, deals damage, applies knock-back, sets stun timer
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
-        animState = AnimationState.HIT;
+        if (respawnTimer <= 0) {
+            animState = AnimationState.HIT;
 
-        percent = Math.min(percent + damage, 999.9f);
-        vel.set(force.scl(((percent / 100) + 1) / weight));
+            percent = Math.min(percent + damage, 999.9f);
+            vel.set(force.scl(((percent / 100) + 1) / weight));
+            stunTimer = hitStun;
 
-        stunTimer = hitStun;
-
-        moveVector.x = 0;
+            moveVector.x = 0;
+        }
     }
 
     /**
@@ -894,6 +910,8 @@ public abstract class Character extends GameObject {
 //          If they do, their position is reset and they lose a stock
             goToPos = respawnPos;
             stockCount -= 1;
+
+            respawnTimer = respawnTime;
 
 //        Otherwise, the user's character dies
         } else {

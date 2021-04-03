@@ -21,8 +21,8 @@ public class ShyGuy extends Character {
     private static ArrayList<Float> healSongLengths;
 
     private float currentSongLength;
-    private int hovertimer = 2;
-    private int timer = 2;
+    private final int hovertimer = 2;
+    private final int timer = 2;
     Random rand = new Random();
 
     private boolean hasHovered = false;

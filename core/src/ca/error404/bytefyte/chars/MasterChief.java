@@ -11,13 +11,6 @@ import java.util.Random;
 
 public class MasterChief extends Character {
 
-
-    private int hovertimer = 2;
-    private int timer = 2;
-    Random rand = new Random();
-
-
-
     public MasterChief(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF");
         manualSpriteOffset = new Vector2(1100, 350);
