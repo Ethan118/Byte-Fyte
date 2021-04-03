@@ -16,6 +16,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -37,6 +38,9 @@ import java.util.Set;
 
 public class TMap implements Screen {
     private final BattleCam gamecam;
+    private final OrthographicCamera bgCam;
+    private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
+    private Vector2 scrollVector;
     private final Viewport viewport;
 
     private final Main game;
@@ -49,15 +53,21 @@ public class TMap implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
+    private Texture background;
+
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
 
-    public TMap(String mapName, Main game, TiledMap map) {
+    public TMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
 
         gamecam = new BattleCam();
+        bgCam = new OrthographicCamera(1920, 1080);
+        this.scrollVector = scrollVector;
 
-        viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT/ Main.PPM, gamecam);
+        this.background = background;
+
+        viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
 
         this.map = map;
         renderer = new OrthogonalTiledMapRenderer(map, 1/Main.PPM);
@@ -119,6 +129,8 @@ public class TMap implements Screen {
     }
 
     public void update(float deltaTime) {
+        bgPos.x += scrollVector.x * deltaTime;
+        bgPos.y += scrollVector.y * deltaTime;
 
         gamecam.update();
         renderer.setView(gamecam);
@@ -234,11 +246,12 @@ public class TMap implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        drawBackground();
+
         renderer.render();
 
-        game.batch.setProjectionMatrix(gamecam.combined);
-
         game.batch.begin();
+        game.batch.setProjectionMatrix(gamecam.combined);
 
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
@@ -252,6 +265,45 @@ public class TMap implements Screen {
         b2dr.render(world, gamecam.combined);
 
         hud.draw();
+    }
+
+    public void drawBackground() {
+        game.batch.begin();
+        game.batch.setProjectionMatrix(bgCam.combined);
+        float w = (bgCam.viewportHeight / background.getHeight()) * background.getWidth();
+
+        if (bgPos.x <= -(w + (1920 / 2f))) {
+            bgPos.x += w;
+        } else if (bgPos.x >= (w + (1920 / 2f))) {
+            bgPos.x -= w;
+        }
+
+        if (bgPos.y <= -(1080 - (-1080 / 2f))) {
+            bgPos.y += bgCam.viewportHeight;
+        } else if (bgPos.y >= (1080 - (-1080 / 2f))) {
+            bgPos.y -= bgCam.viewportHeight;
+        }
+
+        game.batch.draw(background, bgPos.x + w, bgPos.y, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x + w, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x + w, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x + w, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+
+        game.batch.draw(background, bgPos.x - w, bgPos.y, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x - w, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x - w, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x - w, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+
+        game.batch.draw(background, bgPos.x - w * 2, bgPos.y, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x - w * 2, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x - w * 2, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x - w * 2, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+
+        game.batch.draw(background, bgPos.x, bgPos.y, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
+        game.batch.draw(background, bgPos.x, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+        game.batch.end();
     }
 
     // updates screen size

@@ -104,11 +104,6 @@ public class Main extends Game {
 		audioManager = new AssetManager();
 
 		manager = new AssetManager();
-		manager.load("sprites/NES - Super Mario Bros - Tileset.png", Texture.class);
-		manager.finishLoading();
-		manager.load("sprites/shyguy.atlas", TextureAtlas.class);
-		manager.load("sprites/masterchief.atlas", TextureAtlas.class);
-		manager.load("sprites/ui.atlas", TextureAtlas.class);
 
 		loadFonts();
 
@@ -128,7 +123,7 @@ public class Main extends Game {
 			}
 		}
 
-		setScreen(new LoadTMap("sprites/test.tmx", this));
+		setScreen(new LoadTMap("Training Room", this, new Vector2(-350, 0)));
 	}
 
 	public void loadFonts() {

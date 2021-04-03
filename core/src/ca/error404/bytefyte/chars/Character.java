@@ -27,6 +27,7 @@ public abstract class Character extends GameObject {
     private float stunTimer;
 
     private float respawnTimer;
+    private boolean respawned = true;
     private final float respawnTime = 5.0f;
 
     public Vector2 moveVector = new Vector2();
@@ -470,14 +471,19 @@ public abstract class Character extends GameObject {
             handleInput();
         }
 
-        if (respawnTimer > 0) {
-            respawnTimer -= deltaTime;
+        respawnTimer -= deltaTime;
+
+        if (respawnTimer > 0 && !respawned) {
             moveState = MovementState.IDLE;
             animState = AnimationState.IDLE;
 
             if (!moveVector.isZero() || jumping) {
-                respawnTimer = 0;
+                respawned = true;
+            } else if (respawnTimer <= 0) {
+                respawned = true;
             }
+        } else if (!respawned) {
+            respawned = true;
         }
 
         // checks if the player is on the ground
@@ -518,7 +524,7 @@ public abstract class Character extends GameObject {
             maxFallSpeed = fallSpeed;
         }
 
-        if (respawnTimer <= 0) {
+        if (respawned) {
             // checks if the player is moving up or down
             if (vel.y > 0 && !grounded) {
 
@@ -553,7 +559,7 @@ public abstract class Character extends GameObject {
         prevAnimState = animState;
 
         // locks animation state if the player is stunned or an attack animation is playing
-        if (!lockAnim && stunTimer <= 0 && respawnTimer <= 0) {
+        if (!lockAnim && stunTimer <= 0 && respawned) {
             if (animDuration <= 0) {
                 getState();
             } else {
@@ -883,7 +889,7 @@ public abstract class Character extends GameObject {
             percent = Math.min(percent + damage, 999.9f);
             vel.set(force.scl(((percent / 100) + 1) / weight));
 
-        stunTimer = hitStun;
+            stunTimer = hitStun;
 
             moveVector.x = 0;
         }
@@ -910,6 +916,7 @@ public abstract class Character extends GameObject {
 //          If they do, their position is reset and they lose a stock
             goToPos = respawnPos;
             stockCount -= 1;
+            respawned = false;
 
             respawnTimer = respawnTime;
 
