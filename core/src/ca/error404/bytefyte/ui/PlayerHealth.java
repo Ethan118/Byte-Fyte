@@ -154,4 +154,9 @@ public class PlayerHealth extends GameObject {
             color = new Color(112 / 255f, 22 / 255f, 34 / 255f, 1);
         }
     }
+
+    @Override
+    public void destroy() {
+        Main.uiToRemove.add(this);
+    }
 }

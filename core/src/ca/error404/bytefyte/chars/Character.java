@@ -44,7 +44,6 @@ public abstract class Character extends GameObject {
 
     public float walkSpeed = 1f;
     public float walkAcc = 20;
-    public float dashSpeed = 2;
     public float runSpeed = 2;
     public float maxSpeed;
     public boolean running = false;
@@ -514,14 +513,14 @@ public abstract class Character extends GameObject {
         if (moveVector.y < -deadzone) {
 
             // player falls at the fast fall speed
-            maxFallSpeed = fastFallSpeed;
+            maxFallSpeed = fastFallSpeed * weight;
             if (vel.y > 0) {
                 vel.y = 0;
             }
         } else {
 
             // player falls at normal speed
-            maxFallSpeed = fallSpeed;
+            maxFallSpeed = fallSpeed * weight;
         }
 
         if (respawned) {
@@ -529,11 +528,11 @@ public abstract class Character extends GameObject {
             if (vel.y > 0 && !grounded) {
 
                 // up gravity accelerates player down
-                vel.y -= upGravity * deltaTime;
+                vel.y -= upGravity * weight * deltaTime;
             } else if (vel.y > maxFallSpeed && !grounded) {
 
                 // down gravity accelerates player down
-                vel.y -= downGravity * deltaTime;
+                vel.y -= downGravity * weight * deltaTime;
             }
         }
 

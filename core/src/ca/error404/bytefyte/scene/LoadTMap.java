@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.ui.ShowSongName;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
@@ -82,6 +83,7 @@ public class LoadTMap implements Screen {
         if (Main.manager.update()) {
             loadTex.dispose();
             loadTexSpin.dispose();
+            new ShowSongName();
             game.setScreen(new TMap(game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", tmap), Texture.class)));
         }
 
