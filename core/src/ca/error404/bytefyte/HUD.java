@@ -67,6 +67,7 @@ public class HUD implements Disposable {
 
         stage.addActor(header);
         stage.addActor(footer);
+
     }
 
     public void update(float delta) {
@@ -94,5 +95,6 @@ public class HUD implements Disposable {
     @Override
     public void dispose() {
         stage.dispose();
+        font.dispose();
     }
 }

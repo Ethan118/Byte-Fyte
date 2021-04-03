@@ -55,6 +55,8 @@ public class ShyGuy extends Character {
                     e.printStackTrace();
                 }
             }
+
+            System.out.println(healSongLengths);
         }
     }
 
@@ -66,7 +68,7 @@ public class ShyGuy extends Character {
         super.update(deltaTime);
 //        Heals shy guy for song duration
         if (animState == AnimationState.SPECIAL_D) {
-            if (animDuration <= 0) {
+            if (animDuration <= 0.1) {
                 percent = Math.max(percent - (currentSongLength), 0);
             }
         }
@@ -224,7 +226,7 @@ public class ShyGuy extends Character {
     @Override
     void airNeutral() {
 //        A new multihit is created which will hit the opponent multiple times, as per the ability should
-        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 1.8f, 5, 15, false);
+        new MultiHit(new Vector2(0, 0), 40, 40, this, 0.3f, 0, 7, 0.1f, 1.8f, 1, 3, false);
         resetControls();
     }
 

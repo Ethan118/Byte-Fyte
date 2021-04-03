@@ -117,12 +117,15 @@ public abstract class Character extends GameObject {
     protected double moveTimer = 0;
 
     private boolean afterUpB = false;
+    protected Boolean canDownB = true;
+
 
     public int stockCount = 3;
     public Vector2 respawnPos = new Vector2();
 
     protected boolean dead = false;
     protected boolean knockedOff = false;
+
 
 //    Creating an enum to handle the state of movement the player is in
     protected enum MovementState {
@@ -678,7 +681,7 @@ public abstract class Character extends GameObject {
                     //up
                     animState = AnimationState.SPECIAL_U;
                     specialUp();
-                } else if (moveVector.y < 0) {
+                } else if (moveVector.y < 0 && canDownB) {
                     //down
                     animState = AnimationState.SPECIAL_D;
                     specialDown();
@@ -880,8 +883,7 @@ public abstract class Character extends GameObject {
 
             percent = Math.min(percent + damage, 999.9f);
             vel.set(force.scl(((percent / 100) + 1) / weight));
-
-            stunTimer = hitStun * ((percent / 100) + 1);
+            stunTimer = hitStun;
 
             moveVector.x = 0;
         }
