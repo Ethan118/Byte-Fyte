@@ -128,7 +128,7 @@ public class Main extends Game {
 	}
 
 	public void loadFonts() {
-		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/font.ttf"));
+		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/fighterNames.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
 		fontParameter.size = 20;
@@ -136,7 +136,7 @@ public class Main extends Game {
 
 		battleNameFont = fontGenerator.generateFont(fontParameter);
 
-		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Gilroy-ExtraboldItalic.ttf"));
+		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/percent.ttf"));
 		fontParameter.size = 90;
 		fontParameter.borderWidth = 5;
 		fontParameter.borderColor = Color.BLACK;
