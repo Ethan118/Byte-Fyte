@@ -283,25 +283,22 @@ public class TMap implements Screen {
             bgPos.y -= bgCam.viewportHeight;
         }
 
-        game.batch.draw(background, bgPos.x + w, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x + w, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x + w, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x + w, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+        float x = bgPos.x;
 
-        game.batch.draw(background, bgPos.x - w, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+        while (x > -(bgCam.viewportWidth)) {
+            x -= w;
+        }
 
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+        while (x < bgCam.viewportWidth) {
+            game.batch.draw(background, x, bgPos.y, w, bgCam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
 
-        game.batch.draw(background, bgPos.x, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+            x += w;
+
+            System.out.println(x + ", " + bgCam.viewportWidth);
+        }
         game.batch.end();
     }
 

@@ -6,15 +6,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.utils.Align;
 
 public class ShowSongName extends GameObject {
-    private BitmapFont font;
+    private final BitmapFont font;
     private float timer = 4f;
     private float speed = 600f;
 
     private float xPos = 10;
+
+    private final GlyphLayout layout = new GlyphLayout();
 
     public ShowSongName() {
         super();
@@ -30,6 +34,8 @@ public class ShowSongName extends GameObject {
 
         font = fontGenerator.generateFont(fontParameter);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        layout.setText(font, Main.songName, Color.WHITE, 700f, Align.left, true);
     }
 
     @Override
@@ -45,7 +51,7 @@ public class ShowSongName extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        font.draw(batch, Main.songName, xPos, 1070);
+        font.draw(batch, layout, xPos, 1070);
     }
 
     @Override
