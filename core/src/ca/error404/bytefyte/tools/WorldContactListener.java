@@ -19,7 +19,8 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         Character chara;
         Projectile projectile;
-        DeathWall wall;
+        Wall wall;
+        DeathWall deathWall;
         Collider collider;
 
         switch (cDef) {
@@ -31,7 +32,9 @@ public class WorldContactListener implements ContactListener {
                     chara = ((Character) fixB.getUserData());
                 }
 
-                if (chara.vel.y <= 0) {
+                if ((Math.abs(chara.vel.x) >= 3 || Math.abs(chara.vel.y) >= 3) && chara.stunTimer > 0) {
+                    chara.vel.y *= -0.5;
+                } else if (chara.vel.y <= 0) {
                     chara.ground();
                 } else if (chara.animState == Character.AnimationState.SPECIAL_U) {
                     chara.ground();
@@ -44,18 +47,33 @@ public class WorldContactListener implements ContactListener {
                     chara = ((Character) fixB.getUserData());
                 }
 
-                chara.vel.y = 0;
+                if ((Math.abs(chara.vel.x) >= 3 || Math.abs(chara.vel.y) >= 3) && chara.stunTimer > 0) {
+                    chara.vel.x *= -0.5;
+                } else {
+                    chara.vel.y = 0;
+                }
+                break;
+            case Tags.GROUND_BIT | Tags.PLAYER_SIDE_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.WALL_TRIGGER_BIT) {
+                    chara = (Character) fixB.getUserData();
+                } else {
+                    chara = (Character) fixA.getUserData();
+                }
+
+                if ((Math.abs(chara.vel.x) >= 3 || Math.abs(chara.vel.y) >= 3) && chara.stunTimer > 0) {
+                    chara.vel.x *= -0.5;
+                }
                 break;
             case Tags.PLAYER_BIT | Tags.DEATH_BARRIER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
-                    wall = ((DeathWall) fixA.getUserData());
+                    deathWall = ((DeathWall) fixA.getUserData());
                     chara = ((Character) fixB.getUserData());
                 } else {
-                    wall = ((DeathWall) fixB.getUserData());
+                    deathWall = ((DeathWall) fixB.getUserData());
                     chara = ((Character) fixA.getUserData());
                 }
 
-                wall.contact(chara);
+                deathWall.contact(chara);
                 break;
             case Tags.ATTACK_BIT | Tags.PLAYER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
