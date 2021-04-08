@@ -17,7 +17,14 @@ public class Keys {
     public static int SPECIAL = Input.Keys.L;
 
 
-//    Miscellaneous
+    public static int MENU_LEFT = Input.Keys.A;
+    public static int MENU_RIGHT = Input.Keys.D;
+    public static int MENU_UP = Input.Keys.W;
+    public static int MENU_DOWN = Input.Keys.S;
+    public static int MENU_SELECT = Input.Keys.E;
+
+
+    //    Miscellaneous
     public static int FILL_METER = Input.Keys.Z;
     public static int EMPTY_METER = Input.Keys.X;
 
