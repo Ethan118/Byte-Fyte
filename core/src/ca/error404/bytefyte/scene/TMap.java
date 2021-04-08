@@ -57,14 +57,12 @@ public class TMap implements Screen {
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
-
     public TMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
         this.scrollVector = scrollVector;
-
         this.background = background;
 
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
@@ -104,7 +102,7 @@ public class TMap implements Screen {
             int i = (int) object.getProperties().get("player");
             Character chara;
             if (i % 2 == 0) {
-                chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
             } else {
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
             }
@@ -261,7 +259,7 @@ public class TMap implements Screen {
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
-        b2dr.render(world, gamecam.combined);
+        // b2dr.render(world, gamecam.combined);
 
         hud.draw();
     }
@@ -296,8 +294,6 @@ public class TMap implements Screen {
             game.batch.draw(background, x, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
 
             x += w;
-
-            System.out.println(x + ", " + bgCam.viewportWidth);
         }
         game.batch.end();
     }

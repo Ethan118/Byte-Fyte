@@ -15,15 +15,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.apache.commons.io.FileUtils;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import java.io.File;
-import java.io.InputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class LoadTMap implements Screen {
     OrthographicCamera cam;

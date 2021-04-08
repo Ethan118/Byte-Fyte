@@ -35,7 +35,7 @@ public class ShowSongName extends GameObject {
         font = fontGenerator.generateFont(fontParameter);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        layout.setText(font, Main.songName, Color.WHITE, 700f, Align.left, true);
+        layout.setText(font, Main.songName, Color.WHITE, 900f, Align.left, true);
     }
 
     @Override
