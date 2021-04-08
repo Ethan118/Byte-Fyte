@@ -124,7 +124,8 @@ public class Main extends Game {
 			}
 		}
 
-		setScreen(new LoadTMap("Halberd", this, new Vector2(-350, 0)));
+		setScreen(new MenuScene(this));
+//		setScreen(new LoadTMap("Training Room", this, new Vector2(-350, 0)));
 	}
 
 	public void loadFonts() {

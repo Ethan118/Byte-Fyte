@@ -104,7 +104,12 @@ public class TMap implements Screen {
             int i = (int) object.getProperties().get("player");
             Character chara;
             if (i % 2 == 0) {
-                chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                try {
+                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(0), i);
+                } catch (Exception e) {
+                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
+
+                }
             } else {
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
             }

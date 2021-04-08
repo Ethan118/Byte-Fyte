@@ -421,6 +421,8 @@ public abstract class Character extends GameObject {
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
+
+
         if (dead) {
             Main.players.remove(this);
             destroy();
