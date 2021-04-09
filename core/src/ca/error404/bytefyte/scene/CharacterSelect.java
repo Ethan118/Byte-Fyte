@@ -107,8 +107,6 @@ public class CharacterSelect implements Screen {
             }
         }
 
-
-
         shapeRenderer.rect(shyGuy.buttonRect.getX(), shyGuy.buttonRect.getY(), shyGuy.buttonRect.getWidth(), shyGuy.buttonRect.getHeight());
         shapeRenderer.rect(masterChief.buttonRect.getX(), masterChief.buttonRect.getY(), masterChief.buttonRect.getWidth(), masterChief.buttonRect.getHeight());
 
