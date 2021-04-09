@@ -3,10 +3,7 @@ package ca.error404.bytefyte.ui;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
-import ca.error404.bytefyte.scene.LoadTMap;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -41,7 +38,7 @@ public class MenuCursor {
         cursorRect.set(cursorPos.x, cursorPos.y, size.x, size.y);
 
 
-        if (Main.controllers.size >= 1) {
+        if (controller != null) {
             if (!(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) >= -Main.deadZone && controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) <= Main.deadZone)) {
                 if (cursorPos.x > 0 && controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) < -Main.deadZone) {
                     cursorPos.x += (controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) * 10);

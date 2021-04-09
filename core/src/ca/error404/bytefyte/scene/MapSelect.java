@@ -16,41 +16,38 @@ public class MapSelect implements Screen {
     private final Main game;
     BitmapFont font = new BitmapFont();
 
-    private Texture cursorImage = new Texture(Gdx.files.internal("sprites/cursor.png"));
-
-    private Vector2 cursorPos;
-
     private MenuCursor cursor;
+    private MenuCursor cursor2;
+
     ShapeRenderer shapeRenderer;
     private Button trainingRoom;
     private Button halberd;
+
     // menuscene function
-    public MapSelect(Main game) {
+    public MapSelect(Main game, MenuCursor cursor, MenuCursor cursor2) {
         this.game = game;
-        //font used
-        cursorPos = new Vector2(Main.WIDTH / 2f, Main.HEIGHT / 2f);
 
-        try {
-            cursor = new MenuCursor(cursorPos, Main.controllers.get(0), cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-        } catch (Exception e) {
-            cursor = new MenuCursor(cursorPos, null, cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-        }
+        this.cursor = cursor;
+        this.cursor2 = cursor2;
 
-        trainingRoom = new Button(cursor, new Rectangle(), new Vector2(200, 400), new Vector2(150, 50));
-        halberd = new Button(cursor, new Rectangle(), new Vector2(450, 400), new Vector2(150, 50));
+        trainingRoom = new Button(cursor, cursor2, null, null, new Rectangle(), new Vector2(200, 400), new Vector2(150, 50));
+        halberd = new Button(cursor, cursor2, null, null, new Rectangle(), new Vector2(450, 400), new Vector2(150, 50));
+
 
     }
 
     public void update(float deltaTime) {
         cursor.update(deltaTime);
+        cursor2.update(deltaTime);
 
-        if (halberd.isClicked(cursor.controller)) {
+        if (halberd.isClicked()) {
             game.setScreen(new LoadTMap("Halberd", game, new Vector2(-350, 0)));
         }
 
-        if (trainingRoom.isClicked(cursor.controller)) {
+        else if (trainingRoom.isClicked()) {
             game.setScreen(new LoadTMap("Training Room", game, new Vector2(-350, 0)));
         }
+
     }
 
     @Override
@@ -66,11 +63,13 @@ public class MapSelect implements Screen {
         game.batch.begin();
 
         game.batch.draw(cursor.cursorImage, cursor.cursorPos.x, cursor.cursorPos.y);
+        game.batch.draw(cursor2.cursorImage, cursor2.cursorPos.x, cursor2.cursorPos.y);
 
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         shapeRenderer.rect(cursor.cursorRect.getX(), cursor.cursorRect.getY(), cursor.cursorRect.getWidth(), cursor.cursorRect.getHeight());
+        shapeRenderer.rect(cursor2.cursorRect.getX(), cursor2.cursorRect.getY(), cursor2.cursorRect.getWidth(), cursor2.cursorRect.getHeight());
 
         shapeRenderer.rect(trainingRoom.buttonRect.getX(), trainingRoom.buttonRect.getY(), trainingRoom.buttonRect.getWidth(), trainingRoom.buttonRect.getHeight());
         shapeRenderer.rect(halberd.buttonRect.getX(), halberd.buttonRect.getY(), halberd.buttonRect.getWidth(), halberd.buttonRect.getHeight());
