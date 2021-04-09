@@ -28,7 +28,7 @@ public class MenuCursor {
         this.cursorRect = cursorRect;
 
         cursorRect.width = size.x;
-        cursorRect.height = cursorPos.y;
+        cursorRect.height = size.y;
     }
 
     public void update(float deltaTime) {

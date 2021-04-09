@@ -23,37 +23,36 @@ public class MenuScene implements Screen {
 
     private Texture cursorImage = new Texture(Gdx.files.internal("sprites/cursor.png"));
 
-    private Vector2 cursorPos;
-    private Vector2 cursor2Pos;
+    private Vector2[] cursorPos = new Vector2[4];
 
-
-    public MenuCursor cursor;
-    public MenuCursor cursor2;
-
+    private boolean keyboardUsed = false;
 
     private Button playButton;
-    private Button playButton2;
 
+    public MenuCursor[] cursors = new MenuCursor[4];
 
     // menuscene function
     public MenuScene(Main game) {
         this.game = game;
 
-        cursorPos = new Vector2(Main.WIDTH / 2f, Main.HEIGHT / 2f);
-        cursor2Pos = new Vector2(Main.WIDTH / 2f, Main.HEIGHT / 2f);
-
-        try {
-            cursor = new MenuCursor(cursorPos, Main.controllers.get(0), cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-        } catch (Exception e) {
-            cursor = new MenuCursor(cursorPos, null, cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-        }
-        try {
-            cursor2 = new MenuCursor(cursor2Pos, Main.controllers.get(1), cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-        } catch (Exception e) {
-            cursor2 = new MenuCursor(cursor2Pos, null, cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
+        for (int i = 0; i < cursorPos.length; i++) {
+            cursorPos[i] = new Vector2(Main.WIDTH / 2f, Main.HEIGHT / 2f);
         }
 
-        playButton = new Button(cursor, cursor2, null, null, new Rectangle(), new Vector2(300, 400), new Vector2(100, 50));
+        for (int i = 0; i < cursors.length; i++) {
+            try {
+                cursors[i] = new MenuCursor(cursorPos[i], Main.controllers.get(i), cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
+            } catch (Exception e) {
+                if (!keyboardUsed) {
+                    cursors[i] = new MenuCursor(cursorPos[i], null, cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
+                    keyboardUsed = true;
+                } else {
+                    cursors[i] = null;
+                }
+            }
+        }
+
+        playButton = new Button(cursors, new Rectangle(), new Vector2(300, 400), new Vector2(100, 50));
 
     }
 
@@ -71,16 +70,18 @@ public class MenuScene implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
 
-        game.batch.draw(cursor.cursorImage, cursor.cursorPos.x, cursor.cursorPos.y);
-        game.batch.draw(cursor2.cursorImage, cursor2.cursorPos.x, cursor2.cursorPos.y);
-
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        shapeRenderer.rect(cursor.cursorRect.getX(), cursor.cursorRect.getY(), cursor.cursorRect.getWidth(), cursor.cursorRect.getHeight());
-        shapeRenderer.rect(cursor2.cursorRect.getX(), cursor2.cursorRect.getY(), cursor2.cursorRect.getWidth(), cursor2.cursorRect.getHeight());
+        for (MenuCursor cursor: cursors) {
+            if (cursor != null) {
+                game.batch.draw(cursor.cursorImage, cursor.cursorPos.x, cursor.cursorPos.y);
+                shapeRenderer.rect(cursor.cursorRect.getX(), cursor.cursorRect.getY(), cursor.cursorRect.getWidth(), cursor.cursorRect.getHeight());
+            }
+        }
 
         shapeRenderer.rect(playButton.buttonRect.getX(), playButton.buttonRect.getY(), playButton.buttonRect.getWidth(), playButton.buttonRect.getHeight());
+
         //text drawing
         font.draw(game.batch, "Welcome to Byte fyte!", Gdx.graphics.getWidth()*.4f, Gdx.graphics.getHeight() * .85f);
         font.draw(game.batch, "Options", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .3f);
@@ -92,11 +93,14 @@ public class MenuScene implements Screen {
     }
 
     public void update(float deltaTime) {
-        cursor.update(deltaTime);
-        cursor2.update(deltaTime);
+        for (MenuCursor cursor: cursors) {
+            if (cursor != null) {
+                cursor.update(deltaTime);
+            }
+        }
 
-        if (playButton.isClicked()) {
-            game.setScreen(new MapSelect(game, cursor, cursor2));
+        if (playButton.isClicked() != 0) {
+            game.setScreen(new CharacterSelect(game, cursors));
         }
 
     }

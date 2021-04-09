@@ -57,9 +57,11 @@ public class TMap implements Screen {
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
+    private String[] characters;
 
-    public TMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
+    public TMap( String[] characters, Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
+        this.characters = characters;
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -103,18 +105,28 @@ public class TMap implements Screen {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             int i = (int) object.getProperties().get("player");
             Character chara;
-            if (i % 2 == 0) {
-                try {
-                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(0), i);
-                } catch (Exception e) {
-                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
+            if (characters[i-1] != null) {
+                if (characters[i-1].equalsIgnoreCase("Master Chief")) {
+                    try {
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                    } catch (Exception e) {
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
 
+                    }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+
+                } else if (characters[i-1].equalsIgnoreCase("Shy Guy")) {
+                    try {
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                    } catch (Exception e) {
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                    }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
                 }
-            } else {
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+
             }
-            chara.facingLeft = (boolean) object.getProperties().get("left");
-            chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
         }
 
         float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
