@@ -70,8 +70,8 @@ public abstract class Character extends GameObject {
 
     public float weight = 1f;
 
-    public int hitboxScale = 18;
-    public int spriteScale = 15;
+    public float hitboxScale = 18;
+    public float spriteScale = 15;
     protected Vector2 spriteOffset = Vector2.Zero;
     public Vector2 manualSpriteOffset = Vector2.Zero;
 
@@ -197,7 +197,13 @@ public abstract class Character extends GameObject {
      * post: instantiates a character with the parameters
      */
     public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
+        this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
+    }
+
+    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
         super();
+        this.spriteScale = spriteScale;
+        this.hitboxScale = hitboxScale;
         Main.players.add(this);
         this.playerNumber = playerNumber;
         this.charname = charname;

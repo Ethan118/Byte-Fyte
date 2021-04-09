@@ -44,6 +44,7 @@ public class LoadTMap implements Screen {
         Main.manager.load("sprites/ui.atlas", TextureAtlas.class);
         Main.manager.load("sprites/shyguy.atlas", TextureAtlas.class);
         Main.manager.load("sprites/masterchief.atlas", TextureAtlas.class);
+        Main.manager.load("sprites/kirby.atlas", TextureAtlas.class);
 
         for (int i=1; i < 25; i++) {
             Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i), Sound.class);

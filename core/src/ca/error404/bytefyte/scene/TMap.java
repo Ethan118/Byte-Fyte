@@ -102,7 +102,7 @@ public class TMap implements Screen {
             int i = (int) object.getProperties().get("player");
             Character chara;
             if (i % 2 == 0) {
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
             } else {
                 chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
             }
@@ -259,7 +259,7 @@ public class TMap implements Screen {
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
-        // b2dr.render(world, gamecam.combined);
+         b2dr.render(world, gamecam.combined);
 
         hud.draw();
     }
