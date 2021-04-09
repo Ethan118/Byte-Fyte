@@ -48,9 +48,9 @@ public class MenuScene implements Screen {
             cursor = new MenuCursor(cursorPos, null, cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
         }
         try {
-            cursor2 = new MenuCursor(cursorPos, Main.controllers.get(1), cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
+            cursor2 = new MenuCursor(cursor2Pos, Main.controllers.get(1), cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
         } catch (Exception e) {
-            cursor2 = new MenuCursor(cursorPos, null, cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
+            cursor2 = new MenuCursor(cursor2Pos, null, cursorImage, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
         }
 
         playButton = new Button(cursor, cursor2, null, null, new Rectangle(), new Vector2(300, 400), new Vector2(100, 50));
