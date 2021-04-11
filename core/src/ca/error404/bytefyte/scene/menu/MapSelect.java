@@ -30,5 +30,9 @@ public class MapSelect extends MenuScene {
         new Button(new Vector2(730, 250), new Vector2(150, 50), game){ public void click() {
             game.setScreen(new LoadBattleMap("Training Room", game, new Vector2(0, 0), characters, null));
         }};
+
+        new Button(new Vector2(1030, 250), new Vector2(150, 50), game){ public void click() {
+            game.setScreen(new LoadBattleMap("Russia", game, new Vector2(0, 0), characters, "russia"));
+        }};
     }
 }

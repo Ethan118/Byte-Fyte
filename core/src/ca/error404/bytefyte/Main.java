@@ -122,9 +122,6 @@ public class Main extends Game {
 			}
 		}
 
-//		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0)));
-//		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(1, 0)));
-//		setScreen(new LoadBattleMap("Russia", this, new Vector2(0, 0)));
 		setScreen(new MainMenu(this));
 	}
 

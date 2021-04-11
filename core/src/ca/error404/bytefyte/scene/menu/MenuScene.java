@@ -42,10 +42,6 @@ public class MenuScene implements Screen {
         cam.position.set(960, 540, cam.position.z);
         cam.update();
         viewport = new FitViewport(1920, 1080, cam);
-
-        game.music = game.newSong("menu");
-        game.music.setVolume(Main.musicVolume / 10f);
-        game.music.play();
     }
 
     @Override

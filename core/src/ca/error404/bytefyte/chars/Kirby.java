@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public class Kirby extends Character {
-    private float yOffset = 12.5f;
+    private float yOffset = 12f;
 
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
@@ -116,6 +116,13 @@ public class Kirby extends Character {
 //        Exponentially flies him up after the initial frame
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;
+
+//        Gets direction being faced
+        if (moveVector.x > deadzone) {
+            facingLeft = false;
+        } else if (moveVector.x < -deadzone) {
+            facingLeft = true;
+        }
     }
 
     @Override
