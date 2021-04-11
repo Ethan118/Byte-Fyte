@@ -20,8 +20,10 @@ public class CharacterSelect implements Screen {
     private MenuCursor[] cursors;
 
     ShapeRenderer shapeRenderer;
-    private Button shyGuy;
-    private Button masterChief;
+    private Button shyGuyButton;
+    private Button masterChiefButton;
+    private Button kirbyButton;
+
     private String[] characters = {null, null, null, null};
 
     // menuscene function
@@ -31,8 +33,9 @@ public class CharacterSelect implements Screen {
         this.cursors = cursors;
 
 
-        shyGuy = new Button(cursors, new Rectangle(), new Vector2(200, 0), new Vector2(150, 50));
-        masterChief = new Button(cursors, new Rectangle(), new Vector2(350, 0), new Vector2(150, 50));
+        shyGuyButton = new Button(cursors, new Rectangle(), new Vector2(200, 400), new Vector2(150, 50));
+        masterChiefButton = new Button(cursors, new Rectangle(), new Vector2(400, 400), new Vector2(150, 50));
+        kirbyButton = new Button(cursors, new Rectangle(), new Vector2(600, 400), new Vector2(150, 50));
 
 
     }
@@ -49,10 +52,12 @@ public class CharacterSelect implements Screen {
         }
 
         for (int i = 0; i < cursors.length; i++) {
-            if (masterChief.isClicked() == i + 1) {
+            if (masterChiefButton.isClicked() == i + 1) {
                 characters[i] = "Master Chief";
-            } else if (shyGuy.isClicked() == i + 1) {
+            } else if (shyGuyButton.isClicked() == i + 1) {
                 characters[i] = "Shy Guy";
+            } else if (kirbyButton.isClicked() == i + 1) {
+                characters[i] = "Kirby";
             }
         }
 
@@ -77,7 +82,7 @@ public class CharacterSelect implements Screen {
     private boolean checkChars() {
         for (int i = 0; i < cursors.length; i++) {
             if (cursors[i] != null) {
-                if(charsSelected[i] == false) {
+                if(!charsSelected[i]) {
                     return false;
                 }
             }
@@ -104,11 +109,14 @@ public class CharacterSelect implements Screen {
             }
         }
 
-        shapeRenderer.rect(shyGuy.buttonRect.getX(), shyGuy.buttonRect.getY(), shyGuy.buttonRect.getWidth(), shyGuy.buttonRect.getHeight());
-        shapeRenderer.rect(masterChief.buttonRect.getX(), masterChief.buttonRect.getY(), masterChief.buttonRect.getWidth(), masterChief.buttonRect.getHeight());
+        shapeRenderer.rect(shyGuyButton.buttonRect.getX(), shyGuyButton.buttonRect.getY(), shyGuyButton.buttonRect.getWidth(), shyGuyButton.buttonRect.getHeight());
+        shapeRenderer.rect(masterChiefButton.buttonRect.getX(), masterChiefButton.buttonRect.getY(), masterChiefButton.buttonRect.getWidth(), masterChiefButton.buttonRect.getHeight());
+        shapeRenderer.rect(kirbyButton.buttonRect.getX(), kirbyButton.buttonRect.getY(), kirbyButton.buttonRect.getWidth(), kirbyButton.buttonRect.getHeight());
 
-        font.draw(game.batch, "Shy Guy", 204, 70);
-        font.draw(game.batch, "Master Chief", 353, 70);
+        font.draw(game.batch, "Shy Guy", 204, 440);
+        font.draw(game.batch, "Master Chief", 404, 440);
+        font.draw(game.batch, "Kirby", 604, 440);
+
         game.batch.end();
         shapeRenderer.end();
     }

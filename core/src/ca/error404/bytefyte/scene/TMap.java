@@ -123,6 +123,14 @@ public class TMap implements Screen {
                     }
                     chara.facingLeft = (boolean) object.getProperties().get("left");
                     chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+                } else if (characters[i-1].equalsIgnoreCase("Kirby")) {
+                    try {
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                    } catch (Exception e) {
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                    }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
                 }
 
             }

@@ -30,8 +30,8 @@ public class MapSelect implements Screen {
 
         this.cursors = cursors;
 
-        trainingRoom = new Button(cursors, new Rectangle(), new Vector2(200, 400), new Vector2(150, 50));
-        halberd = new Button(cursors, new Rectangle(), new Vector2(450, 400), new Vector2(150, 50));
+        trainingRoom = new Button(cursors, new Rectangle(), new Vector2(400, 250), new Vector2(150, 50));
+        halberd = new Button(cursors, new Rectangle(), new Vector2(730, 250), new Vector2(150, 50));
 
 
     }
@@ -79,8 +79,8 @@ public class MapSelect implements Screen {
         shapeRenderer.rect(trainingRoom.buttonRect.getX(), trainingRoom.buttonRect.getY(), trainingRoom.buttonRect.getWidth(), trainingRoom.buttonRect.getHeight());
         shapeRenderer.rect(halberd.buttonRect.getX(), halberd.buttonRect.getY(), halberd.buttonRect.getWidth(), halberd.buttonRect.getHeight());
 
-        font.draw(game.batch, "Training Room", 214, 435);
-        font.draw(game.batch, "Halberd", 473, 435);
+        font.draw(game.batch, "Training Room", 415, 285);
+        font.draw(game.batch, "Halberd", 753, 285);
         game.batch.end();
         shapeRenderer.end();
     }
