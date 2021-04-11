@@ -21,17 +21,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MenuScene implements Screen {
 
     //delairing variables
-    ShapeRenderer shapeRenderer;
-    private Texture background = new Texture("sprites/menu/main_bg.png");
+    protected ShapeRenderer shapeRenderer;
+    protected Texture background;
     private Vector2 bgPos = new Vector2(0, 0);
     private int speed = -100;
-    private final Main game;
+    protected final Main game;
 
     protected Viewport viewport;
-    private Camera cam;
-
-    private Vector2 cursorPos;
-    private Vector2 cursor2Pos;
+    protected Camera cam;
 
     // menuscene function
     public MenuScene(Main game) {
@@ -45,21 +42,6 @@ public class MenuScene implements Screen {
         cam.position.set(960, 540, cam.position.z);
         cam.update();
         viewport = new FitViewport(1920, 1080, cam);
-
-        cursorPos = new Vector2(Main.WIDTH / 2f, Main.HEIGHT / 2f);
-        cursor2Pos = new Vector2(Main.WIDTH / 2f, Main.HEIGHT / 2f);
-
-        new MenuCursor(cursorPos, null, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-
-        try {
-            new MenuCursor(cursor2Pos, Main.controllers.get(0), game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-        } catch (Exception e) {
-            new MenuCursor(cursor2Pos, null, game, new Vector2(1234, 675), new Vector2(45, 45), new Rectangle());
-        }
-
-        game.buttons.add(new Button(new Rectangle(), new Vector2(300, 400), new Vector2(100, 50), game) { public void click() {
-            game.setScreen(new LoadBattleMap("Russia", game, new Vector2(0, 0)));
-        }});
 
         game.music = game.newSong("menu");
         game.music.setVolume(Main.musicVolume / 10f);
@@ -88,7 +70,7 @@ public class MenuScene implements Screen {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        for (MenuCursor cursor : Main.cursors) { shapeRenderer.rect(cursor.cursorRect.getX(), cursor.cursorRect.getY(), cursor.cursorRect.getWidth(), cursor.cursorRect.getHeight()); }
+        for (MenuCursor cursor : Main.cursors) { shapeRenderer.rect(cursor.rect.getX(), cursor.rect.getY(), cursor.rect.getWidth(), cursor.rect.getHeight()); }
 
         for (Button button : game.buttons) { shapeRenderer.rect(button.buttonRect.getX(), button.buttonRect.getY(), button.buttonRect.getWidth(), button.buttonRect.getHeight()); }
 
@@ -122,6 +104,7 @@ public class MenuScene implements Screen {
             game.batch.draw(background, x, bgPos.y + cam.viewportHeight, w, cam.viewportHeight);
             game.batch.draw(background, x, bgPos.y - cam.viewportHeight, w, cam.viewportHeight);
             game.batch.draw(background, x, bgPos.y - cam.viewportHeight * 2, w, cam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y + cam.viewportHeight * 2, w, cam.viewportHeight);
 
             x += w;
         }
@@ -135,7 +118,7 @@ public class MenuScene implements Screen {
         }
 
         for (MenuCursor cursor : Main.cursors) { cursor.update(deltaTime); }
-        for (Button button : game.buttons) { button.update(); }
+        for (int i=0; i < game.buttons.size(); i++) { game.buttons.get(i).update(); }
     }
 
     @Override

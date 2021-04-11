@@ -26,10 +26,6 @@ public class Kirby extends Character {
     * */
     public void update(float deltaTime) {
         super.update(deltaTime);
-//        Ensuring he respawns
-        if (knockedOff && stockCount != 0) {
-            knockedOff = false;
-        }
 
 //        Allowing the animation of up b to play
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
@@ -120,13 +116,6 @@ public class Kirby extends Character {
 //        Exponentially flies him up after the initial frame
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;
-
-//        Gets direction being faced
-        if (moveVector.x > deadzone) {
-            facingLeft = false;
-        } else if (moveVector.x < -deadzone) {
-            facingLeft = true;
-        }
     }
 
     @Override

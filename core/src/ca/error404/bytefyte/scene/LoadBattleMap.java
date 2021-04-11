@@ -30,7 +30,7 @@ public class LoadBattleMap implements Screen {
     TmxMapLoader mapLoader = new TmxMapLoader();
     public String[] characters;
 
-    public LoadBattleMap(String tmap, Main game, Vector2 scrollVector, String[] characters) {
+    public LoadBattleMap(String tmap, Main game, Vector2 scrollVector, String[] characters, String series) {
         this.game = game;
         this.scrollVector = scrollVector;
         this.characters = characters;
@@ -60,7 +60,11 @@ public class LoadBattleMap implements Screen {
 
         // plays a song so I can hear things
         game.music.stop();
-        game.music = game.newSong();
+        if (series != null) {
+            game.music = game.songFromSeries(series);
+        } else {
+            game.music = game.newSong();
+        }
         game.music.setVolume(Main.musicVolume / 10f);
         game.music.play();
 

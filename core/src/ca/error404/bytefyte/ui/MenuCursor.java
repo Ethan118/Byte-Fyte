@@ -13,65 +13,58 @@ import com.badlogic.gdx.math.Vector2;
 public class MenuCursor {
     public static Texture selectedSprite = new Texture("sprites/cursor_selected.png");
     public static Texture sprite = new Texture("sprites/cursor.png");
-    public Vector2 cursorPos;
+    public Vector2 pos;
     public Controller controller;
     private Main game;
-    private Vector2 max;
-    public Rectangle cursorRect;
-    private Vector2 size;
-    private int speed = 700;
+    private Vector2 max = new Vector2(1920, 1080);
+    public Rectangle rect = new Rectangle();
+    private int speed = 500;
 
-    public MenuCursor(Vector2 cursorPos, Controller controller, Main game, Vector2 max, Vector2 size, Rectangle cursorRect) {
+    public MenuCursor(Vector2 cursorPos, Controller controller, Main game) {
         Main.cursors.add(this);
-        this.cursorPos = cursorPos;
+        this.pos = cursorPos;
         this.controller = controller;
         this.game = game;
-        this.max = max;
-        this.size = size;
-        this.cursorRect = cursorRect;
-
-        cursorRect.width = size.x;
-        cursorRect.height = size.y;
     }
 
     public void update(float deltaTime) {
-        cursorRect.set(cursorPos.x + 30, cursorPos.y + 80, 1, 1);
-
         if (controller != null) {
             if (!(controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) >= -Main.deadZone && controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) <= Main.deadZone)) {
-                if (cursorPos.x > 0 && controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) < -Main.deadZone) {
-                    cursorPos.x += (controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) * speed) * deltaTime;
+                if (pos.x > 0 && controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) < -Main.deadZone) {
+                    pos.x += (controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) * speed) * deltaTime;
                 }
-                if (cursorPos.x < max.x && controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) > Main.deadZone) {
-                    cursorPos.x += (controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) * speed) * deltaTime;
+                if (pos.x < max.x && controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) > Main.deadZone) {
+                    pos.x += (controller.getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) * speed) * deltaTime;
                 }
             }
 
             if (!(controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) >= -Main.deadZone && controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) <= Main.deadZone)) {
-                if (cursorPos.y > 0 && controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) > -Main.deadZone) {
-                    cursorPos.y -= (controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) * speed) * deltaTime;
+                if (pos.y > 0 && controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) > -Main.deadZone) {
+                    pos.y -= (controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) * speed) * deltaTime;
                 }
-                if (cursorPos.y < max.y && controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) < Main.deadZone) {
-                    cursorPos.y -= (controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) * speed) * deltaTime;
+                if (pos.y < max.y && controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) < Main.deadZone) {
+                    pos.y -= (controller.getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) * speed) * deltaTime;
                 }
             }
         } else {
-            if (Gdx.input.isKeyPressed(Keys.MENU_RIGHT) && cursorPos.x < max.x) {
-                cursorPos.x += speed * deltaTime;
+            if (Gdx.input.isKeyPressed(Keys.MENU_RIGHT) && pos.x < max.x) {
+                pos.x += speed * deltaTime;
             }
 
-            if (Gdx.input.isKeyPressed(Keys.MENU_LEFT) && cursorPos.x > 0) {
-                cursorPos.x -= speed * deltaTime;
+            if (Gdx.input.isKeyPressed(Keys.MENU_LEFT) && pos.x > 0) {
+                pos.x -= speed * deltaTime;
             }
 
-            if (Gdx.input.isKeyPressed(Keys.MENU_UP) && cursorPos.y < max.y) {
-                cursorPos.y += speed * deltaTime;
+            if (Gdx.input.isKeyPressed(Keys.MENU_UP) && pos.y < max.y) {
+                pos.y += speed * deltaTime;
             }
 
-            if (Gdx.input.isKeyPressed(Keys.MENU_DOWN) && cursorPos.y > 0) {
-                cursorPos.y -= speed * deltaTime;
+            if (Gdx.input.isKeyPressed(Keys.MENU_DOWN) && pos.y > 0) {
+                pos.y -= speed * deltaTime;
             }
         }
+
+        rect.set(pos.x + 30, pos.y + 80, 1, 1);
     }
 
     public void draw(SpriteBatch batch) {
@@ -84,13 +77,23 @@ public class MenuCursor {
         }
 
         if (over) {
-            batch.draw(selectedSprite, cursorPos.x, cursorPos.y);
+            batch.draw(selectedSprite, pos.x, pos.y);
         } else {
-            batch.draw(sprite, cursorPos.x, cursorPos.y);
+            batch.draw(sprite, pos.x, pos.y);
         }
     }
 
+    public int getID() {
+        for (int i=0; i < game.cursors.size(); i++) {
+            if (game.cursors.get(i) == this) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
     public Vector2 getCursorPos() {
-        return cursorPos;
+        return pos;
     }
 }

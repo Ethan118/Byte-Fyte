@@ -105,34 +105,28 @@ public class BattleMap implements Screen {
             int i = (int) object.getProperties().get("player");
             Character chara;
             if (characters[i-1] != null) {
-                if (characters[i-1].equalsIgnoreCase("Master Chief")) {
+                if (characters[i-1].equalsIgnoreCase("masterchief")) {
                     try {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
                     } catch (Exception e) {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
 
                     }
-                    chara.facingLeft = (boolean) object.getProperties().get("left");
-                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
-
-                } else if (characters[i-1].equalsIgnoreCase("Shy Guy")) {
+                } else if (characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
                         chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
                     } catch (Exception e) {
                         chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
-                    chara.facingLeft = (boolean) object.getProperties().get("left");
-                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
-                } else if (characters[i-1].equalsIgnoreCase("Kirby")) {
+                } else {
                     try {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
                     } catch (Exception e) {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
-                    chara.facingLeft = (boolean) object.getProperties().get("left");
-                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
                 }
-
+                chara.facingLeft = (boolean) object.getProperties().get("left");
+                chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
             }
         }
 
