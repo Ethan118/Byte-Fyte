@@ -15,26 +15,32 @@ public class MapSelect extends MenuScene {
     private final Main game;
     BitmapFont font = new BitmapFont();
 
-    private MenuCursor cursor;
-    private MenuCursor cursor2;
+    private MenuCursor[] cursors;
 
     ShapeRenderer shapeRenderer;
     private Button trainingRoom;
     private Button halberd;
+    private String[] characters;
 
     // menuscene function
-    public MapSelect(Main game) {
-        super(game);
+    public MapSelect(Main game, MenuCursor[] cursors, String[] characters) {
         this.game = game;
+        this.characters = characters;
 
-        trainingRoom = new Button(new Rectangle(), new Vector2(200, 400), new Vector2(150, 50), game);
-        halberd = new Button(new Rectangle(), new Vector2(450, 400), new Vector2(150, 50), game);
+        this.cursors = cursors;
+
+        trainingRoom = new Button(cursors, new Rectangle(), new Vector2(400, 250), new Vector2(150, 50));
+        halberd = new Button(cursors, new Rectangle(), new Vector2(730, 250), new Vector2(150, 50));
+
 
     }
 
     public void update(float deltaTime) {
-        cursor.update(deltaTime);
-        cursor2.update(deltaTime);
+        for (MenuCursor cursor: cursors) {
+            if (cursor != null) {
+                cursor.update(deltaTime);
+            }
+        }
 
         if (halberd.isClicked()) {
             game.setScreen(new LoadBattleMap("Halberd", game, new Vector2(-350, 0)));
@@ -58,20 +64,22 @@ public class MapSelect extends MenuScene {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
 
-//        game.batch.draw(cursor.cursorImage, cursor.cursorPos.x, cursor.cursorPos.y);
-//        game.batch.draw(cursor2.cursorImage, cursor2.cursorPos.x, cursor2.cursorPos.y);
-
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        shapeRenderer.rect(cursor.cursorRect.getX(), cursor.cursorRect.getY(), cursor.cursorRect.getWidth(), cursor.cursorRect.getHeight());
-        shapeRenderer.rect(cursor2.cursorRect.getX(), cursor2.cursorRect.getY(), cursor2.cursorRect.getWidth(), cursor2.cursorRect.getHeight());
+        for (MenuCursor cursor: cursors) {
+            if (cursor != null) {
+                game.batch.draw(cursor.cursorImage, cursor.cursorPos.x, cursor.cursorPos.y);
+                shapeRenderer.rect(cursor.cursorRect.getX(), cursor.cursorRect.getY(), cursor.cursorRect.getWidth(), cursor.cursorRect.getHeight());
+            }
+        }
+
 
         shapeRenderer.rect(trainingRoom.buttonRect.getX(), trainingRoom.buttonRect.getY(), trainingRoom.buttonRect.getWidth(), trainingRoom.buttonRect.getHeight());
         shapeRenderer.rect(halberd.buttonRect.getX(), halberd.buttonRect.getY(), halberd.buttonRect.getWidth(), halberd.buttonRect.getHeight());
 
-        font.draw(game.batch, "Training Room", 214, 435);
-        font.draw(game.batch, "Halberd", 473, 435);
+        font.draw(game.batch, "Training Room", 415, 285);
+        font.draw(game.batch, "Halberd", 753, 285);
         game.batch.end();
         shapeRenderer.end();
     }

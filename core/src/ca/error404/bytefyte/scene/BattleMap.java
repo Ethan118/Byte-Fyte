@@ -57,8 +57,11 @@ public class BattleMap implements Screen {
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
-    public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
+    private String[] characters;
+
+    public BattleMap( String[] characters, Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
+        this.characters = characters;
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -101,13 +104,36 @@ public class BattleMap implements Screen {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             int i = (int) object.getProperties().get("player");
             Character chara;
-            if (i % 2 == 0) {
-                chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
-            } else {
-                chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+            if (characters[i-1] != null) {
+                if (characters[i-1].equalsIgnoreCase("Master Chief")) {
+                    try {
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                    } catch (Exception e) {
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
+
+                    }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+
+                } else if (characters[i-1].equalsIgnoreCase("Shy Guy")) {
+                    try {
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                    } catch (Exception e) {
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                    }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+                } else if (characters[i-1].equalsIgnoreCase("Kirby")) {
+                    try {
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                    } catch (Exception e) {
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                    }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+                }
+
             }
-            chara.facingLeft = (boolean) object.getProperties().get("left");
-            chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
         }
 
         float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
@@ -253,7 +279,7 @@ public class BattleMap implements Screen {
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
-         b2dr.render(world, gamecam.combined);
+        b2dr.render(world, gamecam.combined);
 
         hud.draw();
     }
