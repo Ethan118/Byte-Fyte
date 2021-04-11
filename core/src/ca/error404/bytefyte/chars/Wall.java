@@ -2,13 +2,12 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.Tags;
-import ca.error404.bytefyte.scene.TMap;
-import com.badlogic.gdx.math.Vector2;
+import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Wall {
     public World world;
-    public TMap scene;
+    public BattleMap scene;
 
     public int x;
     public int y;
@@ -19,7 +18,7 @@ public class Wall {
 
     public Body b2body;
 
-    public Wall(int x, int y, float w, float h, TMap screen) {
+    public Wall(int x, int y, float w, float h, BattleMap screen) {
         this.world = screen.getWorld();
         this.scene = screen;
 

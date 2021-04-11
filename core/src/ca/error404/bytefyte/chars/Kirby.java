@@ -1,19 +1,10 @@
 package ca.error404.bytefyte.chars;
 
-import ca.error404.bytefyte.Main;
-import ca.error404.bytefyte.constants.Globals;
-import ca.error404.bytefyte.objects.Collider;
-import ca.error404.bytefyte.objects.MultiHit;
-import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
-import com.badlogic.gdx.audio.Sound;
+import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 
-import javax.sound.sampled.AudioFormat;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Kirby extends Character {
     private float yOffset = 12.5f;
@@ -21,7 +12,7 @@ public class Kirby extends Character {
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
 
-    public Kirby(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+    public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
         weight = 0.8f;
         maxJumps = 10;
