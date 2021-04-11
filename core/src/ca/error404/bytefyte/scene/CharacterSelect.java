@@ -48,17 +48,14 @@ public class CharacterSelect implements Screen {
             System.out.println(character);
         }
 
-        if (masterChief.isClicked() == 1) {
-            characters[0] = "Master Chief";
-        } else if (shyGuy.isClicked() == 1) {
-            characters[0] = "Shy Guy";
+        for (int i = 0; i < cursors.length; i++) {
+            if (masterChief.isClicked() == i + 1) {
+                characters[i] = "Master Chief";
+            } else if (shyGuy.isClicked() == i + 1) {
+                characters[i] = "Shy Guy";
+            }
         }
 
-        if (masterChief.isClicked() == 2) {
-            characters[1] = "Master Chief";
-        } else if (shyGuy.isClicked() == 2) {
-            characters[1] = "Shy Guy";
-        }
 
         for (int i = 0; i < characters.length; i++) {
             if(cursors[i] != null) {
