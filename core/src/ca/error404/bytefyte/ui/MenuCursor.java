@@ -16,7 +16,7 @@ public class MenuCursor {
     private Main game;
     private Vector2 max;
     public Rectangle cursorRect;
-    private Vector2 size;
+    public Vector2 size;
 
     public MenuCursor(Vector2 cursorPos, Controller controller, Texture cursorImage, Main game, Vector2 max, Vector2 size, Rectangle cursorRect) {
         this.cursorPos = cursorPos;

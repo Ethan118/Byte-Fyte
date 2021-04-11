@@ -1,21 +1,15 @@
 package ca.error404.bytefyte;
 
 import ca.error404.bytefyte.chars.Character;
-import ca.error404.bytefyte.chars.ShyGuy;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.Keys;
-import ca.error404.bytefyte.scene.*;
-import ca.error404.bytefyte.scene.MenuScene;
-import ca.error404.bytefyte.scene.SettingsMenu;
-import ca.error404.bytefyte.scene.StoryMenu;
-import ca.error404.bytefyte.scene.TestScene;
-import ca.error404.bytefyte.ui.PlayerHealth;
+import ca.error404.bytefyte.scene.LoadTMap;
+import ca.error404.bytefyte.scene.MainMenu;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
@@ -23,7 +17,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -125,9 +118,9 @@ public class Main extends Game {
 		}
 
 //		setScreen(new LoadTMap("Halberd", this, new Vector2(-350, 0)));
-//		setScreen(new LoadTMap("Forsaken City", this, new Vector2(1, 0)));
+//		setScreen(new LoadTMap("Forsaken City", this, new Vector2(1, 0), new String[4]));
 //		setScreen(new LoadTMap("Russia", this, new Vector2(0, 0)));
-		setScreen(new MenuScene(this));
+		setScreen(new MainMenu(this));
 	}
 
 	public void loadFonts() {

@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 
-public class MenuScene implements Screen {
+public class MainMenu implements Screen {
 
     //delairing variables
     ShapeRenderer shapeRenderer;
@@ -28,15 +28,17 @@ public class MenuScene implements Screen {
     private boolean keyboardUsed = false;
 
     private Button playButton;
+    private Button settingsButton;
+
 
     public MenuCursor[] cursors = new MenuCursor[4];
 
     // menuscene function
-    public MenuScene(Main game) {
+    public MainMenu(Main game) {
         this.game = game;
 
         for (int i = 0; i < cursorPos.length; i++) {
-            cursorPos[i] = new Vector2(Main.WIDTH / 2f, Main.HEIGHT / 2f);
+            cursorPos[i] = new Vector2(Main.WIDTH * (i + 1)/1.5f, Main.HEIGHT / 2f);
         }
 
         for (int i = 0; i < cursors.length; i++) {
@@ -53,6 +55,7 @@ public class MenuScene implements Screen {
         }
 
         playButton = new Button(cursors, new Rectangle(), new Vector2(300, 400), new Vector2(100, 50));
+        settingsButton = new Button(cursors, new Rectangle(), new Vector2(300, 325), new Vector2(100, 50));
 
     }
 
@@ -81,12 +84,13 @@ public class MenuScene implements Screen {
         }
 
         shapeRenderer.rect(playButton.buttonRect.getX(), playButton.buttonRect.getY(), playButton.buttonRect.getWidth(), playButton.buttonRect.getHeight());
+        shapeRenderer.rect(settingsButton.buttonRect.getX(), settingsButton.buttonRect.getY(), settingsButton.buttonRect.getWidth(), settingsButton.buttonRect.getHeight());
 
         //text drawing
         font.draw(game.batch, "Welcome to Byte fyte!", Gdx.graphics.getWidth()*.4f, Gdx.graphics.getHeight() * .85f);
         font.draw(game.batch, "Options", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .3f);
         font.draw(game.batch, "Story", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .4f);
-        font.draw(game.batch, "Leaderboard", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .5f);
+        font.draw(game.batch, "Settings", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .5f);
         font.draw(game.batch, "Fyte!", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .6f);
         game.batch.end();
         shapeRenderer.end();
@@ -101,6 +105,8 @@ public class MenuScene implements Screen {
 
         if (playButton.isClicked() != 0) {
             game.setScreen(new CharacterSelect(game, cursors));
+        } else if (settingsButton.isClicked() != 0) {
+            game.setScreen(new SettingsMenu(game, cursors, this));
         }
 
     }
