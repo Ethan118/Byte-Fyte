@@ -3,7 +3,7 @@ package ca.error404.bytefyte.chars;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.scene.TMap;
-import ca.error404.bytefyte.scene.TestScene;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Wall {
@@ -17,6 +17,8 @@ public class Wall {
 
     public Fixture fix;
 
+    public Body b2body;
+
     public Wall(int x, int y, float w, float h, TMap screen) {
         this.world = screen.getWorld();
         this.scene = screen;
@@ -29,7 +31,7 @@ public class Wall {
         BodyDef bdef = new BodyDef();
         bdef.position.set(this.x / Main.PPM, this.y / Main.PPM);
         bdef.type = BodyDef.BodyType.StaticBody;
-        Body b2body = world.createBody(bdef);
+        b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();

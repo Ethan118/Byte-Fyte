@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ShyGuy extends Character {
-    private static ArrayList<Sound> healSongs;
+    private ArrayList<Sound> healSongs;
     private static ArrayList<Float> healSongLengths;
+    private long currentSongPlaying;
 
     private float currentSongLength;
-    private final int hovertimer = 2;
-    private final int timer = 2;
     Random rand = new Random();
 
     private boolean hasHovered = false;
@@ -76,7 +75,7 @@ public class ShyGuy extends Character {
 
             animDuration = 0;
             for (Sound song : healSongs) {
-                song.stop();
+                song.stop(currentSongPlaying);
             }
         }
 
@@ -208,7 +207,7 @@ public class ShyGuy extends Character {
     @Override
     void specialDown() {
         int i = rand.nextInt(healSongs.size() - 1);
-        healSongs.get(i).play(Main.sfxVolume / 10f);
+        currentSongPlaying = healSongs.get(i).play(Main.sfxVolume / 10f);
 
         animDuration = healSongLengths.get(i);
         moveTimer = healSongLengths.get(i);

@@ -8,16 +8,12 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
 import java.text.DecimalFormat;
 
 public class PlayerHealth extends GameObject {
-
-    private final int playerNum;
-    private final String charname;
 
     private final Vector2 headOffset = new Vector2();
     private final Vector2 baseOffset = new Vector2();
@@ -33,12 +29,8 @@ public class PlayerHealth extends GameObject {
     TextureRegion fsCharge;
     TextureRegion fsFull;
 
-    private FreeTypeFontGenerator fontGenerator;
-    private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
-
     private final GlyphLayout layout = new GlyphLayout();
     private float numSpeed = 20f;
-    private float margain = 0.1f;
     private float num;
     private float prevNum = 0f;
 
@@ -48,8 +40,6 @@ public class PlayerHealth extends GameObject {
         super();
         Main.objectsToAdd.remove(this);
         Main.uiToAdd.add(this);
-        this.playerNum = number;
-        this.charname = charname;
         this.chara = chara;
 
         if (number == 1) {
@@ -81,7 +71,7 @@ public class PlayerHealth extends GameObject {
 
     @Override
     public void update(float delta) {
-        margain = delta * numSpeed;
+        float margain = delta * numSpeed;
         if (num > chara.percent + margain) {
             numSpeed = Math.abs(chara.percent - prevNum) * 4;
             num -= margain;
@@ -94,7 +84,7 @@ public class PlayerHealth extends GameObject {
             numSpeed = 0;
         }
 
-        num = (float) round(num, 1);
+        num = (float) round(num);
     }
 
     @Override
@@ -122,8 +112,8 @@ public class PlayerHealth extends GameObject {
         Main.battleNameFont.draw(batch, layout, pos.x + 250, pos.y + 70);
     }
 
-    private static double round (double value, int precision) {
-        int scale = (int) Math.pow(10, precision);
+    private static double round(double value) {
+        int scale = (int) Math.pow(10, 1);
         return (double) Math.round(value * scale) / scale;
     }
 

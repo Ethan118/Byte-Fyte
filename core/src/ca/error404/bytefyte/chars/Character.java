@@ -24,7 +24,7 @@ public abstract class Character extends GameObject {
     public float deadzone = Main.deadZone;
 
     public float percent = 0f;
-    private float stunTimer;
+    public float stunTimer;
 
     private float respawnTimer;
     private boolean respawned = true;
@@ -70,8 +70,8 @@ public abstract class Character extends GameObject {
 
     public float weight = 1f;
 
-    public int hitboxScale = 18;
-    public int spriteScale = 15;
+    public float hitboxScale = 18;
+    public float spriteScale = 15;
     protected Vector2 spriteOffset = Vector2.Zero;
     public Vector2 manualSpriteOffset = Vector2.Zero;
 
@@ -197,7 +197,13 @@ public abstract class Character extends GameObject {
      * post: instantiates a character with the parameters
      */
     public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
+        this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
+    }
+
+    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
         super();
+        this.spriteScale = spriteScale;
+        this.hitboxScale = hitboxScale;
         Main.players.add(this);
         this.playerNumber = playerNumber;
         this.charname = charname;
@@ -295,6 +301,20 @@ public abstract class Character extends GameObject {
         fdef.isSensor = true;
         fdef.shape = head;
         fdef.filter.categoryBits = Tags.PLAYER_HEAD_BIT;
+        b2body.createFixture(fdef).setUserData(this);
+
+        EdgeShape left = new EdgeShape();
+        left.set(new Vector2((float) -getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) -getRegionHeight() / hitboxScale / 2.2f / Main.PPM), new Vector2((float) -getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) getRegionHeight() / hitboxScale / 2.2f / Main.PPM));
+        fdef.isSensor = true;
+        fdef.shape = left;
+        fdef.filter.categoryBits = Tags.PLAYER_SIDE_BIT;
+        b2body.createFixture(fdef).setUserData(this);
+
+        EdgeShape right = new EdgeShape();
+        right.set(new Vector2((float) getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) -getRegionHeight() / hitboxScale / 2.2f / Main.PPM), new Vector2((float) getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) getRegionHeight() / hitboxScale / 2.2f / Main.PPM));
+        fdef.isSensor = true;
+        fdef.shape = right;
+        fdef.filter.categoryBits = Tags.PLAYER_SIDE_BIT;
         b2body.createFixture(fdef).setUserData(this);
     }
 

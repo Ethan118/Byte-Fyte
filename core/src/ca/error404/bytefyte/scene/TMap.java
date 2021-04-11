@@ -66,7 +66,6 @@ public class TMap implements Screen {
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
         this.scrollVector = scrollVector;
-
         this.background = background;
 
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
@@ -300,25 +299,20 @@ public class TMap implements Screen {
             bgPos.y -= bgCam.viewportHeight;
         }
 
-        game.batch.draw(background, bgPos.x + w, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x + w, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x + w, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x + w, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+        float x = bgPos.x;
 
-        game.batch.draw(background, bgPos.x - w, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+        while (x > -(bgCam.viewportWidth)) {
+            x -= w;
+        }
 
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x - w * 2, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+        while (x < bgCam.viewportWidth) {
+            game.batch.draw(background, x, bgPos.y, w, bgCam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
 
-        game.batch.draw(background, bgPos.x, bgPos.y, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-        game.batch.draw(background, bgPos.x, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+            x += w;
+        }
         game.batch.end();
     }
 

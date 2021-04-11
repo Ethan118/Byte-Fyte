@@ -15,15 +15,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.apache.commons.io.FileUtils;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import java.io.File;
-import java.io.InputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class LoadTMap implements Screen {
     OrthographicCamera cam;
@@ -55,6 +46,7 @@ public class LoadTMap implements Screen {
         Main.manager.load("sprites/ui.atlas", TextureAtlas.class);
         Main.manager.load("sprites/shyguy.atlas", TextureAtlas.class);
         Main.manager.load("sprites/masterchief.atlas", TextureAtlas.class);
+        Main.manager.load("sprites/kirby.atlas", TextureAtlas.class);
 
         for (int i=1; i < 25; i++) {
             Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i), Sound.class);
