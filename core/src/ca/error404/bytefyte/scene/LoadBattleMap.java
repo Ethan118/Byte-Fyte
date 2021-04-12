@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.scene;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.ui.ShowSongName;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -16,6 +17,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class LoadBattleMap implements Screen {
     OrthographicCamera cam;
     Main game;
@@ -28,28 +33,38 @@ public class LoadBattleMap implements Screen {
     Texture loadTexSpin;
     TiledMap map;
     TmxMapLoader mapLoader = new TmxMapLoader();
-    public String[] characters;
 
-    public LoadBattleMap(String tmap, Main game, Vector2 scrollVector, String[] characters, String series) {
+    private float minLoadTime = 10f;
+
+    public LoadBattleMap(String tmap, Main game, Vector2 scrollVector, String series) {
         this.game = game;
         this.scrollVector = scrollVector;
-        this.characters = characters;
         game.music = this.game.music;
         cam = new OrthographicCamera();
         this.tmap = tmap;
         viewport = new FitViewport(1920, 1080, cam);
 
-
         Main.manager.load(String.format("sprites/maps/%s.png", tmap), Texture.class);
         Main.manager.finishLoading();
         Main.manager.load(String.format("sprites/maps/%s_background.png", tmap), Texture.class);
         Main.manager.load("sprites/ui.atlas", TextureAtlas.class);
-        Main.manager.load("sprites/shyguy.atlas", TextureAtlas.class);
-        Main.manager.load("sprites/masterchief.atlas", TextureAtlas.class);
-        Main.manager.load("sprites/kirby.atlas", TextureAtlas.class);
 
-        for (int i=1; i < 25; i++) {
-            Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i), Sound.class);
+        // Convert String Array to List
+        List<String> characters = new ArrayList<>();
+
+        for (String charname : CharacterSelect.characters) {
+
+            if (!characters.contains(charname) && charname != null) {
+                Main.manager.load(String.format("sprites/%s.atlas", charname), TextureAtlas.class);
+            }
+
+            characters.add(charname);
+        }
+
+        if (characters.contains("shyguy")) {
+            for (int i = 1; i < 25; i++) {
+                Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i), Sound.class);
+            }
         }
 
         tmap = String.format("sprites/maps/%s.tmx", tmap);
@@ -79,11 +94,12 @@ public class LoadBattleMap implements Screen {
 
     @Override
     public void render(float delta) {
-        if (Main.manager.update()) {
+        minLoadTime -= delta;
+        if (Main.manager.update() && minLoadTime <= 0) {
             loadTex.dispose();
             loadTexSpin.dispose();
             new ShowSongName();
-            game.setScreen(new BattleMap(characters, game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", tmap), Texture.class)));
+            game.setScreen(new BattleMap(game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", tmap), Texture.class)));
         }
 
         // game.music looping

@@ -8,6 +8,7 @@ import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.objects.BattleCam;
+import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -59,7 +60,7 @@ public class BattleMap implements Screen {
 
     private String[] characters;
 
-    public BattleMap( String[] characters, Main game, TiledMap map, Vector2 scrollVector, Texture background) {
+    public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
         this.characters = characters;
 
@@ -104,15 +105,15 @@ public class BattleMap implements Screen {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             int i = (int) object.getProperties().get("player");
             Character chara;
-            if (characters[i-1] != null) {
-                if (characters[i-1].equalsIgnoreCase("masterchief")) {
+            if (CharacterSelect.characters[i-1] != null) {
+                if (CharacterSelect.characters[i-1].equalsIgnoreCase("masterchief")) {
                     try {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
                     } catch (Exception e) {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
 
                     }
-                } else if (characters[i-1].equalsIgnoreCase("shyguy")) {
+                } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
                         chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
                     } catch (Exception e) {
