@@ -77,7 +77,6 @@ public class LoadBattleMap implements Screen {
         if (game.music != null) {
             game.music.stop();
         }
-
         if (series != null) {
             game.music = game.songFromSeries(series);
         } else {

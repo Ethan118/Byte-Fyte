@@ -126,11 +126,10 @@ public class Main extends Game {
 			}
 		}
 
-		CharacterSelect.characters = new String[] {"kirby", "shyguy", "masterchief", "madeline"};
-		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
-//		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
-//		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
-//		setScreen(new TitleScreen(this));
+		CharacterSelect.characters = new String[]{"madeline", null, null, null};
+		setScreen(new LoadBattleMap("Russia", this, new Vector2(0, 0), "russia"));
+
+		//setScreen(new MainMenu(this));
 	}
 
 	public void loadFonts() {

@@ -25,6 +25,11 @@ public class Madeline extends Character {
 
     private boolean charging = false;
 
+    private float moveCooldown;
+
+    private int maxDashes = 1;
+    private int currentDash = maxDashes;
+
     public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
         super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f);
         manualSpriteOffset = rightOffset;
@@ -60,6 +65,12 @@ public class Madeline extends Character {
     }
 
     public void update (float delta) {
+        if (moveCooldown > 0) {
+            moveCooldown -= delta;
+        } else {
+            moveCooldown = 0;
+        }
+
         if (charging) {
             badelineMeter = Math.min(badelineMeter + (delta * 10), badelineMaxMeter);
 
@@ -78,6 +89,10 @@ public class Madeline extends Character {
 
         super.update(delta);
 
+        if (grounded) {
+            currentDash = maxDashes;
+        }
+
         if (badelineMeter == badelineMaxMeter) {
             badelineActive = true;
             charging = false;
@@ -87,9 +102,15 @@ public class Madeline extends Character {
         }
 
         if (badelineActive) {
+            maxDashes = 2;
+
             badelineMeter = Math.max(badelineMeter - delta, 0);
+            if (animState == AnimationState.SPECIAL_N) {
+                animState = AnimationState.IDLE;
+            }
 
             if (badelineMeter <= 0) {
+                maxDashes = 1;
                 badelineActive = false;
                 badeline.destroy();
             }
@@ -102,26 +123,31 @@ public class Madeline extends Character {
         }
 
         System.out.println(badelineMeter + "/100");
+        System.out.println(currentDash);
     }
 
     @Override
     void basicNeutral() {
-        if (!badelineActive) {
-            new Collider(new Vector2(20, 0), 10, 25, this, 2f, 2f, 0.25f, 0);
-        } else {
-            // badeline projectile
-            Vector2 dir = moveVector.cpy();
+        if (moveCooldown == 0) {
+            moveCooldown = 1f;
 
-            if (facingLeft) {
-                if (dir.isZero()) {
-                    dir.x = -1;
-                }
-                new Projectile(this, new Vector2(0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/madeline.atlas", 0, 0.4f);
+            if (!badelineActive) {
+                new Collider(new Vector2(20, 0), 10, 25, this, 2f, 2f, 0.25f, 0);
             } else {
-                if (dir.isZero()) {
-                    dir.x = 1;
+                // badeline projectile
+                Vector2 dir = moveVector.cpy();
+
+                if (facingLeft) {
+                    if (dir.isZero()) {
+                        dir.x = -1;
+                    }
+                    new Projectile(this, new Vector2(0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/madeline.atlas", 0, 0.4f);
+                } else {
+                    if (dir.isZero()) {
+                        dir.x = 1;
+                    }
+                    new Projectile(this, new Vector2(-0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/madeline.atlas", 0, 0.4f);
                 }
-                new Projectile(this, new Vector2(-0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/madeline.atlas", 0, 0.4f);
             }
         }
     }
@@ -148,11 +174,13 @@ public class Madeline extends Character {
 
     @Override
     void smashSide() {
-        if (badelineActive) {
+        if (badelineActive && moveCooldown == 0) {
+            moveCooldown = 1f;
+
             if (facingLeft) {
                 new Laser(this, new Vector2(0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
             } else {
-                new Laser(this, new Vector2(-0.3f, -0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
+                new Laser(this, new Vector2(-0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
             }
         }
     }
@@ -177,14 +205,23 @@ public class Madeline extends Character {
 
     @Override
     void specialSide() {
-        new Collider(new Vector2(0, 0), 30, 30, this, 2f, 5.2f, 0.25f, 0);
-        badelineMeter = Math.min(badelineMeter + 5, badelineMaxMeter);
+        if (currentDash > 0) {
+            grounded = false;
 
-        animDuration = 1;
-        Vector2 dir = moveVector;
-        vel.set(dir.scl(7));
+            new Collider(new Vector2(0, 0), 30, 30, this, 2f, 5.2f, 0.25f, 0);
 
-        resetControls();
+            if (!badelineActive) {
+                badelineMeter = Math.min(badelineMeter + 5, badelineMaxMeter);
+            }
+
+            currentDash -= 1;
+
+            animDuration = 1;
+            Vector2 dir = moveVector;
+            vel.set(dir.scl(7));
+
+            resetControls();
+        }
     }
 
     @Override
