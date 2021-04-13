@@ -70,8 +70,8 @@ public abstract class Character extends GameObject {
 
     public float weight = 1f;
 
-    public int hitboxScale = 18;
-    public int spriteScale = 15;
+    public float hitboxScale;
+    public float spriteScale;
     protected Vector2 spriteOffset = Vector2.Zero;
     public Vector2 manualSpriteOffset = Vector2.Zero;
 
@@ -80,35 +80,35 @@ public abstract class Character extends GameObject {
     public Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
-    protected final Animation<TextureRegion> idle;
-    protected final Animation<TextureRegion> walk;
-    protected final Animation<TextureRegion> run;
+    protected Animation<TextureRegion> idle;
+    protected Animation<TextureRegion> walk;
+    protected Animation<TextureRegion> run;
 
-    protected final Animation<TextureRegion> jump;
-    protected final Animation<TextureRegion> fall;
-    protected final Animation<TextureRegion> hit;
+    protected Animation<TextureRegion> jump;
+    protected Animation<TextureRegion> fall;
+    protected Animation<TextureRegion> hit;
 
-    protected final Animation<TextureRegion> neutralAttack;
-    protected final Animation<TextureRegion> upTilt;
-    protected final Animation<TextureRegion> downTilt;
-    protected final Animation<TextureRegion> sideTilt;
+    protected Animation<TextureRegion> neutralAttack;
+    protected Animation<TextureRegion> upTilt;
+    protected Animation<TextureRegion> downTilt;
+    protected Animation<TextureRegion> sideTilt;
 
-    protected final Animation<TextureRegion> neutralB;
-    protected final Animation<TextureRegion> upB;
-    protected final Animation<TextureRegion> downB;
-    protected final Animation<TextureRegion> sideB;
+    protected Animation<TextureRegion> neutralB;
+    protected Animation<TextureRegion> upB;
+    protected Animation<TextureRegion> downB;
+    protected Animation<TextureRegion> sideB;
 
-    protected final Animation<TextureRegion> nair;
-    protected final Animation<TextureRegion> dair;
-    protected final Animation<TextureRegion> fair;
-    protected final Animation<TextureRegion> bair;
-    protected final Animation<TextureRegion> uair;
+    protected Animation<TextureRegion> nair;
+    protected Animation<TextureRegion> dair;
+    protected Animation<TextureRegion> fair;
+    protected Animation<TextureRegion> bair;
+    protected Animation<TextureRegion> uair;
 
-    protected final Animation<TextureRegion> upSmash;
-    protected final Animation<TextureRegion> downSmash;
-    protected final Animation<TextureRegion> sideSmash;
+    protected Animation<TextureRegion> upSmash;
+    protected Animation<TextureRegion> downSmash;
+    protected Animation<TextureRegion> sideSmash;
 
-    protected final Animation<TextureRegion> dashAttack;
+    protected Animation<TextureRegion> dashAttack;
 
 
     public ArrayList<Projectile> projectilesOnScreen;
@@ -197,8 +197,14 @@ public abstract class Character extends GameObject {
      * post: instantiates a character with the parameters
      */
     public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
+        this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
+    }
+
+    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
         super();
         Main.players.add(this);
+        this.spriteScale = spriteScale;
+        this.hitboxScale = hitboxScale;
         this.playerNumber = playerNumber;
         this.charname = charname;
         this.playerName = playerName;
@@ -277,7 +283,7 @@ public abstract class Character extends GameObject {
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
-        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT;
+        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT | Tags.LASER_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -324,7 +330,7 @@ public abstract class Character extends GameObject {
     * pre: None
     * post: Handles any and all controller or keyboard inputs for a specific player
     */
-    private void handleInput() {
+    protected void handleInput() {
 
 //        Sets the movement vector of the player to 0 (directional input)
         moveVector.set(0f, 0f);
@@ -457,7 +463,6 @@ public abstract class Character extends GameObject {
         // checks if the player is currently using up special
         if (animState == AnimationState.SPECIAL_U) {
             afterUpB = true;
-
         }
 
         // counts down move timer
