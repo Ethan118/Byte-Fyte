@@ -24,7 +24,8 @@ public class MenuScene implements Screen {
     protected ShapeRenderer shapeRenderer;
     protected Texture background;
     private Vector2 bgPos = new Vector2(0, 0);
-    private int speed = -100;
+    protected int xSpeed = -100;
+    protected int ySpeed = -100;
     protected final Main game;
 
     protected Viewport viewport;
@@ -75,7 +76,8 @@ public class MenuScene implements Screen {
     }
 
     public void drawBackground() {
-        float w = (cam.viewportHeight / background.getHeight()) * background.getWidth();
+        float w = background.getWidth();
+        float h = background.getHeight();
 
         if (bgPos.x <= -(w + (1920 / 2f))) {
             bgPos.x += w;
@@ -84,9 +86,9 @@ public class MenuScene implements Screen {
         }
 
         if (bgPos.y <= -(1080 - (-1080 / 2f))) {
-            bgPos.y += cam.viewportHeight;
+            bgPos.y += h;
         } else if (bgPos.y >= (1080 - (-1080 / 2f))) {
-            bgPos.y -= cam.viewportHeight;
+            bgPos.y -= h;
         }
 
         float x = bgPos.x;
@@ -96,21 +98,24 @@ public class MenuScene implements Screen {
         }
 
         while (x < cam.viewportWidth) {
-            game.batch.draw(background, x, bgPos.y, w, cam.viewportHeight);
-            game.batch.draw(background, x, bgPos.y + cam.viewportHeight, w, cam.viewportHeight);
-            game.batch.draw(background, x, bgPos.y - cam.viewportHeight, w, cam.viewportHeight);
-            game.batch.draw(background, x, bgPos.y - cam.viewportHeight * 2, w, cam.viewportHeight);
-            game.batch.draw(background, x, bgPos.y + cam.viewportHeight * 2, w, cam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y);
+            game.batch.draw(background, x, bgPos.y + h);
+            game.batch.draw(background, x, bgPos.y - h);
+            game.batch.draw(background, x, bgPos.y - h * 2);
+            game.batch.draw(background, x, bgPos.y + h * 2);
 
             x += w;
         }
     }
 
     public void update(float deltaTime) {
-        bgPos.x += speed * deltaTime;
-        bgPos.y += speed * deltaTime;
-        if (game.music.getPosition() >= game.songLoopEnd) {
-            game.music.setPosition((float) (game.music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
+        bgPos.x += xSpeed * deltaTime;
+        bgPos.y += ySpeed * deltaTime;
+
+        if (game.music != null) {
+            if (game.music.getPosition() >= game.songLoopEnd) {
+                game.music.setPosition((float) (game.music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
+            }
         }
 
         for (MenuCursor cursor : Main.cursors) { cursor.update(deltaTime); }

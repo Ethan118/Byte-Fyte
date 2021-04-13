@@ -35,6 +35,7 @@ public class PlayerHealth extends GameObject {
     private float prevNum = 0f;
 
     private Color color;
+    private Color playerColor;
 
     public PlayerHealth(int number, String charname, Character chara) {
         super();
@@ -43,23 +44,25 @@ public class PlayerHealth extends GameObject {
         this.chara = chara;
 
         if (number == 1) {
-            pos = new Vector2(172, 25);
+            pos = new Vector2(25, 25);
         } else if (number == 2) {
-            pos = new Vector2(574, 25);
+            pos = new Vector2(525, 25);
         } else if (number == 3) {
-            pos = new Vector2(975, 25);
+            pos = new Vector2(1025, 25);
         } else if (number == 4) {
-            pos = new Vector2(1366, 25);
+            pos = new Vector2(1525, 25);
         }
 
-        TextureAtlas textureAtlas = Main.manager.get("sprites/ui.atlas", TextureAtlas.class);
+        TextureAtlas textureAtlas = Main.manager.get("sprites/battleUI.atlas", TextureAtlas.class);
 
         playerBase = new TextureRegion(textureAtlas.findRegion(String.format("player_%d_ingame", number)));
         playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
         stock = new TextureRegion(textureAtlas.findRegion(String.format("%s_stock", charname)));
-        country = new TextureRegion(textureAtlas.findRegion(String.format("%s_%d_country", charname, number)));
+        country = new TextureRegion(textureAtlas.findRegion(String.format("%s_country", charname)));
         fsCharge = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"));
         fsFull = new TextureRegion(textureAtlas.findRegion("fs_meter_full"));
+
+        playerColor = setPlayerColor(number);
 
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
@@ -91,7 +94,10 @@ public class PlayerHealth extends GameObject {
     public void draw(SpriteBatch batch) {
         setColor();
 
+        batch.setColor(playerColor);
         batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
+        batch.setColor(Color.WHITE);
+
         batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
         batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
 
@@ -143,6 +149,20 @@ public class PlayerHealth extends GameObject {
         } else {
             color = new Color(112 / 255f, 22 / 255f, 34 / 255f, 1);
         }
+    }
+
+    private Color setPlayerColor(int num) {
+        if (num == 1) {
+            return new Color(255/255f, 17/255f, 35/255f, 1);
+        } else if (num == 2) {
+            return new Color(0/255f, 139/255f, 255/255f, 1);
+        } else if (num == 3) {
+            return new Color(255/255f, 185/255f, 21/255f, 1);
+        } else if (num == 4) {
+            return new Color(11/255f, 185/255f, 52/255f, 1);
+        }
+
+        return Color.WHITE;
     }
 
     @Override

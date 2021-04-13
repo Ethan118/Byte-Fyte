@@ -35,9 +35,9 @@ public class Madeline extends Character {
         upTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
         downTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
 
-        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dash"), Animation.PlayMode.LOOP);
-        downB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dash"), Animation.PlayMode.LOOP);
-        sideB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("dash"), Animation.PlayMode.LOOP);
+        upB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("dash"), Animation.PlayMode.LOOP);
+        downB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("dash"), Animation.PlayMode.LOOP);
+        sideB = new Animation<TextureRegion>(1f/30f, textureAtlas.findRegions("dash"), Animation.PlayMode.LOOP);
 
         nair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
         dair = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
@@ -50,6 +50,11 @@ public class Madeline extends Character {
         sideSmash = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
 
         dashAttack = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
+        hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("madeline_hit"), Animation.PlayMode.NORMAL);
+
+        idle.setFrameDuration(1/30f);
+        jump.setFrameDuration(1/30f);
+        fall.setFrameDuration(1/30f);
 
         projectilesOnScreen = new ArrayList<>(1);
     }
@@ -95,6 +100,8 @@ public class Madeline extends Character {
         } else {
             manualSpriteOffset = rightOffset;
         }
+
+        System.out.println(badelineMeter + "/100");
     }
 
     @Override
@@ -109,12 +116,12 @@ public class Madeline extends Character {
                 if (dir.isZero()) {
                     dir.x = -1;
                 }
-                new Projectile(this, new Vector2(0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/badeline.atlas", 0, 0.4f);
+                new Projectile(this, new Vector2(0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/madeline.atlas", 0, 0.4f);
             } else {
                 if (dir.isZero()) {
                     dir.x = 1;
                 }
-                new Projectile(this, new Vector2(-0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/badeline.atlas", 0, 0.4f);
+                new Projectile(this, new Vector2(-0.5f, 0.3f), dir.cpy().scl(5), 0, 0, 10, 5f, 10f, 0.5f, "projectile", "sprites/madeline.atlas", 0, 0.4f);
             }
         }
     }
@@ -143,9 +150,9 @@ public class Madeline extends Character {
     void smashSide() {
         if (badelineActive) {
             if (facingLeft) {
-                new Laser(this, new Vector2(0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/badeline.atlas", 0.4f);
+                new Laser(this, new Vector2(0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
             } else {
-                new Laser(this, new Vector2(-0.3f, -0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/badeline.atlas", 0.4f);
+                new Laser(this, new Vector2(-0.3f, -0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
             }
         }
     }

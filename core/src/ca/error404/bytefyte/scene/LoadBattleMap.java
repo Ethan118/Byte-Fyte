@@ -47,7 +47,7 @@ public class LoadBattleMap implements Screen {
         Main.manager.load(String.format("sprites/maps/%s.png", tmap), Texture.class);
         Main.manager.finishLoading();
         Main.manager.load(String.format("sprites/maps/%s_background.png", tmap), Texture.class);
-        Main.manager.load("sprites/ui.atlas", TextureAtlas.class);
+        Main.manager.load("sprites/battleUI.atlas", TextureAtlas.class);
 
         // Convert String Array to List
         List<String> characters = new ArrayList<>();
@@ -74,7 +74,10 @@ public class LoadBattleMap implements Screen {
         map = mapLoader.loadSync(Main.manager, tmap, Gdx.files.internal(tmap), null);
 
         // plays a song so I can hear things
-        game.music.stop();
+        if (game.music != null) {
+            game.music.stop();
+        }
+
         if (series != null) {
             game.music = game.songFromSeries(series);
         } else {

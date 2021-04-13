@@ -24,15 +24,19 @@ public class MapSelect extends MenuScene {
         new MenuCursor(new Vector2(0, 0), null, game);
 
         new Button(new Vector2(300, 400), new Vector2(150, 50), game) { public void click() {
-            game.setScreen(new LoadBattleMap("Halberd", game, new Vector2(0, 0), "kirby"));
+            game.setScreen(new LoadBattleMap("Halberd", game, new Vector2(-350, 0), "kirby"));
         }};
 
-        new Button(new Vector2(730, 250), new Vector2(150, 50), game){ public void click() {
+        new Button(new Vector2(730, 400), new Vector2(150, 50), game){ public void click() {
             game.setScreen(new LoadBattleMap("Training Room", game, new Vector2(0, 0), null));
         }};
 
-        new Button(new Vector2(1030, 250), new Vector2(150, 50), game){ public void click() {
+        new Button(new Vector2(1030, 400), new Vector2(150, 50), game){ public void click() {
             game.setScreen(new LoadBattleMap("Russia", game, new Vector2(0, 0), "russia"));
+        }};
+
+        new Button(new Vector2(1330, 400), new Vector2(150, 50), game){ public void click() {
+            game.setScreen(new LoadBattleMap("Forsaken City", game, new Vector2(0.5f, 0), "celeste"));
         }};
     }
 }

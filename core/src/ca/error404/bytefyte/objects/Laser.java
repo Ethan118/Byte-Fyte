@@ -69,7 +69,7 @@ public class Laser extends GameObject {
         RayCastCallback callback = new RayCastCallback() {
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-                if (fixture.getFilterData().categoryBits == Tags.GROUND_BIT || fixture.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
+                if (fixture.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
                     collision = point.cpy();
                     return fraction;
                 } else {

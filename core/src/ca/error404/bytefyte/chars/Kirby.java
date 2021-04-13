@@ -2,6 +2,7 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ public class Kirby extends Character {
 
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
+    private float lowFriction = -4f;
+    private float defaultFriction = -7f;
 
     public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
@@ -18,6 +21,9 @@ public class Kirby extends Character {
         maxJumps = 10;
         manualSpriteOffset = new Vector2(100, yOffset);
         projectilesOnScreen = new ArrayList<>(1);
+
+        jump.setPlayMode(Animation.PlayMode.NORMAL);
+        downB.setPlayMode(Animation.PlayMode.NORMAL);
     }
 
     /*
@@ -26,6 +32,8 @@ public class Kirby extends Character {
     * */
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        friction = defaultFriction;
 
 //        Allowing the animation of up b to play
         if (animState == AnimationState.SPECIAL_U && vel.y < 0) {
@@ -36,8 +44,11 @@ public class Kirby extends Character {
         if (animState == AnimationState.SPECIAL_U) {
             specialUp();
             hasHovered = true;
-            manualSpriteOffset.y = 40f;
-        } else {
+        } else if (animState == AnimationState.DASH) {
+            friction = lowFriction;
+        }
+
+        if (animDuration <= 1/60f) {
             manualSpriteOffset.y = yOffset;
         }
 
@@ -101,6 +112,7 @@ public class Kirby extends Character {
 
     @Override
     void specialUp() {
+        manualSpriteOffset.y = 40f;
 
 //        Hovers him for a frame
         if (animDuration == 0) {

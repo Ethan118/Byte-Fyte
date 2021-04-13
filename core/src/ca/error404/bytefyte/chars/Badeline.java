@@ -55,7 +55,7 @@ public class Badeline extends GameObject {
         state = STATE.IDLE;
         prevState = STATE.IDLE;
 
-        TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", "badeline"), TextureAtlas.class);
+        TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", "madeline"), TextureAtlas.class);
 
         idle = new Animation<TextureRegion>(1f/60, textureAtlas.findRegions("badeline_idle"), Animation.PlayMode.LOOP);
         hit = new Animation<TextureRegion>(1f/60, textureAtlas.findRegions("hit"), Animation.PlayMode.LOOP);

@@ -119,6 +119,12 @@ public class BattleMap implements Screen {
                     } catch (Exception e) {
                         chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
+                } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("madeline")) {
+                    try {
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                    } catch (Exception e) {
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                    }
                 } else {
                     try {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);

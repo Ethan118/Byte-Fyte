@@ -4,8 +4,12 @@ import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.Keys;
+import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.LoadBattleMap;
+import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.scene.menu.MainMenu;
 import ca.error404.bytefyte.scene.menu.MenuScene;
+import ca.error404.bytefyte.scene.menu.TitleScreen;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Game;
@@ -122,7 +126,11 @@ public class Main extends Game {
 			}
 		}
 
-		setScreen(new MainMenu(this));
+		CharacterSelect.characters = new String[] {"kirby", "shyguy", "masterchief", "madeline"};
+		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
+//		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
+//		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
+//		setScreen(new TitleScreen(this));
 	}
 
 	public void loadFonts() {
