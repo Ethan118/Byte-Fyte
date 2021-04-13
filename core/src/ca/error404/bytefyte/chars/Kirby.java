@@ -104,7 +104,7 @@ public class Kirby extends Character {
 
     @Override
     void smashUp() {
-        new Collider(new Vector2(0, 15), 40, 20, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(5, 15), 40, 20, this, 2f, 4f, 0.25f, 0.1f);
 
         resetControls();
     }
