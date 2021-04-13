@@ -6,8 +6,7 @@ import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
-import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
@@ -196,15 +195,15 @@ public abstract class Character extends GameObject {
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
+    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
     }
 
-    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
+    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
         super();
-        Main.players.add(this);
         this.spriteScale = spriteScale;
         this.hitboxScale = hitboxScale;
+        Main.players.add(this);
         this.playerNumber = playerNumber;
         this.charname = charname;
         this.playerName = playerName;
@@ -441,8 +440,6 @@ public abstract class Character extends GameObject {
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
-
-
         if (dead) {
             Main.players.remove(this);
             destroy();

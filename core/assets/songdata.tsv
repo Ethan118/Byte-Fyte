@@ -11,7 +11,7 @@ zen	Zen Ball Master	0	-1	other	Kung Fu Panda 2	1
 cornered anime	Pursuit ~ Cornered (TV Series)	6.396	44.81	pwaa	Ace Attorney (TV Series)	1
 grand finale	The Grand Finale DX	9.232	92.306	mario	Mario & Luigi: Bowser's Inside Story	1
 pikmin 2 boss	Boss Battle (Pikmin 2)	7.406	117.0	other	Pikmin 2	1
-arstozka	Papers, Please	1.297	102.721	other	Papers, Please	1
+arstozka	Papers, Please	1.297	102.721	russia	Papers, Please	1
 cornered marvel	Pursuit ~ Cornered (Marvel VS Capcom 3)	6.447	83.659	pwaa	Marvel VS Capcom 3	1
 crowned	C-R-O-W-N-E-D	15.204	147.191	kirby	Kirby's Return to Dream Land	1
 fury 1	Bowser's Fury	17.931	111.417	mario	Bowser's Fury	1
@@ -42,7 +42,7 @@ fury battle	Chasing Down Bowser	12.875	60.059	mario	Bowser's Fury	1
 kk metal	K.K. Metal	25.992	163.573	ac	ToxicxEternity	1
 week 2 song 2	South	0	-1	other	Friday Night Funkin'	1
 pico	Pico	3.185	80.016	other	Friday Night Funkin'	1
-megalo big	MEGALOVANIA (Orchestral)	18.482	162.450	other	UNDERTALE	1
+megalo big	MEGALOVANIA (Orchestral)	18.482	162.450	undertale	UNDERTALE	1
 dadbattle big	Dad Battle (Orchestral)	0.710	86.059	other	Friday Night Funkin'	1
 lemon	Winter Horrorland (Orchestral)	1	130.816	other	Friday Night Funkin'	1
 spooky month	Spookeez	6.691	96.301	other	Friday Night Funkin'	1
@@ -61,11 +61,23 @@ meta knight star allies	Friends and the Sound of Those Crossing Blades	0.298	60.
 masked dedede triple deluxe	Dedede's Royal Payback	12.701	63.898	kirby	Kirby: Triple Deluxe	1
 gourmet race piano	Gourmet Race (Piano)	21.843	168.17	kirby	Sheet Music Boss	1
 megalo russia	MEGALOVANIA (Russian Hard Bass)	12.811	211.203	russia	Case	1
-rasputin	Ra Ra Rasputin (Piano)	5	229.028	russia	Sheet Music Boss	1
-putin	A Man Like Putin	0	-1	russia	Russia	1
-moskau	Moskau	74.931	252.987	russia	Dschinghis Khan	1
+rasputin piano	Rasputin (Piano)	5	229.028	russia	Sheet Music Boss	1
+moskau	Moskau	75.931	253.987	russia	Dschinghis Khan	1
 wide	Wide Putin Walking (Song for Denise)	34.835	159.44	russia	Piano Fantasia	1
-ussr	Soviet Union National Anthem	3.578	221.302	russia	USSR	1
 tetris a	Tetris: Type A (Brawl)	19.898	127.306	russia	Super Smash Bros. Brawl	1
 tetris b	Tetris: Type B (Brawl)	0.755	172.69	russia	Super Smash Bros. Brawl	1
 tetris c	Defence Battle 3	5.931	71.763	russia	Tetris 99	1
+megalo daft punk	MEGALOVANIA (Daft Punk)	0	-1	other	Daft Punk	1
+rasputin	Rasputin	9.662	232.716	russia	Boney M.	1
+megalo gourmet race	1, 2, Bonemeal	3.332	51.339	kirby	LiterallyNoOne	1
+first steps	First Steps	10.618	225.275	celeste	Celeste	1
+badeline chase	Ressurections (Part 2)	18.282	104.022	celeste	Celeste	1
+library celeste	Scattered and Lost	0	-1	celeste	Celeste	1
+megalo piglin	MEGALOVANIA (Pigstep)	23.566	153.449	celeste	Drunken Sailor	1
+pigstep	Pigstep	22.628	112.974	celeste	Minecraft	1
+celeste summit	Reach for the Summit	0	-1	celeste	Celeste	1
+celeste library b	Celestial Resort (Good Karma Mix)	6.89	205.745	celeste	Celeste	1
+linebeck techno	Linebeck's Theme (Noteblock)	7.619	155.343	halo	Noteblock	1
+menu	Menu	19.128	67.134	n/a	Byte Fyte	1
+ussr	Soviet Union National Anthem	3.578	221.302	russia	USSR	1
+putin	A Man Like Putin	0	-1	russia	Russia	1

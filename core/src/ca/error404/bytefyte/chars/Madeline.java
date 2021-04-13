@@ -4,7 +4,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
+import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -25,7 +25,7 @@ public class Madeline extends Character {
 
     private boolean charging = false;
 
-    public Madeline(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
+    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
         super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f);
         manualSpriteOffset = rightOffset;
 
