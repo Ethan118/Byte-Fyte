@@ -62,46 +62,60 @@ public class Kirby extends Character {
 //    All abilities.  Will add colliders or move shy guy as applicable
     @Override
     void basicNeutral() {
+        new Collider(new Vector2(25, 0), 20, 35, this, 2f, 4f, 0.25f, 0.1f);
+
         resetControls();
     }
-
     @Override
     void basicSide() {
+        new Collider(new Vector2(15, 0), 40, 20, this, 2f, 4f, 0.25f, 0.2f);
+
         resetControls();
     }
-
     @Override
     void basicUp() {
+        new Collider(new Vector2(5, 15), 25, 15, this, 2f, 4f, 0.25f, 0.1f);
+
         resetControls();
     }
 
     @Override
     void basicDown() {
+        new Collider(new Vector2(0, 0), 35, 15, this, 2f, 4f, 0.25f, 0.1f);
+
         resetControls();
     }
 
     @Override
     void dashAttack() {
+        new Collider(new Vector2(20, 0), 35, 15, this, 2f, 4f, 0.25f, 0.1f);
+
         resetControls();
     }
 
     @Override
     void smashSide() {
+        new Collider(new Vector2(25, 00), 35, 30, this, 4f, 5f, 0.25f, 0.3f);
+
         resetControls();
     }
 
     @Override
     void smashUp() {
+        new Collider(new Vector2(5, 15), 40, 20, this, 2f, 4f, 0.25f, 0.1f);
+
         resetControls();
     }
-
     @Override
     void smashDown() {
+
         resetControls();
     }
 
     @Override
     void specialNeutral() {
+        new Collider(new Vector2(25, 0), 50, 40, this, 8f, 4f, 0.25f, 1f);
+
         resetControls();
     }
 
@@ -125,6 +139,7 @@ public class Kirby extends Character {
             animDuration = 1.8f;
         }
 
+        new Collider(new Vector2(0, -20), 15, 30, this, 3f, 2f, 0.25f, 1f);
 //        Exponentially flies him up after the initial frame
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;
@@ -148,25 +163,32 @@ public class Kirby extends Character {
 
     @Override
     void airNeutral() {
+        new Collider(new Vector2(0, 0), 40, 20, this, 2f, 4f, 0.25f, 0.1f);
+
         resetControls();
     }
-
     @Override
     void airForward() {
-    }
+        new Collider(new Vector2(10, 5), 25, 40, this, 2f, 4f, 0.25f, 0.2f);
 
+        resetControls();
+    }
     @Override
     void airBack() {
     }
 
     @Override
     void airUp() {
+        new Collider(new Vector2(0, 15), 30, 30, this, 2f, 4f, 0.25f, 0.1f);
+
+        resetControls();
+    }
+    @Override
+    void airDown() {
+        new Collider(new Vector2(5, 0), 40, -30, this, 2f, 4f, 0.25f, 0.1f);
+
         resetControls();
     }
 
-    @Override
-    void airDown() {
-        resetControls();
-    }
 
 }
