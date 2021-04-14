@@ -26,7 +26,7 @@ public class Badeline extends GameObject {
     private final Animation<TextureRegion> hit;
 
     private final Animation<TextureRegion> charge_beam;
-    //private final Animation<TextureRegion> charge_projectile;
+    private final Animation<TextureRegion> charge_projectile;
 
     private Animation<TextureRegion> currentAnim;
 
@@ -61,7 +61,7 @@ public class Badeline extends GameObject {
         hit = new Animation<TextureRegion>(1f/60, textureAtlas.findRegions("hit"), Animation.PlayMode.LOOP);
 
         charge_beam = new Animation<TextureRegion>(1f/60, textureAtlas.findRegions("badeline_beam_charge"), Animation.PlayMode.NORMAL);
-        //charge_projectile = new Animation<TextureRegion>(1f/60, textureAtlas.findRegions("charge_projectile"), Animation.PlayMode.NORMAL);
+        charge_projectile = new Animation<TextureRegion>(1f/60, textureAtlas.findRegions("charge_projectile"), Animation.PlayMode.NORMAL);
 
         TextureRegion sprite = idle.getKeyFrame(elapsedTime, true);
         lockAnim = false;
