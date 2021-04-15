@@ -12,8 +12,6 @@ import ca.error404.bytefyte.scene.menu.MenuScene;
 import ca.error404.bytefyte.scene.menu.TitleScreen;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
-import ca.error404.bytefyte.scene.LoadTMap;
-import ca.error404.bytefyte.scene.MainMenu;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -128,13 +126,12 @@ public class Main extends Game {
 			}
 		}
 
-		CharacterSelect.characters = new String[]{"madeline", null, null, null};
-		setScreen(new LoadBattleMap("Russia", this, new Vector2(0, 0), "russia"));
-
-//		setScreen(new LoadTMap("Halberd", this, new Vector2(-350, 0)));
-//		setScreen(new LoadTMap("Forsaken City", this, new Vector2(1, 0), new String[4]));
-//		setScreen(new LoadTMap("Russia", this, new Vector2(0, 0)));
-		setScreen(new MainMenu(this));
+		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
+//		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
+//		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
+		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
+//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(-350, 0), null));
+//		setScreen(new TitleScreen(this));
 	}
 
 	public void loadFonts() {

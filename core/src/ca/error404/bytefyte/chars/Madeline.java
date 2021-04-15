@@ -16,8 +16,8 @@ import java.util.ArrayList;
 public class Madeline extends Character {
     Badeline badeline;
 
-    Vector2 leftOffset = new Vector2(17f, 5f);
-    Vector2 rightOffset = new Vector2(15f, 5f);
+    Vector2 leftOffset = new Vector2(17f, 5.5f);
+    Vector2 rightOffset = new Vector2(15f, 5.5f);
 
     private float badelineMeter = 0;
     private final float badelineMaxMeter = 100;
@@ -33,6 +33,8 @@ public class Madeline extends Character {
     public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
         super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f);
         manualSpriteOffset = rightOffset;
+
+        weight = 1.1f;
 
         TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", charname), TextureAtlas.class);
 
@@ -58,7 +60,9 @@ public class Madeline extends Character {
         hit = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("madeline_hit"), Animation.PlayMode.NORMAL);
 
         idle.setFrameDuration(1/30f);
+        walk.setFrameDuration(1/60f);
         jump.setFrameDuration(1/30f);
+        jump.setPlayMode(Animation.PlayMode.NORMAL);
         fall.setFrameDuration(1/30f);
 
         projectilesOnScreen = new ArrayList<>(1);
@@ -72,7 +76,7 @@ public class Madeline extends Character {
         }
 
         if (charging) {
-            badelineMeter = Math.min(badelineMeter + (delta * 10), badelineMaxMeter);
+            badelineMeter = Math.min(badelineMeter + (delta * 2), badelineMaxMeter);
 
             lockAnim = true;
             handleInput();
@@ -82,7 +86,7 @@ public class Madeline extends Character {
                 }
             }
 
-            if (!moveVector.isZero() || (attackState != AttackState.NONE && attackState != AttackState.SPECIAL) || jumping) {
+            if (!moveVector.isZero() || (attackState != AttackState.NONE && attackState != AttackState.SPECIAL) || jumping || hasBeenHit) {
                 charging = false;
             }
         }
@@ -104,7 +108,7 @@ public class Madeline extends Character {
         if (badelineActive) {
             maxDashes = 2;
 
-            badelineMeter = Math.max(badelineMeter - delta, 0);
+            badelineMeter = Math.max(badelineMeter - delta * 3, 0);
             if (animState == AnimationState.SPECIAL_N) {
                 animState = AnimationState.IDLE;
             }
@@ -121,9 +125,6 @@ public class Madeline extends Character {
         } else {
             manualSpriteOffset = rightOffset;
         }
-
-        System.out.println(badelineMeter + "/100");
-        System.out.println(currentDash);
     }
 
     @Override
@@ -175,12 +176,20 @@ public class Madeline extends Character {
     @Override
     void smashSide() {
         if (badelineActive && moveCooldown == 0) {
-            moveCooldown = 1f;
+//            moveCooldown = 1f;
 
-            if (facingLeft) {
-                new Laser(this, new Vector2(0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
+            if (controller != null) {
+                if (facingLeft) {
+                    new Laser(this, new Vector2(0.3f, 0.3f), rStick.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
+                } else {
+                    new Laser(this, new Vector2(-0.3f, 0.3f), rStick.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
+                }
             } else {
-                new Laser(this, new Vector2(-0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
+                if (facingLeft) {
+                    new Laser(this, new Vector2(0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
+                } else {
+                    new Laser(this, new Vector2(-0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
+                }
             }
         }
     }

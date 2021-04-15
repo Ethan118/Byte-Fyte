@@ -1,8 +1,11 @@
 package ca.error404.bytefyte.chars;
 
+import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -15,6 +18,8 @@ public class Kirby extends Character {
     private float lowFriction = -4f;
     private float defaultFriction = -7f;
 
+    private boolean rock;
+
     public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
         weight = 0.8f;
@@ -24,6 +29,7 @@ public class Kirby extends Character {
 
         jump.setPlayMode(Animation.PlayMode.NORMAL);
         downB.setPlayMode(Animation.PlayMode.NORMAL);
+        sideB.setPlayMode(Animation.PlayMode.NORMAL);
     }
 
     /*
@@ -31,6 +37,17 @@ public class Kirby extends Character {
     * Post: Updates character
     * */
     public void update(float deltaTime) {
+        if (rock) {
+            lockAnim = true;
+
+            handleInput();
+            if (attackState == AttackState.SPECIAL && moveVector.y < 0 || hasBeenHit) {
+                rock = false;
+            } else {
+                resetControls();
+            }
+        }
+
         super.update(deltaTime);
 
         friction = defaultFriction;
@@ -48,7 +65,7 @@ public class Kirby extends Character {
             friction = lowFriction;
         }
 
-        if (animDuration <= 1/60f) {
+        if (animDuration <= 1/60f || animState == AnimationState.HIT) {
             manualSpriteOffset.y = yOffset;
         }
 
@@ -59,29 +76,71 @@ public class Kirby extends Character {
 
     }
 
+    public TextureRegion checkFacing(TextureRegion region) {
+        // Decide which direction to face
+        if (grounded && attackAnimation == null) {
+            if ((vel.x > 0) && !region.isFlipX()) {
+                region.flip(true, false);
+                facingLeft = false;
+            } else if ((vel.x < 0) && region.isFlipX()) {
+                region.flip(true, false);
+                facingLeft = true;
+            } else {
+                if (!facingLeft && !region.isFlipX()) {
+                    region.flip(true, false);
+                } else if (facingLeft && region.isFlipX()) {
+                    region.flip(true, false);
+                }
+            }
+        } else if (animState == AnimationState.SPECIAL_S) {
+            if ((vel.x > 0) && !region.isFlipX()) {
+                region.flip(true, false);
+                facingLeft = false;
+            } else if ((vel.x < 0) && region.isFlipX()) {
+                region.flip(true, false);
+                facingLeft = true;
+            } else {
+                if (!facingLeft && !region.isFlipX()) {
+                    region.flip(true, false);
+                } else if (facingLeft && region.isFlipX()) {
+                    region.flip(true, false);
+                }
+            }
+        }
+        else {
+            if (!facingLeft && !region.isFlipX()) {
+                region.flip(true, false);
+            } else if (facingLeft && region.isFlipX()) {
+                region.flip(true, false);
+            }
+        }
+
+        return region;
+    }
+
 //    All abilities.  Will add colliders or move shy guy as applicable
     @Override
     void basicNeutral() {
-        new Collider(new Vector2(25, 0), 20, 35, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(25, 0), 20, 35, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
     @Override
     void basicSide() {
-        new Collider(new Vector2(15, 0), 40, 20, this, 2f, 4f, 0.25f, 0.2f);
+        new Collider(new Vector2(15, 0), 40, 20, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
     @Override
     void basicUp() {
-        new Collider(new Vector2(5, 15), 25, 15, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(5, 15), 25, 15, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
 
     @Override
     void basicDown() {
-        new Collider(new Vector2(0, 0), 35, 15, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(0, -15), 40, 15, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
@@ -95,19 +154,20 @@ public class Kirby extends Character {
 
     @Override
     void smashSide() {
-        new Collider(new Vector2(25, 00), 35, 30, this, 4f, 5f, 0.25f, 0.3f);
+        new Collider(new Vector2(25, 0), 35, 30, this, 4f, 5f, 0.25f, 0.1f);
 
         resetControls();
     }
 
     @Override
     void smashUp() {
-        new Collider(new Vector2(5, 15), 40, 20, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(5, 15), 40, 20, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
     @Override
     void smashDown() {
+        new Collider(new Vector2(0, -15), 40, 15, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
@@ -121,6 +181,10 @@ public class Kirby extends Character {
 
     @Override
     void specialSide() {
+        new Collider(new Vector2(0, 5), 40, 60, this, 8f, 4f, 0.25f, 0);
+        animDuration = 1f;
+
+        vel.set(new Vector2(7 * moveVector.x, 3));
         resetControls();
     }
 
@@ -154,7 +218,9 @@ public class Kirby extends Character {
 
     @Override
     void specialDown() {
+        new Collider(new Vector2(0, 0), 30, 30, this, 8f, 4f, 0.5f, 13/60f, 2f);
         resetControls();
+        rock = true;
     }
 
     @Override
@@ -163,29 +229,37 @@ public class Kirby extends Character {
 
     @Override
     void airNeutral() {
-        new Collider(new Vector2(0, 0), 40, 20, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(0, 0), 40, 20, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
     @Override
     void airForward() {
-        new Collider(new Vector2(10, 5), 25, 40, this, 2f, 4f, 0.25f, 0.2f);
+        new Collider(new Vector2(10, 5), 25, 40, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
     @Override
     void airBack() {
+//      Create a projectile based on the user direction
+        if (!facingLeft) {
+            new Projectile(this, new Vector2(-0.2f, 0.1f), new Vector2(-4, 0), 0, 0, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "beam_shot", "sprites/kirby.atlas", 3f / 60f, spriteScale);
+        } else {
+            new Projectile(this, new Vector2(0.2f, 0.1f), new Vector2(4, 0), 0, 0, (float) Double.POSITIVE_INFINITY, 2f, 7f, 0.25f, "beam_shot", "sprites/kirby.atlas", 3f / 60f, spriteScale);
+        }
+
+        resetControls();
     }
 
     @Override
     void airUp() {
-        new Collider(new Vector2(0, 15), 30, 30, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(0, 15), 30, 30, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }
     @Override
     void airDown() {
-        new Collider(new Vector2(5, 0), 40, -30, this, 2f, 4f, 0.25f, 0.1f);
+        new Collider(new Vector2(5, -15), 40, -30, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
     }

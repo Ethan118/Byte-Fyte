@@ -18,6 +18,8 @@ public class MasterChief extends Character {
         manualSpriteOffset = new Vector2(1100, 350);
 
         projectilesOnScreen = new ArrayList<>(1);
+
+        walk.setFrameDuration(1/60f);
     }
 
     /*
