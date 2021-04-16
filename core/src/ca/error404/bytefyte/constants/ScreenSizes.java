@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ScreenSizes {
     public static final ArrayList<ArrayList<Integer>> screenSizes = new ArrayList<>();
     public static int screenSize = 3;
+    public static boolean fullScreen = false;
 
     static {
         ArrayList<Integer> array = new ArrayList<Integer>();

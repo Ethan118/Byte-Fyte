@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.scene.menu;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,30 +15,36 @@ public class CharacterSelect extends MenuScene {
     public CharacterSelect(Main game) {
         super(game);
         background = new Texture("sprites/menu/main_bg.png");
+    }
 
-        new MenuCursor(new Vector2(0, 0), null, game);
+    public void show() {
+        super.show();
+        new MenuCursor(new Vector2(0, 0), Main.controllers[0], game);
+        new MenuCursor(new Vector2(0, 0), Main.controllers[1], game);
+        new MenuCursor(new Vector2(0, 0), Main.controllers[2], game);
+        new MenuCursor(new Vector2(0, 0), Main.controllers[3], game);
 
-        new Button(new Vector2(200, 400), new Vector2(150, 50), game) {
+        new Button(new Vector2(200, 400), game, "Master Chief") {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "masterchief";
             }
         };
 
-        new Button(new Vector2(400, 400), new Vector2(150, 50), game) {
+        new Button(new Vector2(400, 400), game, "Shy Guy") {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "shyguy";
             }
         };
 
-        new Button(new Vector2(600, 400), new Vector2(150, 50), game) {
+        new Button(new Vector2(600, 400), game, "Kirby") {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "kirby";
             }
         };
 
-        new Button(new Vector2(600, 200), new Vector2(150, 50), game) {
+        new Button(new Vector2(600, 200), game, "Maps") {
             public void click() {
-                game.setScreen(new MapSelect(this.game, CharacterSelect.characters));
+                new ScreenWipe(new MapSelect(game), game);
             }
         };
     }

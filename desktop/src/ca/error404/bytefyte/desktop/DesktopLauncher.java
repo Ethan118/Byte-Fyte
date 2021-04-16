@@ -30,24 +30,29 @@ public class DesktopLauncher {
 			Wini ini = new Wini(settings);
 			ini.add("Settings", "screen size", ScreenSizes.screenSize);
 			ini.add("Settings", "music volume", Main.musicVolume);
+			ini.add("Settings", "sfx volume", Main.sfxVolume);
+			ini.add("Settings", "cutscene volume", Main.cutsceneVolume);
+			ini.add("Settings", "fullscreen", ScreenSizes.fullScreen);
+			ini.add("Settings", "debug", Main.debug);
 			ini.store();
 		} else {
 			Wini ini = new Wini(settings);
 			try {
 				ScreenSizes.screenSize = Integer.parseInt(ini.get("Settings", "screen size"));
 				Main.musicVolume = Integer.parseInt(ini.get("Settings", "music volume"));
+				Main.cutsceneVolume = Integer.parseInt(ini.get("Settings", "cutscene volume"));
+				Main.sfxVolume = Integer.parseInt(ini.get("Settings", "sfx volume"));
+				ScreenSizes.fullScreen = Boolean.parseBoolean(ini.get("Settings", "fullscreen"));
+				Main.debug = Boolean.parseBoolean(ini.get("Settings", "debug"));
 			} catch (Exception ignored) {
 
 			}
 		}
 
-		if (Globals.OS.contains("WIN")) {
-			config.width = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0);
-			config.height = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1);
-		} else {
-			config.width = 1280;
-			config.height = 720;
-		}
+		config.width = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0);
+		config.height = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1);
+
+		config.fullscreen = ScreenSizes.fullScreen;
 
 		config.title = "Byte Fyte";
 		config.resizable = false;

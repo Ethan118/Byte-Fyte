@@ -3,6 +3,7 @@ package ca.error404.bytefyte.scene.menu;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.scene.LoadBattleMap;
+import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Gdx;
@@ -27,21 +28,26 @@ public class MainMenu extends MenuScene {
     public MainMenu(Main game) {
         super(game);
         background = new Texture("sprites/menu/main_bg.png");
+    }
 
-        new MenuCursor(new Vector2(0, 0), null, game);
+    public void show() {
+        super.show();
+        new MenuCursor(new Vector2(0, 0), Main.controllers[0], game);
 
-        try {
-            new MenuCursor(new Vector2(0, 0), Main.controllers.get(0), game);
-        } catch (Exception e) {
-            new MenuCursor(new Vector2(0, 0), null, game);
+        new Button(new Vector2(960, 400), game, "Fyte!") {
+            public void click() {
+                new ScreenWipe(new CharacterSelect(this.game), game);
+            }};
+
+        new Button(new Vector2(960, 500), game, "Settings") {
+            public void click() {
+                new ScreenWipe(new SettingsMenu(this.game), game);
+            }};
+
+        if (game.music == null) {
+            game.music = game.newSong("menu");
+            game.music.setVolume(Main.musicVolume / 10f);
+            game.music.play();
         }
-
-        new Button(new Vector2(300, 400), new Vector2(100, 50), game) { public void click() {
-            game.setScreen(new CharacterSelect(this.game));
-        }};
-
-        game.music = game.newSong("menu");
-        game.music.setVolume(Main.musicVolume / 10f);
-        game.music.play();
     }
 }

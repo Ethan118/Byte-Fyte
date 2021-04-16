@@ -17,6 +17,9 @@ public class Kirby extends Character {
     private float flyAcceleration = 0f;
     private float lowFriction = -4f;
     private float defaultFriction = -7f;
+    private float defaultGravity;
+    private float defaultFall;
+    private float defaultMaxFall;
 
     private boolean rock;
 
@@ -24,6 +27,8 @@ public class Kirby extends Character {
         super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
         weight = 0.8f;
         maxJumps = 10;
+        defaultGravity = downGravity;
+        defaultFall = fallSpeed;
         manualSpriteOffset = new Vector2(100, yOffset);
         projectilesOnScreen = new ArrayList<>(1);
 
@@ -38,7 +43,12 @@ public class Kirby extends Character {
     * */
     public void update(float deltaTime) {
         if (rock) {
+            downGravity = 50f;
+            fallSpeed = -50f;
             lockAnim = true;
+            if (vel.y > 0) {
+                vel.y = 0;
+            }
 
             handleInput();
             if (attackState == AttackState.SPECIAL && moveVector.y < 0 || hasBeenHit) {
@@ -46,6 +56,9 @@ public class Kirby extends Character {
             } else {
                 resetControls();
             }
+        } else {
+            downGravity = defaultGravity;
+            fallSpeed = defaultFall;
         }
 
         super.update(deltaTime);
@@ -203,7 +216,7 @@ public class Kirby extends Character {
             animDuration = 1.8f;
         }
 
-        new Collider(new Vector2(0, -20), 15, 30, this, 3f, 2f, 0.25f, 1f);
+        new Collider(new Vector2(0, -20), 15, 30, this, 3f, 2f, 0.25f, 0);
 //        Exponentially flies him up after the initial frame
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;

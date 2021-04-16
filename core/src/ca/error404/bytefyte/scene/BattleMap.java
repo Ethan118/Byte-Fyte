@@ -18,6 +18,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -58,11 +59,9 @@ public class BattleMap implements Screen {
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
-    private String[] characters;
-
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
-        this.characters = characters;
+        game.batch = new SpriteBatch();
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -108,26 +107,26 @@ public class BattleMap implements Screen {
             if (CharacterSelect.characters[i-1] != null) {
                 if (CharacterSelect.characters[i-1].equalsIgnoreCase("masterchief")) {
                     try {
-                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
 
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
-                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("madeline")) {
                     try {
-                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
                 } else {
                     try {
-                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers.get(i - 1), i);
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
@@ -168,62 +167,6 @@ public class BattleMap implements Screen {
             videoPlayer.stop();
         }
 
-        // Set game.music volume
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            Main.musicVolume = Main.musicVolume < 10 ? Main.musicVolume + 1 : 10;
-
-            // Writes data to the settings file
-            File settings = new File(Globals.workingDirectory + "settings.ini");
-
-            try {
-                Wini ini = new Wini(settings);
-                ini.add("Settings", "music volume", Main.musicVolume);
-                ini.store();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            Main.musicVolume = Main.musicVolume > 0 ? Main.musicVolume - 1 : 0;
-
-            // Writes data to the settings file
-            File settings = new File(Globals.workingDirectory + "settings.ini");
-
-            try {
-                Wini ini = new Wini(settings);
-                ini.add("Settings", "music volume", Main.musicVolume);
-                ini.store();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Adjusts screen size, then writes screen size to settings file
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            ScreenSizes.screenSize = ScreenSizes.screenSize >= ScreenSizes.screenSizes.size() - 1 ? 0 : ScreenSizes.screenSize + 1;
-            Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
-
-            File settings = new File(Globals.workingDirectory + "settings.ini");
-
-            try {
-                Wini ini = new Wini(settings);
-                ini.add("Settings", "screen size", ScreenSizes.screenSize);
-                ini.store();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        game.music.setVolume(Main.musicVolume / 10f);
-
-        // toggles fullscreen
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            if (Gdx.graphics.isFullscreen()) {
-                Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
-            } else {
-                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-            }
-        }
-
         // start video if not playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
             videoPlayer.play();
@@ -261,6 +204,7 @@ public class BattleMap implements Screen {
             Main.recentButtons.get(key).clear();
         }
 
+        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).update(deltaTime);
     }
     public void render(float delta) {
         update(delta);
@@ -283,7 +227,11 @@ public class BattleMap implements Screen {
         for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
         game.batch.end();
 
-        b2dr.render(world, gamecam.combined);
+        if (Main.debug) {
+            b2dr.render(world, gamecam.combined);
+        }
+
+        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
 
         hud.draw();
     }

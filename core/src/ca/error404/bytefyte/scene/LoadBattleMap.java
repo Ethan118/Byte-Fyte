@@ -29,6 +29,8 @@ public class LoadBattleMap implements Screen {
     float rotation = 0;
     int rotateSpeed = 180;
     String tmap;
+    String series;
+    String mapName;
     Texture loadTex;
     Texture loadTexSpin;
     TiledMap map;
@@ -40,8 +42,13 @@ public class LoadBattleMap implements Screen {
         this.game = game;
         this.scrollVector = scrollVector;
         game.music = this.game.music;
-        cam = new OrthographicCamera();
         this.tmap = tmap;
+        this.series = series;
+    }
+
+    @Override
+    public void show() {
+        cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080, cam);
 
         Main.manager.load(String.format("sprites/maps/%s.png", tmap), Texture.class);
@@ -62,11 +69,12 @@ public class LoadBattleMap implements Screen {
         }
 
         if (characters.contains("shyguy")) {
-            for (int i = 1; i < 25; i++) {
-                Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i), Sound.class);
+            for (int i = 0; i < 24; i++) {
+                Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1), Sound.class);
             }
         }
 
+        mapName = tmap;
         tmap = String.format("sprites/maps/%s.tmx", tmap);
 
         mapLoader.getDependencies(tmap, Gdx.files.internal(tmap), null);
@@ -90,18 +98,13 @@ public class LoadBattleMap implements Screen {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
     public void render(float delta) {
         minLoadTime -= delta;
         if (Main.manager.update() && minLoadTime <= 0) {
             loadTex.dispose();
             loadTexSpin.dispose();
             new ShowSongName();
-            game.setScreen(new BattleMap(game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", tmap), Texture.class)));
+            game.setScreen(new BattleMap(game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", mapName), Texture.class)));
         }
 
         // game.music looping

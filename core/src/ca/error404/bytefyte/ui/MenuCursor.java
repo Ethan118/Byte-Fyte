@@ -25,6 +25,9 @@ public class MenuCursor {
         this.pos = cursorPos;
         this.controller = controller;
         this.game = game;
+
+        max.x -= sprite.getWidth();
+        max.y -= sprite.getHeight();
     }
 
     public void update(float deltaTime) {
