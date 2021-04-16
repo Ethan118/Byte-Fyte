@@ -22,13 +22,16 @@ public class MapSelect implements Screen {
     private Button trainingRoom;
     private Button halberd;
     private String[] characters;
+    private CharacterSelect characterSelect;
 
     // menuscene function
-    public MapSelect(Main game, MenuCursor[] cursors, String[] characters) {
+    public MapSelect(Main game, MenuCursor[] cursors, String[] characters, CharacterSelect characterSelect) {
         this.game = game;
         this.characters = characters;
 
         this.cursors = cursors;
+
+        this.characterSelect = characterSelect;
 
         trainingRoom = new Button(cursors, new Rectangle(), new Vector2(400, 250), new Vector2(150, 50));
         halberd = new Button(cursors, new Rectangle(), new Vector2(730, 250), new Vector2(150, 50));
@@ -44,11 +47,11 @@ public class MapSelect implements Screen {
         }
 
         if (halberd.isClicked() != 0) {
-            game.setScreen(new LoadTMap("Halberd", game, new Vector2(-350, 0), characters));
+            game.setScreen(new LoadTMap("Halberd", game, new Vector2(-350, 0), characters, characterSelect));
         }
 
         else if (trainingRoom.isClicked() != 0) {
-            game.setScreen(new LoadTMap("Training Room", game, new Vector2(-350, 0), characters));
+            game.setScreen(new LoadTMap("Training Room", game, new Vector2(-350, 0), characters, characterSelect));
         }
 
     }

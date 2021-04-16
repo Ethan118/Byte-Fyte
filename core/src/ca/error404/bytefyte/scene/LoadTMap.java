@@ -29,11 +29,13 @@ public class LoadTMap implements Screen {
     TiledMap map;
     TmxMapLoader mapLoader = new TmxMapLoader();
     public String[] characters;
+    private CharacterSelect characterSelect;
 
-    public LoadTMap(String tmap, Main game, Vector2 scrollVector, String[] characters) {
+    public LoadTMap(String tmap, Main game, Vector2 scrollVector, String[] characters, CharacterSelect characterSelect) {
         this.game = game;
         this.scrollVector = scrollVector;
         this.characters = characters;
+        this.characterSelect = characterSelect;
         game.music = this.game.music;
         cam = new OrthographicCamera();
         this.tmap = tmap;
@@ -78,7 +80,7 @@ public class LoadTMap implements Screen {
             loadTex.dispose();
             loadTexSpin.dispose();
             new ShowSongName();
-            game.setScreen(new TMap(characters, game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", tmap), Texture.class)));
+            game.setScreen(new TMap(characters, characterSelect, game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", tmap), Texture.class)));
         }
 
         // game.music looping

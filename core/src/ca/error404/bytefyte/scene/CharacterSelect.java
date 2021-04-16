@@ -15,16 +15,16 @@ public class CharacterSelect implements Screen {
     private final Main game;
     BitmapFont font = new BitmapFont();
 
-    private boolean[] charsSelected = new boolean[4];
+    public boolean[] charsSelected = new boolean[4];
 
-    private MenuCursor[] cursors;
+    public MenuCursor[] cursors;
 
     ShapeRenderer shapeRenderer;
     private Button shyGuyButton;
     private Button masterChiefButton;
     private Button kirbyButton;
 
-    private String[] characters = {null, null, null, null};
+    public String[] characters = {null, null, null, null};
 
     // menuscene function
     public CharacterSelect(Main game, MenuCursor[] cursors) {
@@ -41,6 +41,7 @@ public class CharacterSelect implements Screen {
     }
 
     public void update(float deltaTime) {
+        System.out.println("O");
         for (MenuCursor cursor: cursors) {
             if (cursor != null) {
                 cursor.update(deltaTime);
@@ -74,7 +75,7 @@ public class CharacterSelect implements Screen {
 
         if (checkChars()) {
             System.out.println(characters);
-            game.setScreen(new MapSelect(game, cursors, characters));
+            game.setScreen(new MapSelect(game, cursors, characters, this));
         }
 
     }

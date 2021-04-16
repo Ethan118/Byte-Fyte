@@ -10,6 +10,7 @@ import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.objects.BattleCam;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.tools.WorldContactListener;
+import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -53,15 +54,20 @@ public class TMap implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
+    private int playersAlive;
+
     private Texture background;
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
     private String[] characters;
+    private CharacterSelect characterSelect;
 
-    public TMap( String[] characters, Main game, TiledMap map, Vector2 scrollVector, Texture background) {
+    public TMap(String[] characters, CharacterSelect characterSelect, Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
         this.characters = characters;
+
+        this.characterSelect = characterSelect;
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -152,6 +158,30 @@ public class TMap implements Screen {
     }
 
     public void update(float deltaTime) {
+        int i = 0;
+        playersAlive = 0;
+        for (Character character: Main.players) {
+            i ++;
+            if (character != null) {
+                if (character.dead) {
+                    Main.players.set(i, null);
+                } else {
+                    playersAlive += 1;
+                }
+            }
+        }
+
+        if (playersAlive == 1) {
+            System.out.println("True");
+            for (int j = 0; j < 4; j++) {
+                if (characterSelect.cursors[j] != null) {
+                    characterSelect.characters[j] = null;
+                    characterSelect.charsSelected[j] = false;
+                }
+            }
+            game.setScreen(characterSelect);
+        }
+
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;
 
