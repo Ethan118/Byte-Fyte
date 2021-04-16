@@ -6,6 +6,7 @@ import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -19,6 +20,7 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         Character chara;
         Projectile projectile;
+        Laser laser;
         Wall wall;
         DeathWall deathWall;
         Collider collider;
@@ -124,6 +126,24 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
 
+            case  Tags.LASER_BIT | Tags.PLAYER_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
+                    chara = (Character) fixA.getUserData();
+                    laser = (Laser) fixB.getUserData();
+                } else {
+                    chara = (Character) fixB.getUserData();
+                    laser = (Laser) fixA.getUserData();
+                }
+
+                if (!(laser.parent == chara)) {
+                    Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (laser.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (laser.parent.pos.y)) * 100.0f) / 100.0f);
+                    direction.x = Math.signum(direction.x);
+                    direction.y = Math.signum(direction.y);
+
+                    Vector2 force = new Vector2(direction.x * laser.power, direction.y * laser.power);
+                    chara.Hit(laser.damage, force, laser.hitStun);
+                }
+                break;
             case Tags.PROJECTILE_BIT | Tags.GROUND_BIT:
             case Tags.PROJECTILE_BIT | Tags.DEATH_BARRIER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PROJECTILE_BIT) {

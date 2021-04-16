@@ -4,8 +4,15 @@ import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.Keys;
-import ca.error404.bytefyte.scene.LoadTMap;
-import ca.error404.bytefyte.scene.MainMenu;
+import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.LoadBattleMap;
+import ca.error404.bytefyte.scene.ScreenWipe;
+import ca.error404.bytefyte.scene.menu.CharacterSelect;
+import ca.error404.bytefyte.scene.menu.MainMenu;
+import ca.error404.bytefyte.scene.menu.MenuScene;
+import ca.error404.bytefyte.scene.menu.TitleScreen;
+import ca.error404.bytefyte.ui.Button;
+import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -36,6 +43,7 @@ public class Main extends Game {
 	public static final int WIDTH = 384;
 	public static final int HEIGHT = 216;
 	public static final float PPM = 100;
+	public static boolean debug = false;
 	public Music music;
 
 	public static int musicVolume = 5;
@@ -54,7 +62,8 @@ public class Main extends Game {
 	public static AssetManager audioManager;
 	public static AssetManager manager;
 
-	public static Array<Controller> controllers = new Array<>();
+	public static Controller[] controllers = {null, null, null, null};
+	public static Array<Controller> allControllers = new Array<>();
 	public static Hashtable<Controller, Array<Integer>> recentButtons = new Hashtable<>();
 
 	public static ArrayList<GameObject> gameObjects = new ArrayList<>();
@@ -66,17 +75,22 @@ public class Main extends Game {
 	public static ArrayList<GameObject> uiToAdd = new ArrayList<>();
 	public static ArrayList<GameObject> uiToRemove = new ArrayList<>();
 
+	public static ArrayList<MenuCursor> cursors = new ArrayList<>();
+	public static ArrayList<Button> buttons = new ArrayList<>();
+	public static ArrayList<ScreenWipe> transitions = new ArrayList<>();
+
 	public static BitmapFont battleNameFont;
 	public static BitmapFont percentNumFont;
 	public static BitmapFont percentFont;
+	public static BitmapFont menuFont;
 
 	@Override
 	public void create () {
-		for (int i=1; i < 25; i++) {
+		for (int i=0; i < 24; i++) {
 			try {
-				String fileName = String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i);
+				String fileName = String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1);
 
-				File file = new File(String.valueOf(Gdx.files.internal(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i))));
+				File file = new File(String.valueOf(Gdx.files.internal(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1))));
 
 				ClassLoader classLoader = Main.class.getClassLoader();
 				InputStream inputStream = classLoader.getResourceAsStream(fileName);
@@ -94,18 +108,40 @@ public class Main extends Game {
 		}
 
 		batch = new SpriteBatch();
-
 		audioManager = new AssetManager();
-
 		manager = new AssetManager();
 
 		loadFonts();
 
+		reloadControllers();
+
+//		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
+//		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
+//		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
+//		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
+//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(-350, 0), null));
+		setScreen(new TitleScreen(this));
+	}
+
+	public void reloadControllers() {
 		if (Controllers.getControllers().size > 0) {
+			int currentController = 0;
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
 				if (ControllerButtons.isXboxController(cont)) {
-					controllers.add(cont);
+					if (currentController < 4) {
+						controllers[currentController] = cont;
+						currentController += 1;
+						recentButtons.put(cont, new Array<Integer>());
+						cont.addListener(new ControllerAdapter() {
+							public boolean buttonDown(Controller controller, int buttonIndex) {
+								recentButtons.get(controller).add(buttonIndex);
+								return false;
+							}
+						});
+					}
+
+					allControllers.add(cont);
 					recentButtons.put(cont, new Array<Integer>());
 					cont.addListener(new ControllerAdapter() {
 						public boolean buttonDown(Controller controller, int buttonIndex) {
@@ -116,11 +152,6 @@ public class Main extends Game {
 				}
 			}
 		}
-
-//		setScreen(new LoadTMap("Halberd", this, new Vector2(-350, 0)));
-//		setScreen(new LoadTMap("Forsaken City", this, new Vector2(1, 0), new String[4]));
-//		setScreen(new LoadTMap("Russia", this, new Vector2(0, 0)));
-		setScreen(new MainMenu(this));
 	}
 
 	public void loadFonts() {
@@ -145,6 +176,15 @@ public class Main extends Game {
 		fontParameter.size = 20;
 
 		percentFont = fontGenerator.generateFont(fontParameter);
+
+		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/upheaval.ttf"));
+		fontParameter.size = 90;
+		fontParameter.borderWidth = 5;
+		fontParameter.borderColor = Color.BLACK;
+		fontParameter.shadowColor = new Color(28 / 255f, 28 / 255f, 28 / 255f, 1);
+		fontParameter.shadowOffsetX = 5;
+		fontParameter.shadowOffsetY = 5;
+		menuFont = fontGenerator.generateFont(fontParameter);
 
 		battleNameFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		percentFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -318,23 +358,6 @@ public class Main extends Game {
 	@Override
 	public void render () {
 		super.render();
-	}
-
-	// this is bad code that should be replaced later
-	public static Vector2 leftStick() {
-		Vector2 moveVector = new Vector2();
-
-		if (controllers.size > 0) {
-			moveVector.x = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS)) >= deadZone ? controllers.get(0).getAxis(ControllerButtons.L_STICK_HORIZONTAL_AXIS) : 0f;
-			moveVector.y = Math.abs(controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS)) >= deadZone ? -controllers.get(0).getAxis(ControllerButtons.L_STICK_VERTICAL_AXIS) : 0f;
-		}
-
-		if (Gdx.input.isKeyPressed(Keys.MOVE_RIGHT)) moveVector.x += 1;
-		if (Gdx.input.isKeyPressed(Keys.MOVE_LEFT)) moveVector.x -= 1;
-		if (Gdx.input.isKeyPressed(Keys.MOVE_UP)) moveVector.y += 1;
-		if (Gdx.input.isKeyPressed(Keys.MOVE_DOWN)) moveVector.y -= 1;
-
-		return moveVector;
 	}
 
 	// checks if element is in list

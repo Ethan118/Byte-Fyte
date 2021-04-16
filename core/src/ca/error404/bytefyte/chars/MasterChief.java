@@ -2,16 +2,15 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
+import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MasterChief extends Character {
 
-    public MasterChief(TMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+    public MasterChief(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF");
         weight = 1.2f;
         walkSpeed = 0.9f;
@@ -19,6 +18,8 @@ public class MasterChief extends Character {
         manualSpriteOffset = new Vector2(1100, 350);
 
         projectilesOnScreen = new ArrayList<>(1);
+
+        walk.setFrameDuration(1/60f);
     }
 
     /*

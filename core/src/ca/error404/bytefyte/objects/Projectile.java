@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Projectile extends GameObject {
+    public Vector2 startPos;
     public Vector2 pos;
     public Vector2 vel;
     public Vector2 offset;
@@ -30,7 +31,7 @@ public class Projectile extends GameObject {
 
     private final Animation<TextureRegion> anim;
     private final TextureAtlas atlas;
-    private final float elapsedTime = 0f;
+    private float elapsedTime = 0f;
 
     private float delay;
 
@@ -44,6 +45,7 @@ public class Projectile extends GameObject {
      * pre: parent Character, position, velocity, gravity, spin, max distance to travel, force applied on hit, damage dealt, duration of stun on hit, path to the animation, path to the atlas containing animation, duration before spawned
      * post: instantiates a new projectile with given parameters
      */
+
     public Projectile(Character parent, Vector2 offset, Vector2 vel, float gravity, float spin, float maxDistance, float power, float damage, float hitStun, String animPath, String atlasPath, float delay) {
         super();
 
@@ -52,6 +54,7 @@ public class Projectile extends GameObject {
         this.offset = offset;
 
         this.pos = new Vector2(parent.pos.x + offset.x, parent.pos.y + offset.y);
+        startPos = this.pos;
         this.vel = vel;
         this.maxDistance = maxDistance;
 
@@ -75,6 +78,12 @@ public class Projectile extends GameObject {
 
 
         setRegion(sprite);
+    }
+
+    public Projectile (Character parent, Vector2 offset, Vector2 vel, float gravity, float spin, float maxDistance, float power, float damage, float hitStun, String animPath, String atlasPath, float delay, float spriteScale) {
+        this(parent, offset, vel, gravity, spin, maxDistance, power, damage, hitStun, animPath, atlasPath, delay);
+
+        this.spriteScale = spriteScale;
     }
 
     /**
@@ -119,6 +128,7 @@ public class Projectile extends GameObject {
             // if the body is not defined, define it
             if (b2body == null) {
                 pos = new Vector2(parent.pos.x + offset.x, parent.pos.y + offset.y);
+                startPos = pos;
                 define();
             }
 
@@ -129,7 +139,7 @@ public class Projectile extends GameObject {
             vel.y -= gravity;
 
             // checks if the projectile has reached a max distance
-            if (pos.len() >= maxDistance) {
+            if (Math.abs(pos.dst(startPos)) >= maxDistance) {
                 destroy();
             } else {
 
@@ -143,6 +153,7 @@ public class Projectile extends GameObject {
                 b2body.setTransform(b2body.getPosition(), (float) Math.toRadians(vel.angleDeg() - 90));
             }
 
+            setRegion(getFrame(delta));
             // sets the bounds of the graphics
             setBounds(b2body.getPosition().x - (getRegionWidth() / spriteScale / Main.PPM / 2), b2body.getPosition().y - (getRegionHeight() / spriteScale / Main.PPM / 2), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
 
@@ -175,11 +186,24 @@ public class Projectile extends GameObject {
         }
     }
 
+    private TextureRegion getFrame(float delta) {
+        TextureRegion region;
+
+        elapsedTime += delta;
+
+        region = anim.getKeyFrame(elapsedTime, true);
+        return region;
+    }
+
     @Override
     public void destroy() {
         remove = true;
 
 //        Removes this projectile from the parent's arraylist
-        parent.projectilesOnScreen.remove(this);
+        try {
+            parent.projectilesOnScreen.remove(this);
+        } catch (Exception ignored) {
+
+        }
     }
 }

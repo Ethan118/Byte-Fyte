@@ -6,8 +6,7 @@ import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.TMap;
-import ca.error404.bytefyte.scene.TestScene;
+import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
@@ -22,6 +21,7 @@ public abstract class Character extends GameObject {
 
     public Controller controller;
     public float deadzone = Main.deadZone;
+    public boolean hasBeenHit = false;
 
     public float percent = 0f;
     public float stunTimer;
@@ -70,8 +70,8 @@ public abstract class Character extends GameObject {
 
     public float weight = 1f;
 
-    public float hitboxScale = 18;
-    public float spriteScale = 15;
+    public float hitboxScale;
+    public float spriteScale;
     protected Vector2 spriteOffset = Vector2.Zero;
     public Vector2 manualSpriteOffset = Vector2.Zero;
 
@@ -80,35 +80,35 @@ public abstract class Character extends GameObject {
     public Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
-    protected final Animation<TextureRegion> idle;
-    protected final Animation<TextureRegion> walk;
-    protected final Animation<TextureRegion> run;
+    protected Animation<TextureRegion> idle;
+    protected Animation<TextureRegion> walk;
+    protected Animation<TextureRegion> run;
 
-    protected final Animation<TextureRegion> jump;
-    protected final Animation<TextureRegion> fall;
-    protected final Animation<TextureRegion> hit;
+    protected Animation<TextureRegion> jump;
+    protected Animation<TextureRegion> fall;
+    protected Animation<TextureRegion> hit;
 
-    protected final Animation<TextureRegion> neutralAttack;
-    protected final Animation<TextureRegion> upTilt;
-    protected final Animation<TextureRegion> downTilt;
-    protected final Animation<TextureRegion> sideTilt;
+    protected Animation<TextureRegion> neutralAttack;
+    protected Animation<TextureRegion> upTilt;
+    protected Animation<TextureRegion> downTilt;
+    protected Animation<TextureRegion> sideTilt;
 
-    protected final Animation<TextureRegion> neutralB;
-    protected final Animation<TextureRegion> upB;
-    protected final Animation<TextureRegion> downB;
-    protected final Animation<TextureRegion> sideB;
+    protected Animation<TextureRegion> neutralB;
+    protected Animation<TextureRegion> upB;
+    protected Animation<TextureRegion> downB;
+    protected Animation<TextureRegion> sideB;
 
-    protected final Animation<TextureRegion> nair;
-    protected final Animation<TextureRegion> dair;
-    protected final Animation<TextureRegion> fair;
-    protected final Animation<TextureRegion> bair;
-    protected final Animation<TextureRegion> uair;
+    protected Animation<TextureRegion> nair;
+    protected Animation<TextureRegion> dair;
+    protected Animation<TextureRegion> fair;
+    protected Animation<TextureRegion> bair;
+    protected Animation<TextureRegion> uair;
 
-    protected final Animation<TextureRegion> upSmash;
-    protected final Animation<TextureRegion> downSmash;
-    protected final Animation<TextureRegion> sideSmash;
+    protected Animation<TextureRegion> upSmash;
+    protected Animation<TextureRegion> downSmash;
+    protected Animation<TextureRegion> sideSmash;
 
-    protected final Animation<TextureRegion> dashAttack;
+    protected Animation<TextureRegion> dashAttack;
 
 
     public ArrayList<Projectile> projectilesOnScreen;
@@ -196,11 +196,11 @@ public abstract class Character extends GameObject {
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
+    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
     }
 
-    public Character(TMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
+    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
         super();
         this.spriteScale = spriteScale;
         this.hitboxScale = hitboxScale;
@@ -283,7 +283,7 @@ public abstract class Character extends GameObject {
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
-        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT;
+        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT | Tags.LASER_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -330,7 +330,7 @@ public abstract class Character extends GameObject {
     * pre: None
     * post: Handles any and all controller or keyboard inputs for a specific player
     */
-    private void handleInput() {
+    protected void handleInput() {
 
 //        Sets the movement vector of the player to 0 (directional input)
         moveVector.set(0f, 0f);
@@ -441,8 +441,7 @@ public abstract class Character extends GameObject {
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
-
-
+        hasBeenHit = false;
         if (dead) {
             Main.players.remove(this);
             destroy();
@@ -463,7 +462,6 @@ public abstract class Character extends GameObject {
         // checks if the player is currently using up special
         if (animState == AnimationState.SPECIAL_U) {
             afterUpB = true;
-
         }
 
         // counts down move timer
@@ -866,6 +864,19 @@ public abstract class Character extends GameObject {
                 break;
         }
 
+        region = checkFacing(region);
+
+        // offsets sprite
+        spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
+        spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
+
+        // sets the lock animation if the attack animation is set and the move timer is still counting or the animation is not finished
+        lockAnim = attackAnimation != null && (moveTimer > 0 || !attackAnimation.isAnimationFinished(elapsedTime));
+
+        return region;
+    }
+
+    public TextureRegion checkFacing(TextureRegion region) {
         // Decide which direction to face
         if (grounded && attackAnimation == null) {
             if ((vel.x > 0) && !region.isFlipX()) {
@@ -889,13 +900,6 @@ public abstract class Character extends GameObject {
             }
         }
 
-        // offsets sprite
-        spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
-        spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
-
-        // sets the lock animation if the attack animation is set and the move timer is still counting or the animation is not finished
-        lockAnim = attackAnimation != null && (moveTimer > 0 || !attackAnimation.isAnimationFinished(elapsedTime));
-
         return region;
     }
 
@@ -905,6 +909,7 @@ public abstract class Character extends GameObject {
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
         if (respawnTimer <= 0) {
+            hasBeenHit = true;
             animState = AnimationState.HIT;
 
             percent = Math.min(percent + damage, 999.9f);
