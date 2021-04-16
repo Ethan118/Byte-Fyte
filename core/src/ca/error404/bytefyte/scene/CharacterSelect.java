@@ -75,6 +75,7 @@ public class CharacterSelect implements Screen {
 
         if (checkChars()) {
             System.out.println(characters);
+//            game.setScreen(new VictoryScreen(game, characters, cursors));
             game.setScreen(new MapSelect(game, cursors, characters, this));
         }
 

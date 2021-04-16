@@ -179,7 +179,7 @@ public class TMap implements Screen {
                     characterSelect.charsSelected[j] = false;
                 }
             }
-            game.setScreen(characterSelect);
+            game.setScreen(new VictoryScreen(game, characters, characterSelect.cursors));
         }
 
         bgPos.x += scrollVector.x * deltaTime;
