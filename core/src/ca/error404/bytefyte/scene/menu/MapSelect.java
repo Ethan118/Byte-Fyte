@@ -24,7 +24,7 @@ public class MapSelect extends MenuScene {
         super.show();
         background = new Texture("sprites/menu/main_bg.png");
 
-        new MenuCursor(new Vector2(0, 0), Main.controllers[0], game);
+        new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
 
         new Button(new Vector2(300, 400), game, "Halberd") { public void click() {
             new ScreenWipe(new LoadBattleMap("Halberd", game, new Vector2(-350, 0), "kirby"), game);

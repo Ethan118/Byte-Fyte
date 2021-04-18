@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class LoadBattleMap implements Screen {

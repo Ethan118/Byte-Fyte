@@ -5,6 +5,7 @@ import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.scene.LoadBattleMap;
 import ca.error404.bytefyte.scene.ScreenWipe;
+import ca.error404.bytefyte.scene.menu.rebind.KeyboardRebind;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Gdx;
@@ -30,7 +31,7 @@ public class SettingsMenu extends MenuScene {
         super.show();
         background = new Texture("sprites/menu/main_bg.png");
 
-        pointer = new MenuCursor(new Vector2(0, 0), Main.controllers[0], game);
+        pointer = new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
 
         // Screen Settings
 
@@ -205,6 +206,20 @@ public class SettingsMenu extends MenuScene {
                 Main.debug = !Main.debug;
             }
         };
+
+        // Controlller Rebind
+
+//        new Button(new Vector2(1920 / 2f, 350), game, "Change Keyboard Controls") {
+//            public void click() {
+//                new ScreenWipe(new KeyboardRebind(game), game);
+//            }
+//        };
+//
+//        new Button(new Vector2(1920 / 2f, 275), game, "Change Controller Controls") {
+//            public void click() {
+//                new ScreenWipe(new ControllerRebind(game), game);
+//            }
+//        };
 
         // Navigation Buttons
 

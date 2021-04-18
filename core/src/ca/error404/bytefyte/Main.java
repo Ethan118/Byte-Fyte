@@ -115,12 +115,14 @@ public class Main extends Game {
 
 		reloadControllers();
 
-//		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
+		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
 //		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
 //		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
 //		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
-//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(-350, 0), null));
-		setScreen(new TitleScreen(this));
+//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
+		setScreen(new LoadBattleMap("Fawful's Castle", this, new Vector2(0, 0), "mario"));
+//		setScreen(new LoadBattleMap("Castle Bleck", this, new Vector2(20, 0), "paper mario"));
+//		setScreen(new TitleScreen(this));
 	}
 
 	public void reloadControllers() {

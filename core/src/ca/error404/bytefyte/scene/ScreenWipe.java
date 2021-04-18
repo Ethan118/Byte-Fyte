@@ -18,6 +18,7 @@ public class ScreenWipe {
     Screen newScreen;
     boolean hasSwitched = false;
     Main game;
+    float timer = 2f;
 
     public ScreenWipe(Screen newScreen, Main game) {
         Main.transitions.add(this);
@@ -28,11 +29,16 @@ public class ScreenWipe {
     }
 
     public void update(float delta) {
-        rect.x += delta * 4000;
+        if (timer == 2f || timer <= 0) {
+            rect.x += delta * 4000;
+        }
 
         if (rect.x > -screen.getWorldWidth() * 0.1 && !hasSwitched) {
-            hasSwitched = true;
-            game.setScreen(newScreen);
+            timer -= delta;
+            if (timer <= 0) {
+                hasSwitched = true;
+                game.setScreen(newScreen);
+            }
         } else if (rect.x > screen.getWorldWidth()) {
             renderer.dispose();
             Main.transitions.remove(this);

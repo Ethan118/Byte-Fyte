@@ -32,7 +32,7 @@ public class MainMenu extends MenuScene {
 
     public void show() {
         super.show();
-        new MenuCursor(new Vector2(0, 0), Main.controllers[0], game);
+        new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
 
         new Button(new Vector2(960, 400), game, "Fyte!") {
             public void click() {

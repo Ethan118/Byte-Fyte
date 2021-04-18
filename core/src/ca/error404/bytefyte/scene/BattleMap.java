@@ -231,9 +231,9 @@ public class BattleMap implements Screen {
             b2dr.render(world, gamecam.combined);
         }
 
-        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
-
         hud.draw();
+
+        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
     public void drawBackground() {

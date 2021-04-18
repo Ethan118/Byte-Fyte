@@ -935,6 +935,9 @@ public abstract class Character extends GameObject {
         moveVector.x = 0;
         moveVector.y = 0;
         knockedOff = true;
+        ground();
+        afterUpB = false;
+        grounded = false;
 
 //        Checks if the user has stocks (lives) left
         prevGoToPos = new Vector2(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);

@@ -24,7 +24,7 @@ public class CharacterSelect extends MenuScene {
         new MenuCursor(new Vector2(0, 0), Main.controllers[2], game);
         new MenuCursor(new Vector2(0, 0), Main.controllers[3], game);
 
-        new Button(new Vector2(200, 400), game, "Master Chief") {
+        new Button(new Vector2(200, 600), game, "Master Chief") {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "masterchief";
             }
@@ -36,9 +36,15 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(600, 400), game, "Kirby") {
+        new Button(new Vector2(600, 800), game, "Kirby") {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "kirby";
+            }
+        };
+
+        new Button(new Vector2(600, 1000), game, "Madeline") {
+            public void click() {
+                CharacterSelect.characters[cursor.getID()] = "madeline";
             }
         };
 
