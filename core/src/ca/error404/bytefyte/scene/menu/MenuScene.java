@@ -27,7 +27,7 @@ public class MenuScene implements Screen {
     //delairing variables
     protected ShapeRenderer shapeRenderer;
     protected Texture background;
-    private Vector2 bgPos = new Vector2(0, 0);
+    protected Vector2 bgPos = new Vector2(0, 0);
     protected int xSpeed = -100;
     protected int ySpeed = -100;
     protected final Main game;

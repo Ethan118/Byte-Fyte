@@ -11,6 +11,7 @@ import ca.error404.bytefyte.objects.BattleCam;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.tools.WorldContactListener;
+import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -55,9 +56,14 @@ public class BattleMap implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
+    private int playersAlive;
+
     private Texture background;
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
+
+    private String[] characters;
+    private CharacterSelect characterSelect;
 
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
@@ -133,6 +139,7 @@ public class BattleMap implements Screen {
                 }
                 chara.facingLeft = (boolean) object.getProperties().get("left");
                 chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+
             }
         }
 
@@ -152,6 +159,23 @@ public class BattleMap implements Screen {
     }
 
     public void update(float deltaTime) {
+        int i = 0;
+        playersAlive = 0;
+        for (Character character: Main.players) {
+            i ++;
+            if (character != null) {
+                if (character.dead) {
+                    Main.players.set(i, null);
+                } else {
+                    playersAlive += 1;
+                }
+            }
+        }
+
+        if (playersAlive == 1) {
+            new ScreenWipe(new VictoryScreen(game, characters), game);
+        }
+
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;
 
@@ -204,7 +228,7 @@ public class BattleMap implements Screen {
             Main.recentButtons.get(key).clear();
         }
 
-        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).update(deltaTime);
+        for (int j=0; j < Main.transitions.size(); j++) Main.transitions.get(j).update(deltaTime);
     }
     public void render(float delta) {
         update(delta);

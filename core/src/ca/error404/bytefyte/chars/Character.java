@@ -123,7 +123,7 @@ public abstract class Character extends GameObject {
     public int stockCount = 3;
     public Vector2 respawnPos = new Vector2();
 
-    protected boolean dead = false;
+    public boolean dead = false;
     protected boolean knockedOff = false;
 
 //    Creating an enum to handle the state of movement the player is in
