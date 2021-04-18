@@ -41,7 +41,7 @@ public class LoadBattleMap implements Screen {
     private float minLoadTime = 10f;
 
     public LoadBattleMap(String tmap, Main game, Vector2 scrollVector, String series) {
-    public LoadTMap(String tmap, Main game, Vector2 scrollVector, String[] characters, CharacterSelect characterSelect) {
+//    public LoadTMap(String tmap, Main game, Vector2 scrollVector, String[] characters, CharacterSelect characterSelect) {
         this.game = game;
         this.scrollVector = scrollVector;
         this.characters = characters;

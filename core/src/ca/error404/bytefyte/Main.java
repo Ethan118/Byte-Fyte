@@ -7,6 +7,7 @@ import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.LoadBattleMap;
 import ca.error404.bytefyte.scene.ScreenWipe;
+import ca.error404.bytefyte.scene.VictoryScreen;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.scene.menu.MainMenu;
 import ca.error404.bytefyte.scene.menu.MenuScene;
@@ -115,12 +116,13 @@ public class Main extends Game {
 
 		reloadControllers();
 
-//		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
+//		CharacterSelect.characters = new String[] {"madeline", "masterchief", null, null};
 //		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
 //		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
 //		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
 //		setScreen(new LoadBattleMap("Training Room", this, new Vector2(-350, 0), null));
 		setScreen(new TitleScreen(this));
+//		setScreen(new VictoryScreen(this, CharacterSelect.characters));
 	}
 
 	public void reloadControllers() {

@@ -65,12 +65,9 @@ public class BattleMap implements Screen {
     private String[] characters;
     private CharacterSelect characterSelect;
 
-    public TMap(String[] characters, CharacterSelect characterSelect, Main game, TiledMap map, Vector2 scrollVector, Texture background) {
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
         game.batch = new SpriteBatch();
-
-        this.characterSelect = characterSelect;
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -121,27 +118,34 @@ public class BattleMap implements Screen {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
 
                     }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
                         chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("madeline")) {
                     try {
                         chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
-                } else {
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+                } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("kirby")){
                     try {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
+                    chara.facingLeft = (boolean) object.getProperties().get("left");
+                    chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
                 }
-                chara.facingLeft = (boolean) object.getProperties().get("left");
-                chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
+
             }
         }
 
@@ -175,14 +179,7 @@ public class BattleMap implements Screen {
         }
 
         if (playersAlive == 1) {
-            System.out.println("True");
-            for (int j = 0; j < 4; j++) {
-                if (characterSelect.cursors[j] != null) {
-                    characterSelect.characters[j] = null;
-                    characterSelect.charsSelected[j] = false;
-                }
-            }
-            game.setScreen(new VictoryScreen(game, characters, characterSelect.cursors));
+            new ScreenWipe(new VictoryScreen(game, characters), game);
         }
 
         bgPos.x += scrollVector.x * deltaTime;
@@ -237,7 +234,7 @@ public class BattleMap implements Screen {
             Main.recentButtons.get(key).clear();
         }
 
-        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).update(deltaTime);
+        for (int j=0; j < Main.transitions.size(); j++) Main.transitions.get(j).update(deltaTime);
     }
     public void render(float delta) {
         update(delta);
@@ -264,9 +261,10 @@ public class BattleMap implements Screen {
             b2dr.render(world, gamecam.combined);
         }
 
-        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
 
         hud.draw();
+        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
+
     }
 
     public void drawBackground() {
