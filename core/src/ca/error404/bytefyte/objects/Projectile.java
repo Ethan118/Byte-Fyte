@@ -45,6 +45,7 @@ public class Projectile extends GameObject {
      * pre: parent Character, position, velocity, gravity, spin, max distance to travel, force applied on hit, damage dealt, duration of stun on hit, path to the animation, path to the atlas containing animation, duration before spawned
      * post: instantiates a new projectile with given parameters
      */
+
     public Projectile(Character parent, Vector2 offset, Vector2 vel, float gravity, float spin, float maxDistance, float power, float damage, float hitStun, String animPath, String atlasPath, float delay) {
         super();
 
@@ -199,6 +200,10 @@ public class Projectile extends GameObject {
         remove = true;
 
 //        Removes this projectile from the parent's arraylist
-        parent.projectilesOnScreen.remove(this);
+        try {
+            parent.projectilesOnScreen.remove(this);
+        } catch (Exception ignored) {
+
+        }
     }
 }

@@ -3,10 +3,12 @@ package ca.error404.bytefyte.scene.menu;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.scene.LoadBattleMap;
+import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,12 +20,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Set;
+
 public class MenuScene implements Screen {
 
     //delairing variables
     protected ShapeRenderer shapeRenderer;
     protected Texture background;
-    private Vector2 bgPos = new Vector2(0, 0);
+    protected Vector2 bgPos = new Vector2(0, 0);
     protected int xSpeed = -100;
     protected int ySpeed = -100;
     protected final Main game;
@@ -34,6 +38,10 @@ public class MenuScene implements Screen {
     // menuscene function
     public MenuScene(Main game) {
         this.game = game;
+    }
+
+    @Override
+    public void show() {
         game.cursors.clear();
         game.buttons.clear();
 
@@ -43,11 +51,6 @@ public class MenuScene implements Screen {
         cam.position.set(960, 540, cam.position.z);
         cam.update();
         viewport = new FitViewport(1920, 1080, cam);
-    }
-
-    @Override
-    public void show() {
-
     }
 
     @Override
@@ -63,16 +66,27 @@ public class MenuScene implements Screen {
 
         drawBackground();
 
+        for (Button button : Main.buttons) { button.draw(game.batch); }
+
         for (MenuCursor cursor : Main.cursors) { cursor.draw(game.batch); }
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        if (Main.debug) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        for (MenuCursor cursor : Main.cursors) { shapeRenderer.rect(cursor.rect.getX(), cursor.rect.getY(), cursor.rect.getWidth(), cursor.rect.getHeight()); }
+            for (MenuCursor cursor : Main.cursors) {
+                shapeRenderer.rect(cursor.rect.getX(), cursor.rect.getY(), cursor.rect.getWidth(), cursor.rect.getHeight());
+            }
 
-        for (Button button : game.buttons) { shapeRenderer.rect(button.buttonRect.getX(), button.buttonRect.getY(), button.buttonRect.getWidth(), button.buttonRect.getHeight()); }
+            for (Button button : game.buttons) {
+                shapeRenderer.rect(button.buttonRect.getX(), button.buttonRect.getY(), button.buttonRect.getWidth(), button.buttonRect.getHeight());
+            }
+
+            shapeRenderer.end();
+        }
 
         game.batch.end();
-        shapeRenderer.end();
+
+        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
     public void drawBackground() {
@@ -120,6 +134,14 @@ public class MenuScene implements Screen {
 
         for (MenuCursor cursor : Main.cursors) { cursor.update(deltaTime); }
         for (int i=0; i < game.buttons.size(); i++) { game.buttons.get(i).update(); }
+
+        // clear all controller inputs
+        Set<Controller> keys = Main.recentButtons.keySet();
+        for (Controller key : keys) {
+            Main.recentButtons.get(key).clear();
+        }
+
+        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).update(deltaTime);
     }
 
     @Override

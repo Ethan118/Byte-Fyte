@@ -1,79 +1,285 @@
 package ca.error404.bytefyte.scene.menu;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.constants.Globals;
+import ca.error404.bytefyte.constants.ScreenSizes;
+import ca.error404.bytefyte.scene.LoadBattleMap;
+import ca.error404.bytefyte.scene.ScreenWipe;
+import ca.error404.bytefyte.scene.menu.rebind.KeyboardRebind;
+import ca.error404.bytefyte.ui.Button;
+import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
+import org.ini4j.Wini;
 
-public class SettingsMenu implements Screen {
+import java.io.File;
+import java.io.IOException;
 
-    //delairing variables
-    ShapeRenderer shapeRenderer;
-    BitmapFont font;
-    private final Main game;
+public class SettingsMenu extends MenuScene {
+    public MenuCursor pointer;
+    public static boolean toRefresh = false;
+    public static float timer;
 
-
-
-    // menuscene function
     public SettingsMenu(Main game) {
-        this.game = game;
-
+        super(game);
     }
 
-    @Override
     public void show() {
+        super.show();
+        background = new Texture("sprites/menu/main_bg.png");
 
+        pointer = new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
+
+        // Screen Settings
+
+        new Button(new Vector2(500, 1000), game, "Screen Size") {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+        };
+
+        new Button(new Vector2(500, 925), game, "< " +  ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0) + "x" + ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1) + " >") {
+            public void update() {
+                if (isClicked()) {
+                    click();
+                }
+
+                string = "< " +  ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0) + "x" + ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1) + " >";
+
+                layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
+
+                this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+            }
+
+            public void click() {
+                if (cursor.pos.x < pos.x) {
+                    ScreenSizes.screenSize = ScreenSizes.screenSize <= 0 ? ScreenSizes.screenSizes.size() - 1 : ScreenSizes.screenSize - 1;
+                } else {
+                    ScreenSizes.screenSize = ScreenSizes.screenSize >= ScreenSizes.screenSizes.size() - 1 ? 0 : ScreenSizes.screenSize + 1;
+                }
+            }
+        };
+
+        new Button(new Vector2(1300, 1000), game, "Full Screen") {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+        };
+
+        new Button(new Vector2(1300, 925), game, "Off") {
+            public void update() {
+                if (isClicked()) {
+                    click();
+                }
+
+                if (ScreenSizes.fullScreen) {
+                    string = "On";
+                } else {
+                    string = "Off";
+                }
+
+                layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
+
+                this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+            }
+
+            public void click() {
+                ScreenSizes.fullScreen = !ScreenSizes.fullScreen;
+            }
+        };
+
+        // Volume Settings
+
+        new Button(new Vector2(1920 / 2f, 800), game, "Music Volume") {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+        };
+
+        new Button(new Vector2(1920 / 2f, 725), game, "< " +  Main.musicVolume + " >") {
+            public void update() {
+                if (isClicked()) {
+                    click();
+                }
+
+                string = "< " +  Main.musicVolume + " >";
+
+                layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
+
+                this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+            }
+
+            public void click() {
+                if (cursor.pos.x < pos.x) {
+                    Main.musicVolume = Math.max(Main.musicVolume - 1, 0);
+                } else {
+                    Main.musicVolume = Math.min(Main.musicVolume + 1, 10);
+                }
+            }
+        };
+
+        new Button(new Vector2(400, 725), game, "SFX Volume") {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+        };
+
+        new Button(new Vector2(400, 650), game, "< " +  Main.sfxVolume + " >") {
+            public void update() {
+                if (isClicked()) {
+                    click();
+                }
+
+                string = "< " +  Main.sfxVolume + " >";
+
+                layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
+
+                this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+            }
+
+            public void click() {
+                if (cursor.pos.x < pos.x) {
+                    Main.sfxVolume = Math.max(Main.sfxVolume - 1, 0);
+                } else {
+                    Main.sfxVolume = Math.min(Main.sfxVolume + 1, 10);
+                }
+            }
+        };
+
+        new Button(new Vector2(1550, 725), game, "Video Volume") {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+        };
+
+        new Button(new Vector2(1550, 650), game, "< " +  Main.cutsceneVolume + " >") {
+            public void update() {
+                if (isClicked()) {
+                    click();
+                }
+
+                string = "< " +  Main.cutsceneVolume + " >";
+
+                layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
+
+                this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+            }
+
+            public void click() {
+                if (cursor.pos.x < pos.x) {
+                    Main.cutsceneVolume = Math.max(Main.cutsceneVolume - 1, 0);
+                } else {
+                    Main.cutsceneVolume = Math.min(Main.cutsceneVolume + 1, 10);
+                }
+            }
+        };
+
+        // Debug Settings
+
+        new Button(new Vector2(1920 / 2f, 600), game, "Hitboxes") {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+        };
+
+        new Button(new Vector2(1920 / 2f, 525), game, "Invisible") {
+            public void update() {
+                if (isClicked()) {
+                    click();
+                }
+
+                if (Main.debug) {
+                    string = "Visible";
+                } else {
+                    string = "Invisible";
+                }
+
+                layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
+
+                this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+            }
+
+            public void click() {
+                Main.debug = !Main.debug;
+            }
+        };
+
+        // Controlller Rebind
+
+//        new Button(new Vector2(1920 / 2f, 350), game, "Change Keyboard Controls") {
+//            public void click() {
+//                new ScreenWipe(new KeyboardRebind(game), game);
+//            }
+//        };
+//
+//        new Button(new Vector2(1920 / 2f, 275), game, "Change Controller Controls") {
+//            public void click() {
+//                new ScreenWipe(new ControllerRebind(game), game);
+//            }
+//        };
+
+        // Navigation Buttons
+
+        new Button(new Vector2(200, 100), game, "Back") {
+            public void click() {
+                new ScreenWipe(new MainMenu(game), game);
+            }
+        };
+
+        new Button(new Vector2(1920 / 2f, 100), game, "Apply") {
+            public void click() {
+
+                File settings = new File(Globals.workingDirectory + "settings.ini");
+
+                try {
+                    Wini ini = new Wini(settings);
+                    ini.add("Settings", "screen size", ScreenSizes.screenSize);
+                    ini.add("Settings", "music volume", Main.musicVolume);
+                    ini.add("Settings", "sfx volume", Main.sfxVolume);
+                    ini.add("Settings", "cutscene volume", Main.cutsceneVolume);
+                    ini.add("Settings", "fullscreen", ScreenSizes.fullScreen);
+                    ini.add("Settings", "debug", Main.debug);
+                    ini.store();
+
+                    if (ScreenSizes.fullScreen) {
+                        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                    } else {
+                        Gdx.graphics.setWindowedMode(ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0), ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                game.music.setVolume(Main.musicVolume / 10f);
+
+                Main.cursors.clear();
+                Main.recentButtons.clear();
+                game.reloadControllers();
+                game.loadFonts();
+
+                SettingsMenu.toRefresh = true;
+                SettingsMenu.timer = 1f;
+            }
+        };
     }
 
-    @Override
-    //render function
-    public void render(float delta) {
+    public void update(float delta) {
+        if (toRefresh && timer <= 0) {
+            Main.cursors.clear();
+            Main.recentButtons.clear();
+            game.reloadControllers();
+            game.loadFonts();
+            pointer = new MenuCursor(new Vector2(pointer.pos.x, pointer.pos.y), Main.controllers[0], game);
 
+            for (Button button : Main.buttons) { button.cursor = pointer; }
+            toRefresh = false;
+        }
 
-        //font used
-        BitmapFont font = new BitmapFont();
+        timer -= delta;
 
-        //drawing things
-        Gdx.gl.glClearColor(0, 0.5f, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.begin();
-
-        //text drawing
-        font.draw(game.batch, "Settings", Gdx.graphics.getWidth()*.4f, Gdx.graphics.getHeight() * .85f);
-        font.draw(game.batch, "Volume (slider will be added)", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .4f);
-        font.draw(game.batch, "Controls", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .5f);
-        font.draw(game.batch, "Screen settings", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .6f);
-        font.draw(game.batch, "Back", Gdx.graphics.getWidth()*.25f, Gdx.graphics.getHeight() * .7f);
-        game.batch.end();
+        super.update(delta);
     }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-
-
 }

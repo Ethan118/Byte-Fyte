@@ -21,6 +21,7 @@ public abstract class Character extends GameObject {
 
     public Controller controller;
     public float deadzone = Main.deadZone;
+    public boolean hasBeenHit = false;
 
     public float percent = 0f;
     public float stunTimer;
@@ -122,7 +123,7 @@ public abstract class Character extends GameObject {
     public int stockCount = 3;
     public Vector2 respawnPos = new Vector2();
 
-    protected boolean dead = false;
+    public boolean dead = false;
     protected boolean knockedOff = false;
 
 //    Creating an enum to handle the state of movement the player is in
@@ -440,6 +441,7 @@ public abstract class Character extends GameObject {
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
+        hasBeenHit = false;
         if (dead) {
             Main.players.remove(this);
             destroy();
@@ -862,6 +864,19 @@ public abstract class Character extends GameObject {
                 break;
         }
 
+        region = checkFacing(region);
+
+        // offsets sprite
+        spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
+        spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
+
+        // sets the lock animation if the attack animation is set and the move timer is still counting or the animation is not finished
+        lockAnim = attackAnimation != null && (moveTimer > 0 || !attackAnimation.isAnimationFinished(elapsedTime));
+
+        return region;
+    }
+
+    public TextureRegion checkFacing(TextureRegion region) {
         // Decide which direction to face
         if (grounded && attackAnimation == null) {
             if ((vel.x > 0) && !region.isFlipX()) {
@@ -885,13 +900,6 @@ public abstract class Character extends GameObject {
             }
         }
 
-        // offsets sprite
-        spriteOffset.x = ((TextureAtlas.AtlasRegion) region).offsetX;
-        spriteOffset.y = ((TextureAtlas.AtlasRegion) region).offsetY;
-
-        // sets the lock animation if the attack animation is set and the move timer is still counting or the animation is not finished
-        lockAnim = attackAnimation != null && (moveTimer > 0 || !attackAnimation.isAnimationFinished(elapsedTime));
-
         return region;
     }
 
@@ -901,6 +909,7 @@ public abstract class Character extends GameObject {
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
         if (respawnTimer <= 0) {
+            hasBeenHit = true;
             animState = AnimationState.HIT;
 
             percent = Math.min(percent + damage, 999.9f);
@@ -926,6 +935,9 @@ public abstract class Character extends GameObject {
         moveVector.x = 0;
         moveVector.y = 0;
         knockedOff = true;
+        ground();
+        afterUpB = false;
+        grounded = false;
 
 //        Checks if the user has stocks (lives) left
         prevGoToPos = new Vector2(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
