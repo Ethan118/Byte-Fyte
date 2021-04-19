@@ -16,6 +16,8 @@ import java.util.ArrayList;
 public class Madeline extends Character {
     Badeline badeline;
 
+
+
     Vector2 leftOffset = new Vector2(17f, 5f);
     Vector2 rightOffset = new Vector2(15f, 5f);
 
@@ -206,7 +208,9 @@ public class Madeline extends Character {
     @Override
     void specialSide() {
         if (currentDash > 0) {
-            grounded = false;
+            if (moveVector.y > 0) {
+                grounded = false;
+            }
 
             new Collider(new Vector2(0, 0), 30, 30, this, 2f, 5.2f, 0.25f, 0);
 

@@ -114,13 +114,6 @@ public class Badeline extends GameObject {
         elapsedTime = state == prevState ? elapsedTime + delta : 0;
 
         switch (state) {
-            case LASER:
-                region = charge_beam.getKeyFrame(elapsedTime, false);
-                currentAnim = charge_beam;
-                break;
-//            case PROJECTILE:
-//                region = charge_projectile.getKeyFrame(elapsedTime, false);
-//                break;
             case HIT:
                 region = hit.getKeyFrame(elapsedTime, true);
                 currentAnim = null;

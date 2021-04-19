@@ -233,10 +233,15 @@ public class BattleMap implements Screen {
             world.step(1 / 60f, 6, 2);
             for (GameObject obj : Main.gameObjects) {
                 if (obj.remove) {
-                    world.destroyBody(obj.b2body);
+                    try {
+                        world.destroyBody(obj.b2body);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     Main.objectsToRemove.add(obj);
+                } else {
+                    obj.update(deltaTime);
                 }
-                obj.update(deltaTime);
             }
 
             // Manage which game objects are active
