@@ -159,22 +159,22 @@ public class BattleMap implements Screen {
     }
 
     public void update(float deltaTime) {
-        int i = 0;
-        playersAlive = 0;
-        for (Character character: Main.players) {
-            i ++;
-            if (character != null) {
-                if (character.dead) {
-                    Main.players.set(i, null);
-                } else {
-                    playersAlive += 1;
-                }
-            }
-        }
-
-        if (playersAlive == 1) {
-            new ScreenWipe(new VictoryScreen(game, characters), game);
-        }
+//        int i = 0;
+//        playersAlive = 0;
+//        for (Character character: Main.players) {
+//            i ++;
+//            if (character != null) {
+//                if (character.dead) {
+//                    Main.players.set(i, null);
+//                } else {
+//                    playersAlive += 1;
+//                }
+//            }
+//        }
+//
+//        if (playersAlive == 1) {
+//            new ScreenWipe(new VictoryScreen(game, characters), game);
+//        }
 
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;

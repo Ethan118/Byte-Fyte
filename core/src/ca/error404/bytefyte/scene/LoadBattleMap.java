@@ -34,17 +34,12 @@ public class LoadBattleMap implements Screen {
     Texture loadTexSpin;
     TiledMap map;
     TmxMapLoader mapLoader = new TmxMapLoader();
-    public String[] characters;
-    private CharacterSelect characterSelect;
 
     private float minLoadTime = 10f;
 
     public LoadBattleMap(String tmap, Main game, Vector2 scrollVector, String series) {
-//    public LoadTMap(String tmap, Main game, Vector2 scrollVector, String[] characters, CharacterSelect characterSelect) {
         this.game = game;
         this.scrollVector = scrollVector;
-        this.characters = characters;
-        this.characterSelect = characterSelect;
         game.music = this.game.music;
         this.tmap = tmap;
         this.series = series;

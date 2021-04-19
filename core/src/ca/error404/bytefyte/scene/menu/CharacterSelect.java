@@ -19,6 +19,7 @@ public class CharacterSelect extends MenuScene {
     private Button startButton;
 
     public static String[] characters = {null, null, null, null};
+    Texture charWall = new Texture("sprites/menu/charwall.png");
 
     boolean keyboardUsed = false;
     // menuscene function
@@ -38,7 +39,7 @@ public class CharacterSelect extends MenuScene {
             }
         }
 
-        new Button(new Vector2(200, 600), game, "Master Chief") {
+        new Button(new Vector2(1510, 430), game, new Texture[]{ new Texture("sprites/menu/characters/masterchief.png"), new Texture("sprites/menu/characters/masterchief_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "masterchief";
                 if (checkChars()) {
@@ -47,7 +48,7 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(400, 400), game, "Shy Guy") {
+        new Button(new Vector2(365, 840), game, new Texture[]{ new Texture("sprites/menu/characters/shyguy.png"), new Texture("sprites/menu/characters/shyguy_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "shyguy";
                 if (checkChars()) {
@@ -56,7 +57,7 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(600, 800), game, "Kirby") {
+        new Button(new Vector2(929, 840), game, new Texture[]{ new Texture("sprites/menu/characters/kirby.png"), new Texture("sprites/menu/characters/kirby_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "kirby";
                 if (checkChars()) {
@@ -65,18 +66,14 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(600, 1000), game, "Madeline") {
+        new Button(new Vector2(365, 430), game, new Texture[]{ new Texture("sprites/menu/characters/madeline.png"), new Texture("sprites/menu/characters/madeline_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "madeline";
+                if (checkChars()) {
+                    createButton();
+                }
             }
         };
-
-        new Button(new Vector2(600, 200), game, "Maps") {
-            public void click() {
-                new ScreenWipe(new MapSelect(game), game);
-            }
-        };
-
     }
 
     private boolean checkChars() {
@@ -111,6 +108,10 @@ public class CharacterSelect extends MenuScene {
                 }
             };
         }
+    }
+
+    public void render(float delta) {
+        super.render(delta);
     }
 }
 

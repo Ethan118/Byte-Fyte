@@ -52,8 +52,9 @@ public class VictoryScreen extends MenuScene {
             }
         }
         ready = new boolean[numOfPlayers];
-        readyButton = new Button(new Vector2(0, 0), game, new Texture(Gdx.files.internal("sprites/readyButton.png"))) {public void click(){
-            ready[cursor.getID()] = true;
+        readyButton = new Button(new Vector2(0, 0), game, new Texture[] { new Texture("sprites/readyButton.png") }) {
+            public void click(){
+                ready[cursor.getID()] = true;
         }};
     }
 
