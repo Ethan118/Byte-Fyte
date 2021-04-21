@@ -23,6 +23,7 @@ public class Madeline extends Character {
     Vector2 rightOffset = new Vector2(15f, 5.5f);
 
     private LinkedList<HairPoint> hairPoints = new LinkedList<>();
+    private Vector2 hairVector;
 
     private float badelineMeter = 0;
     private final float badelineMaxMeter = 100;
@@ -74,6 +75,8 @@ public class Madeline extends Character {
     }
 
     public void update (float delta) {
+        hairVector = pos.cpy().add(vel.cpy().scl(-1));
+
         if (moveCooldown > 0) {
             moveCooldown -= delta;
         } else {

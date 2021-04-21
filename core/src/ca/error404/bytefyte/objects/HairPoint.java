@@ -11,17 +11,19 @@ import com.badlogic.gdx.math.Vector2;
 public class HairPoint extends Sprite {
     private Character parent;
     public Vector2 pos;
+    public Vector2 goToPos;
 
     private TextureRegion texture;
 
     private Vector2 restPos;
+    public float maxDist;
     private float size;
 
     private Color color;
 
-    public HairPoint(Character parent, String texturePath, String atlasPath, Vector2 restPos, float size, Color color) {
+    public HairPoint(Character parent, String texturePath, Vector2 restPos, float size, Color color) {
         TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", parent.charname), TextureAtlas.class);
-        texture = textureAtlas.findRegion("hair");
+        texture = textureAtlas.findRegion(texturePath);
 
         this.parent = parent;
 
