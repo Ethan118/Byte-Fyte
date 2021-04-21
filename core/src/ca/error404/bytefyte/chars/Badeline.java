@@ -13,12 +13,13 @@ public class Badeline extends GameObject {
     private Character parent;
 
     public Vector2 pos;
+    public Vector2 targetPos;
 
-    private Vector2 spriteOffset = Vector2.Zero;
-    public Vector2 manualSpriteOffset = Vector2.Zero;
+    private final Vector2 spriteOffset = new Vector2(0, 0);
+    public Vector2 manualSpriteOffset = new Vector2(50f, 40f);
 
-    Vector2 leftOffset = new Vector2(40f, 30f);
-    Vector2 rightOffset = new Vector2(60f, 30f);
+    Vector2 leftOffset;
+    Vector2 rightOffset;
 
     private boolean lockAnim;
 
@@ -44,13 +45,18 @@ public class Badeline extends GameObject {
 
     private final float spriteScale = 0.4f;
 
+    final float speed = 0.05f, ispeed = 1.0f-speed;
+
     public Badeline(Character parent) {
         super();
 
-        this.parent = parent;
-        pos = parent.pos;
+        leftOffset =  new Vector2(15f / spriteScale / Main.PPM, 15f / spriteScale / Main.PPM);
+        rightOffset =  new Vector2(-15f / spriteScale / Main.PPM, 15f / spriteScale / Main.PPM);
 
-        manualSpriteOffset = rightOffset;
+        this.parent = parent;
+        pos = parent.pos.cpy();
+        targetPos = parent.pos.cpy();
+        targetPos.add(rightOffset);
 
         state = STATE.IDLE;
         prevState = STATE.IDLE;
@@ -78,7 +84,7 @@ public class Badeline extends GameObject {
 
     @Override
     public void update(float delta) {
-        pos = parent.pos;
+        targetPos = parent.pos.cpy();
 
         prevState = state;
 
@@ -87,10 +93,14 @@ public class Badeline extends GameObject {
         }
 
         if (parent.facingLeft) {
-            manualSpriteOffset = leftOffset;
+            targetPos.add(leftOffset);
         } else {
-            manualSpriteOffset = rightOffset;
+            targetPos.add(rightOffset);
         }
+
+        pos.scl(ispeed);
+        targetPos.scl(speed);
+        pos.add(targetPos);
 
         setRegion(getFrame(delta));
         setBounds(pos.x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), pos.y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);

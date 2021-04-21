@@ -76,14 +76,14 @@ repeat: none
   index: -1
 comma
   rotate: false
-  xy: 7195, 6798
+  xy: 2719, 1109
   size: 126, 166
   orig: 142, 170
   offset: 8, 2
   index: -1
 decimal
   rotate: false
-  xy: 2626, 1147
+  xy: 2719, 979
   size: 126, 128
   orig: 142, 170
   offset: 8, 40
@@ -104,14 +104,42 @@ fs_meter_full
   index: -1
 hp
   rotate: false
-  xy: 2110, 819
+  xy: 7103, 4969
   size: 313, 205
   orig: 315, 213
   offset: 1, 4
   index: -1
-kirby_country
+kirby_1_country
   rotate: false
   xy: 5219, 4165
+  size: 450, 516
+  orig: 2835, 1701
+  offset: 2144, 1118
+  index: -1
+kirby_2_country
+  rotate: false
+  xy: 6909, 5684
+  size: 450, 516
+  orig: 2835, 1701
+  offset: 2144, 1118
+  index: -1
+kirby_3_country
+  rotate: false
+  xy: 7271, 6448
+  size: 450, 516
+  orig: 2835, 1701
+  offset: 2144, 1118
+  index: -1
+kirby_4_country
+  rotate: false
+  xy: 7723, 6448
+  size: 450, 516
+  orig: 2835, 1701
+  offset: 2144, 1118
+  index: -1
+kirby_country
+  rotate: false
+  xy: 6651, 4883
   size: 450, 516
   orig: 2835, 1701
   offset: 2144, 1118
@@ -125,14 +153,42 @@ kirby_ingame
   index: -1
 kirby_stock
   rotate: false
-  xy: 3805, 1749
+  xy: 7716, 6278
   size: 175, 168
   orig: 175, 168
   offset: 0, 0
   index: -1
-madeline_country
+madeline_1_country
   rotate: false
   xy: 1501, 896
+  size: 607, 379
+  orig: 2835, 1701
+  offset: 2075, 1251
+  index: -1
+madeline_2_country
+  rotate: false
+  xy: 2110, 896
+  size: 607, 379
+  orig: 2835, 1701
+  offset: 2075, 1251
+  index: -1
+madeline_3_country
+  rotate: false
+  xy: 1501, 515
+  size: 607, 379
+  orig: 2835, 1701
+  offset: 2075, 1251
+  index: -1
+madeline_4_country
+  rotate: false
+  xy: 2110, 515
+  size: 607, 379
+  orig: 2835, 1701
+  offset: 2075, 1251
+  index: -1
+madeline_country
+  rotate: false
+  xy: 1473, 134
   size: 607, 379
   orig: 2835, 1701
   offset: 2075, 1251
@@ -146,7 +202,7 @@ madeline_ingame
   index: -1
 madeline_stock
   rotate: false
-  xy: 1501, 724
+  xy: 7271, 6276
   size: 443, 170
   orig: 443, 170
   offset: 0, 0
@@ -158,9 +214,37 @@ marioluigi_ingame
   orig: 2835, 1701
   offset: 194, 222
   index: -1
+masterchief_1_country
+  rotate: false
+  xy: 6909, 5433
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_2_country
+  rotate: false
+  xy: 5676, 4535
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_3_country
+  rotate: false
+  xy: 5671, 4284
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_4_country
+  rotate: false
+  xy: 6192, 4549
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
 masterchief_country
   rotate: false
-  xy: 2110, 1026
+  xy: 5671, 4033
   size: 514, 249
   orig: 2835, 1701
   offset: 2135, 1282
@@ -174,14 +258,14 @@ masterchief_ingame
   index: -1
 masterchief_stock
   rotate: false
-  xy: 6909, 5432
+  xy: 7103, 5176
   size: 285, 255
   orig: 285, 255
   offset: 0, 0
   index: -1
 percent
   rotate: false
-  xy: 6651, 5165
+  xy: 2546, 26
   size: 236, 234
   orig: 241, 241
   offset: 2, 4
@@ -214,6 +298,13 @@ player_4_ingame
   orig: 2835, 1701
   offset: 0, 0
   index: -1
+sans_country
+  rotate: false
+  xy: 2082, 51
+  size: 462, 462
+  orig: 2835, 1701
+  offset: 2259, 1098
+  index: -1
 sans_ingame
   rotate: false
   xy: 2839, 3357
@@ -221,9 +312,44 @@ sans_ingame
   orig: 2835, 1701
   offset: 158, 222
   index: -1
+sans_stock
+  rotate: false
+  xy: 7893, 6285
+  size: 182, 161
+  orig: 182, 161
+  offset: 0, 0
+  index: -1
+shyguy_1_country
+  rotate: false
+  xy: 4009, 2844
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
+shyguy_2_country
+  rotate: false
+  xy: 4009, 2331
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
+shyguy_3_country
+  rotate: false
+  xy: 4009, 1818
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
+shyguy_4_country
+  rotate: false
+  xy: 3805, 1305
+  size: 428, 511
+  orig: 2835, 1701
+  offset: 2277, 1090
+  index: -1
 shyguy_country
   rotate: false
-  xy: 6909, 5689
+  xy: 4235, 1305
   size: 428, 511
   orig: 2835, 1701
   offset: 2277, 1090
@@ -237,7 +363,7 @@ shyguy_ingame
   index: -1
 shyguy_stock
   rotate: false
-  xy: 4009, 3104
+  xy: 2546, 262
   size: 203, 251
   orig: 203, 251
   offset: 0, 0

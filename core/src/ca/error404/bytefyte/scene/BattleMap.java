@@ -263,7 +263,16 @@ public class BattleMap implements Screen {
     public void drawBackground() {
         game.batch.begin();
         game.batch.setProjectionMatrix(bgCam.combined);
-        float w = (bgCam.viewportHeight / background.getHeight()) * background.getWidth();
+        float h;
+        float w;
+
+        if (background.getHeight() <= background.getWidth()) {
+            h = bgCam.viewportHeight;
+            w = (bgCam.viewportHeight / background.getHeight()) * background.getWidth();
+        } else {
+            h = (bgCam.viewportWidth / background.getWidth()) * background.getHeight();
+            w = bgCam.viewportWidth;
+        }
 
         if (bgPos.x <= -(w + (1920 / 2f))) {
             bgPos.x += w;
@@ -271,10 +280,10 @@ public class BattleMap implements Screen {
             bgPos.x -= w;
         }
 
-        if (bgPos.y <= -(1080 - (-1080 / 2f))) {
-            bgPos.y += bgCam.viewportHeight;
-        } else if (bgPos.y >= (1080 - (-1080 / 2f))) {
-            bgPos.y -= bgCam.viewportHeight;
+        if (bgPos.y <= -(h - (-1080 / 2f))) {
+            bgPos.y += h;
+        } else if (bgPos.y >= (h - (-1080 / 2f))) {
+            bgPos.y -= h;
         }
 
         float x = bgPos.x;
@@ -284,10 +293,10 @@ public class BattleMap implements Screen {
         }
 
         while (x < bgCam.viewportWidth) {
-            game.batch.draw(background, x, bgPos.y, w, bgCam.viewportHeight);
-            game.batch.draw(background, x, bgPos.y + bgCam.viewportHeight, w, bgCam.viewportHeight);
-            game.batch.draw(background, x, bgPos.y - bgCam.viewportHeight, w, bgCam.viewportHeight);
-            game.batch.draw(background, x, bgPos.y - bgCam.viewportHeight * 2, w, bgCam.viewportHeight);
+            game.batch.draw(background, x, bgPos.y, w, h);
+            game.batch.draw(background, x, bgPos.y + h, w, h);
+            game.batch.draw(background, x, bgPos.y - h, w, h);
+            game.batch.draw(background, x, bgPos.y - h * 2, w, h);
 
             x += w;
         }

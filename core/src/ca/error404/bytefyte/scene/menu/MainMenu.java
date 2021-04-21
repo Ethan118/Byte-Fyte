@@ -22,26 +22,39 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.awt.*;
 
 public class MainMenu extends MenuScene {
-    private Vector2 cursorPos = new Vector2(0, 0);
-
     // menuscene function
     public MainMenu(Main game) {
         super(game);
         background = new Texture("sprites/menu/main_bg.png");
+        xSpeed = 0;
     }
 
     public void show() {
         super.show();
-        new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
+        new MenuCursor(new Vector2(420, 540), Main.controllers[0], game);
 
-        new Button(new Vector2(960, 400), game, "Fyte!") {
+        new Button(new Vector2(420, 540), game, new Texture[] { new Texture("sprites/menu/fyte.png"), new Texture("sprites/menu/fyte_selected.png") }) {
             public void click() {
                 new ScreenWipe(new CharacterSelect(this.game), game);
+                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
             }};
 
-        new Button(new Vector2(960, 500), game, "Settings") {
+        new Button(new Vector2(1520, 304), game, new Texture[] { new Texture("sprites/menu/settings.png"), new Texture("sprites/menu/settings_selected.png") }) {
             public void click() {
                 new ScreenWipe(new SettingsMenu(this.game), game);
+                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
+            }};
+
+        new Button(new Vector2(968, 540), game, new Texture[] { new Texture("sprites/menu/fawful.png"), new Texture("sprites/menu/fawful_selected.png") }) {
+            public void click() {
+//                new ScreenWipe(new SettingsMenu(this.game), game);
+//                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
+            }};
+
+        new Button(new Vector2(1520, 707), game, new Texture[] { new Texture("sprites/menu/vault.png"), new Texture("sprites/menu/vault_selected.png") }) {
+            public void click() {
+//                new ScreenWipe(new SettingsMenu(this.game), game);
+//                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
             }};
 
         if (game.music == null) {

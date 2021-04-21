@@ -114,7 +114,7 @@ public class Madeline extends Character {
             charging = false;
             badeline = new Badeline(this);
         } else if (!vel.isZero() && !badelineActive) {
-            badelineMeter = Math.min(badelineMeter + delta, badelineMaxMeter);
+            badelineMeter = Math.min(badelineMeter + (delta / 2), badelineMaxMeter);
         }
 
         if (badelineActive) {
@@ -234,7 +234,7 @@ public class Madeline extends Character {
             new Collider(new Vector2(0, 0), 30, 30, this, 2f, 5.2f, 0.25f, 0);
 
             if (!badelineActive) {
-                badelineMeter = Math.min(badelineMeter + 5, badelineMaxMeter);
+                badelineMeter = Math.min(badelineMeter + 1, badelineMaxMeter);
             }
 
             currentDash -= 1;

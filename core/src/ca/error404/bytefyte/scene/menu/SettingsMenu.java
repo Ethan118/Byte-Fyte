@@ -3,13 +3,10 @@ package ca.error404.bytefyte.scene.menu;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
-import ca.error404.bytefyte.scene.LoadBattleMap;
 import ca.error404.bytefyte.scene.ScreenWipe;
-import ca.error404.bytefyte.scene.menu.rebind.KeyboardRebind;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -29,7 +26,8 @@ public class SettingsMenu extends MenuScene {
 
     public void show() {
         super.show();
-        background = new Texture("sprites/menu/main_bg.png");
+        background = new Texture("sprites/menu/settings_bg.png");
+        xSpeed = 0;
 
         pointer = new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
 
@@ -226,6 +224,7 @@ public class SettingsMenu extends MenuScene {
         new Button(new Vector2(200, 100), game, "Back") {
             public void click() {
                 new ScreenWipe(new MainMenu(game), game);
+                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
             }
         };
 
