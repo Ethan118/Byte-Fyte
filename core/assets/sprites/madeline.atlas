@@ -640,14 +640,14 @@ hit
   size: 38, 30
   orig: 96, 96
   offset: 29, 31
-  index: 3
+  index: 2
 hit
   rotate: false
   xy: 3663, 32
   size: 38, 30
   orig: 96, 96
   offset: 29, 31
-  index: 2
+  index: 3
 badeline_charge
   rotate: false
   xy: 3703, 32
@@ -2160,6 +2160,13 @@ fall
   orig: 32, 32
   offset: 10, 0
   index: 4
+hair
+  rotate: false
+  xy: 2405, 2
+  size: 8, 8
+  orig: 10, 10
+  offset: 1, 1
+  index: -1
 hit
   rotate: false
   xy: 1683, 2
@@ -2307,13 +2314,13 @@ hit
   orig: 96, 96
   offset: 30, 32
   index: 1
-hit
+hit_1 (4)
   rotate: false
   xy: 3663, 2
   size: 36, 28
   orig: 96, 96
   offset: 30, 32
-  index: 4
+  index: -1
 hit
   rotate: false
   xy: 3863, 33
@@ -2355,7 +2362,7 @@ hit
   size: 18, 18
   orig: 96, 96
   offset: 39, 34
-  index: 27
+  index: 28
 hit
   rotate: false
   xy: 3701, 12
@@ -2369,7 +2376,7 @@ hit
   size: 18, 18
   orig: 96, 96
   offset: 39, 34
-  index: 28
+  index: 27
 hit
   rotate: false
   xy: 3897, 44
@@ -2411,7 +2418,7 @@ hit
   size: 16, 16
   orig: 96, 96
   offset: 40, 35
-  index: 30
+  index: 29
 hit
   rotate: false
   xy: 3934, 46
@@ -2425,7 +2432,7 @@ hit
   size: 16, 16
   orig: 96, 96
   offset: 40, 35
-  index: 29
+  index: 30
 idle
   rotate: false
   xy: 2707, 16
@@ -2495,13 +2502,6 @@ idle
   size: 13, 11
   orig: 32, 32
   offset: 11, 0
-  index: 16
-idle
-  rotate: false
-  xy: 1928, 30
-  size: 13, 11
-  orig: 32, 32
-  offset: 11, 0
   index: 15
 idle
   rotate: false
@@ -2509,7 +2509,14 @@ idle
   size: 13, 11
   orig: 32, 32
   offset: 11, 0
-  index: 14
+  index: 16
+idle
+  rotate: false
+  xy: 1928, 30
+  size: 13, 11
+  orig: 32, 32
+  offset: 11, 0
+  index: 13
 idle
   rotate: false
   xy: 1928, 30
@@ -2523,7 +2530,7 @@ idle
   size: 13, 11
   orig: 32, 32
   offset: 11, 0
-  index: 13
+  index: 14
 idle
   rotate: false
   xy: 1943, 34
@@ -2817,7 +2824,7 @@ neutral_b
   size: 15, 18
   orig: 32, 32
   offset: 10, 0
-  index: 20
+  index: 21
 neutral_b
   rotate: false
   xy: 3738, 12
@@ -2831,7 +2838,7 @@ neutral_b
   size: 15, 18
   orig: 32, 32
   offset: 10, 0
-  index: 21
+  index: 20
 neutral_b
   rotate: false
   xy: 3755, 13
@@ -2999,21 +3006,7 @@ neutral_b
   size: 15, 14
   orig: 32, 32
   offset: 10, 0
-  index: 48
-neutral_b
-  rotate: false
-  xy: 4051, 48
-  size: 15, 14
-  orig: 32, 32
-  offset: 10, 0
   index: 47
-neutral_b
-  rotate: false
-  xy: 4051, 48
-  size: 15, 14
-  orig: 32, 32
-  offset: 10, 0
-  index: 44
 neutral_b
   rotate: false
   xy: 4051, 48
@@ -3028,6 +3021,20 @@ neutral_b
   orig: 32, 32
   offset: 10, 0
   index: 46
+neutral_b
+  rotate: false
+  xy: 4051, 48
+  size: 15, 14
+  orig: 32, 32
+  offset: 10, 0
+  index: 44
+neutral_b
+  rotate: false
+  xy: 4051, 48
+  size: 15, 14
+  orig: 32, 32
+  offset: 10, 0
+  index: 48
 neutral_b
   rotate: false
   xy: 3871, 18
@@ -3405,7 +3412,7 @@ walk
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 2
+  index: 4
 walk
   rotate: false
   xy: 2659, 16
@@ -3419,7 +3426,7 @@ walk
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 4
+  index: 2
 walk
   rotate: false
   xy: 2659, 2
@@ -3433,7 +3440,7 @@ walk
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 19
+  index: 20
 walk
   rotate: false
   xy: 2659, 2
@@ -3447,7 +3454,7 @@ walk
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 20
+  index: 19
 walk
   rotate: false
   xy: 2675, 16
@@ -3461,14 +3468,14 @@ walk
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 23
+  index: 22
 walk
   rotate: false
   xy: 2675, 16
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 22
+  index: 23
 walk
   rotate: false
   xy: 2675, 16
@@ -3489,6 +3496,13 @@ walk
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
+  index: 44
+walk
+  rotate: false
+  xy: 2675, 2
+  size: 14, 12
+  orig: 32, 32
+  offset: 11, 0
   index: 42
 walk
   rotate: false
@@ -3497,13 +3511,6 @@ walk
   orig: 32, 32
   offset: 11, 0
   index: 43
-walk
-  rotate: false
-  xy: 2675, 2
-  size: 14, 12
-  orig: 32, 32
-  offset: 11, 0
-  index: 44
 walk
   rotate: false
   xy: 2691, 16
@@ -3524,14 +3531,14 @@ walk
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 46
+  index: 48
 walk
   rotate: false
   xy: 2691, 16
   size: 14, 12
   orig: 32, 32
   offset: 11, 0
-  index: 48
+  index: 46
 walk
   rotate: false
   xy: 1914, 44
@@ -3545,14 +3552,14 @@ walk
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 6
+  index: 7
 walk
   rotate: false
   xy: 1914, 44
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 7
+  index: 6
 walk
   rotate: false
   xy: 1914, 44
@@ -3580,14 +3587,14 @@ walk
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 10
+  index: 11
 walk
   rotate: false
   xy: 1820, 31
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 11
+  index: 10
 walk
   rotate: false
   xy: 1836, 31
@@ -3601,14 +3608,14 @@ walk
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 14
+  index: 16
 walk
   rotate: false
   xy: 1836, 31
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 16
+  index: 14
 walk
   rotate: false
   xy: 1836, 31
@@ -3629,13 +3636,6 @@ walk
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 26
-walk
-  rotate: false
-  xy: 1852, 31
-  size: 14, 11
-  orig: 32, 32
-  offset: 11, 0
   index: 28
 walk
   rotate: false
@@ -3644,6 +3644,13 @@ walk
   orig: 32, 32
   offset: 11, 0
   index: 27
+walk
+  rotate: false
+  xy: 1852, 31
+  size: 14, 11
+  orig: 32, 32
+  offset: 11, 0
+  index: 26
 walk
   rotate: false
   xy: 1868, 31
@@ -3664,14 +3671,14 @@ walk
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 31
+  index: 30
 walk
   rotate: false
   xy: 1868, 31
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 30
+  index: 31
 walk
   rotate: false
   xy: 1884, 31
@@ -3685,7 +3692,7 @@ walk
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 36
+  index: 34
 walk
   rotate: false
   xy: 1884, 31
@@ -3699,7 +3706,7 @@ walk
   size: 14, 11
   orig: 32, 32
   offset: 11, 0
-  index: 34
+  index: 36
 walk
   rotate: false
   xy: 1900, 31
@@ -3707,13 +3714,6 @@ walk
   orig: 32, 32
   offset: 11, 0
   index: 37
-walk
-  rotate: false
-  xy: 1900, 31
-  size: 14, 11
-  orig: 32, 32
-  offset: 11, 0
-  index: 38
 walk
   rotate: false
   xy: 1900, 31
@@ -3728,3 +3728,10 @@ walk
   orig: 32, 32
   offset: 11, 0
   index: 39
+walk
+  rotate: false
+  xy: 1900, 31
+  size: 14, 11
+  orig: 32, 32
+  offset: 11, 0
+  index: 38

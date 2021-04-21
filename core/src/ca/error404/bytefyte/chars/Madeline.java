@@ -1,7 +1,9 @@
 package ca.error404.bytefyte.chars;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.HairPoint;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
@@ -12,12 +14,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Madeline extends Character {
     Badeline badeline;
 
     Vector2 leftOffset = new Vector2(17f, 5.5f);
     Vector2 rightOffset = new Vector2(15f, 5.5f);
+
+    private LinkedList<HairPoint> hairPoints = new LinkedList<>();
 
     private float badelineMeter = 0;
     private final float badelineMaxMeter = 100;
@@ -73,6 +78,10 @@ public class Madeline extends Character {
             moveCooldown -= delta;
         } else {
             moveCooldown = 0;
+        }
+
+        if (knockedOff) {
+            badelineMeter = 0;
         }
 
         if (charging) {
