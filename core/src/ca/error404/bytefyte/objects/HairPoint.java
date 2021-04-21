@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 public class HairPoint extends Sprite {
     private Character parent;
     public Vector2 pos;
-    public Vector2 goToPos;
+    public Vector2 targetPos;
 
     private TextureRegion texture;
 
@@ -20,6 +20,8 @@ public class HairPoint extends Sprite {
     private float size;
 
     private Color color;
+
+    final float speed = 0.05f, ispeed = 1.0f-speed;
 
     public HairPoint(Character parent, String texturePath, Vector2 restPos, float size, Color color) {
         TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", parent.charname), TextureAtlas.class);
@@ -37,6 +39,12 @@ public class HairPoint extends Sprite {
     }
 
     public void update(float delta) {
+        targetPos = parent.pos.cpy().add(restPos);
+
+        pos.scl(ispeed);
+        targetPos.scl(speed);
+        pos.add(targetPos);
+
         setBounds(pos.x - getWidth() / 2, pos.y - getHeight() / 2, getRegionWidth() / parent.spriteScale / Main.PPM, getRegionHeight() / parent.spriteScale / Main.PPM);
     }
 }

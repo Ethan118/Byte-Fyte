@@ -141,12 +141,12 @@ public class Madeline extends Character {
 
     @Override
     void basicNeutral() {
-        if (moveCooldown == 0) {
-            moveCooldown = 1f;
+        if (!badelineActive) {
+            new Collider(new Vector2(20, 0), 10, 25, this, 2f, 2f, 0.25f, 0);
+        } else {
+            if (moveCooldown == 0) {
+                moveCooldown = 1f;
 
-            if (!badelineActive) {
-                new Collider(new Vector2(20, 0), 10, 25, this, 2f, 2f, 0.25f, 0);
-            } else {
                 // badeline projectile
                 Vector2 dir = moveVector.cpy();
 
