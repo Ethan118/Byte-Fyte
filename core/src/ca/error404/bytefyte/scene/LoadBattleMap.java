@@ -34,6 +34,7 @@ public class LoadBattleMap implements Screen {
     Texture loadTexSpin;
     TiledMap map;
     TmxMapLoader mapLoader = new TmxMapLoader();
+    Texture tex;
 
     private float minLoadTime = 10f;
 
@@ -149,5 +150,8 @@ public class LoadBattleMap implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    private class Filter {
     }
 }

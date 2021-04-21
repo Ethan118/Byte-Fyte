@@ -43,7 +43,9 @@ public class Button {
         this.pos = pos;
         this.string = null;
         this.texture = texture[0];
-        this.selectTexture = texture[1];
+        if (texture[1] != null) {
+            this.selectTexture = texture[1];
+        }
         this.game = game;
         Main.buttons.add(this);
 

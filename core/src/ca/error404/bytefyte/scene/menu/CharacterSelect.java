@@ -14,18 +14,16 @@ public class CharacterSelect extends MenuScene {
 
     private boolean[] charsSelected = new boolean[4];
 
-    private boolean transition = false;
-
     private Button startButton;
 
     public static String[] characters = {null, null, null, null};
-    Texture charWall = new Texture("sprites/menu/charwall.png");
 
     boolean keyboardUsed = false;
     // menuscene function
     public CharacterSelect(Main game) {
         super(game);
-        background = new Texture("sprites/menu/main_bg.png");
+        xSpeed = 0;
+        background = new Texture("sprites/menu/char_bg.png");
     }
 
     public void show() {
@@ -39,7 +37,7 @@ public class CharacterSelect extends MenuScene {
             }
         }
 
-        new Button(new Vector2(1510, 430), game, new Texture[]{ new Texture("sprites/menu/characters/masterchief.png"), new Texture("sprites/menu/characters/masterchief_selected.png") }) {
+        new Button(new Vector2(1510, 430), game, new Texture[] { new Texture("sprites/menu/characters/masterchief.png"), new Texture("sprites/menu/characters/masterchief_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "masterchief";
                 if (checkChars()) {
@@ -48,7 +46,7 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(365, 840), game, new Texture[]{ new Texture("sprites/menu/characters/shyguy.png"), new Texture("sprites/menu/characters/shyguy_selected.png") }) {
+        new Button(new Vector2(365, 840), game, new Texture[] { new Texture("sprites/menu/characters/shyguy.png"), new Texture("sprites/menu/characters/shyguy_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "shyguy";
                 if (checkChars()) {
@@ -57,7 +55,7 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(929, 840), game, new Texture[]{ new Texture("sprites/menu/characters/kirby.png"), new Texture("sprites/menu/characters/kirby_selected.png") }) {
+        new Button(new Vector2(929, 840), game, new Texture[] { new Texture("sprites/menu/characters/kirby.png"), new Texture("sprites/menu/characters/kirby_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "kirby";
                 if (checkChars()) {
@@ -66,12 +64,32 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(365, 430), game, new Texture[]{ new Texture("sprites/menu/characters/madeline.png"), new Texture("sprites/menu/characters/madeline_selected.png") }) {
+        new Button(new Vector2(365, 430), game, new Texture[] { new Texture("sprites/menu/characters/madeline.png"), new Texture("sprites/menu/characters/madeline_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "madeline";
                 if (checkChars()) {
                     createButton();
                 }
+            }
+        };
+
+        new Button(new Vector2(1510, 840), game, new Texture[] { new Texture("sprites/menu/characters/mal_hidden.png"), null }) {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+
+            public void update() {
+
+            }
+        };
+
+        new Button(new Vector2(929, 430), game, new Texture[] { new Texture("sprites/menu/characters/sans_hidden.png"), null }) {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+
+            public void update() {
+
             }
         };
     }
@@ -101,10 +119,8 @@ public class CharacterSelect extends MenuScene {
         if (checkChars()) {
             startButton = new Button(new Vector2(600, 200), game, "Maps") {
                 public void click() {
-                    if (!transition) {
-                        new ScreenWipe(new MapSelect(game), game);
-                        transition = true;
-                    }
+                    new ScreenWipe(new MapSelect(game), game);
+                    for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
                 }
             };
         }

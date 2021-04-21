@@ -3,10 +3,13 @@ package ca.error404.bytefyte.scene;
 import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -24,7 +27,10 @@ public class ScreenWipe {
         Main.transitions.add(this);
         this.newScreen = newScreen;
         this.game = game;
-        screen  = new FitViewport(1920, 1080, new OrthographicCamera());
+        Camera cam = new OrthographicCamera(1920, 1080);
+        cam.position.set(960, 540, cam.position.z);
+        cam.update();
+        screen  = new FitViewport(1920, 1080, cam);
         rect = new Rectangle(-(int) (screen.getWorldWidth() * 1.2), 0, (int) (screen.getWorldWidth() * 1.2), screen.getWorldHeight());
     }
 
@@ -46,8 +52,10 @@ public class ScreenWipe {
     }
 
     public void draw() {
+        renderer.setProjectionMatrix(screen.getCamera().combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(Color.BLACK);
+        renderer.rect(-5, -5, 10, 10);
         renderer.rect(rect.x, rect.y, rect.getWidth(), rect.getHeight());
         renderer.end();
     }
