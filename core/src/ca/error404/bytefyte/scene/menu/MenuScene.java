@@ -169,8 +169,4 @@ public class MenuScene implements Screen {
         game.batch.dispose();
         shapeRenderer.dispose();
     }
-
-
-
-
 }

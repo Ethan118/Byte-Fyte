@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.awt.*;
+import java.util.Random;
 
 public class MainMenu extends MenuScene {
     // menuscene function
@@ -58,7 +59,15 @@ public class MainMenu extends MenuScene {
             }};
 
         if (game.music == null) {
-            game.music = game.newSong("menu");
+            Random rand = new Random();
+            int i = rand.nextInt(100);
+            System.out.println(i);
+
+            if (i == 2) {
+                game.music = game.newSong("never gonna give you up");
+            } else {
+                game.music = game.newSong("menu");
+            }
             game.music.setVolume(Main.musicVolume / 10f);
             game.music.play();
         }
