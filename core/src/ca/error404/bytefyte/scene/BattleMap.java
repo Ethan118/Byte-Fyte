@@ -72,7 +72,7 @@ public class BattleMap implements Screen {
         game.batch = new SpriteBatch();
         Random rand = new Random();
 
-        PlayerHealth.nerds = rand.nextInt(75);
+        PlayerHealth.nerds = rand.nextInt(50);
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);

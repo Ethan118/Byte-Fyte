@@ -14,19 +14,17 @@ public class HairPoint extends Sprite {
     public Vector2 pos;
     public Vector2 targetPos;
 
-    public Color color;
     public float size;
 
     private TextureRegion textureRegion;
 
     final float speed = 40.0f;
 
-    public HairPoint(Character parent, Color color, float size, String texturePath, String atlasPath) {
+    public HairPoint(Character parent, float size, String texturePath, String atlasPath) {
         this.parent = parent;
 
         this.pos = parent.pos.cpy();
         this.targetPos = parent.pos.cpy();
-        this.color = color;
         this.size = size / 7;
 
         TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", atlasPath), TextureAtlas.class);

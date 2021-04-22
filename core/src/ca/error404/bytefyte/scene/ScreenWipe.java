@@ -27,6 +27,7 @@ public class ScreenWipe {
         Main.transitions.add(this);
         this.newScreen = newScreen;
         this.game = game;
+        game.cursors.clear();
         Camera cam = new OrthographicCamera(1920, 1080);
         cam.position.set(960, 540, cam.position.z);
         cam.update();

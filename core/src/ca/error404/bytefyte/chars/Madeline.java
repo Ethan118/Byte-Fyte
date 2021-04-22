@@ -161,7 +161,7 @@ public class Madeline extends Character {
 
     void createHair() {
         for (int i = 0; i < 6; i++) {
-            hairPoints.add(new HairPoint(this, Color.PINK, Math.max(1, Math.min(7, 7-i)), "hair", charname));
+            hairPoints.add(new HairPoint(this, Math.max(1, Math.min(7, 7-i)), "hair", charname));
         }
     }
 
@@ -183,9 +183,9 @@ public class Madeline extends Character {
 
     public void drawHair(SpriteBatch batch) {
         for (HairPoint h : hairPoints) {
-            batch.setColor(currentColor);
+            h.setColor(currentColor);
             h.draw(batch);
-            batch.setColor(Color.WHITE);
+            h.setColor(Color.WHITE);
         }
     }
 
