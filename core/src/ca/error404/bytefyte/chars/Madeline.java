@@ -1,17 +1,22 @@
 package ca.error404.bytefyte.chars;
 
+import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.HairPoint;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Madeline extends Character {
     Badeline badeline;
@@ -19,9 +24,16 @@ public class Madeline extends Character {
     Vector2 leftOffset = new Vector2(17f, 5.5f);
     Vector2 rightOffset = new Vector2(15f, 5.5f);
 
+    private LinkedList<HairPoint> hairPoints = new LinkedList<>();
+
     private float badelineMeter = 0;
     private final float badelineMaxMeter = 100;
     private boolean badelineActive = false;
+
+    private final Color oneDash = new Color(172 / 255f, 50 / 255f, 50 / 255f, 1);
+    private final Color twoDashes = new Color(255 / 255f, 109 / 255f, 239 / 255f, 1);
+    private final Color emptyDashes = new Color(68 / 255f, 183 / 255f, 255 / 255f, 1);
+    private Color currentColor;
 
     private boolean charging = false;
 
@@ -66,6 +78,8 @@ public class Madeline extends Character {
         fall.setFrameDuration(1/30f);
 
         projectilesOnScreen = new ArrayList<>(1);
+
+        createHair();
     }
 
     public void update (float delta) {
@@ -73,6 +87,10 @@ public class Madeline extends Character {
             moveCooldown -= delta;
         } else {
             moveCooldown = 0;
+        }
+
+        if (knockedOff) {
+            badelineMeter = 0;
         }
 
         if (charging) {
@@ -125,16 +143,60 @@ public class Madeline extends Character {
         } else {
             manualSpriteOffset = rightOffset;
         }
+
+        switch (currentDash) {
+            case 0:
+                currentColor = emptyDashes;
+                break;
+            case 1:
+                currentColor = oneDash;
+                break;
+            case 2:
+                currentColor = twoDashes;
+                break;
+        }
+
+        simulateHair(delta);
+    }
+
+    void createHair() {
+        for (int i = 0; i < 6; i++) {
+            hairPoints.add(new HairPoint(this, Color.PINK, Math.max(1, Math.min(7, 7-i)), "hair", charname));
+        }
+    }
+
+    void simulateHair(float delta) {
+        Vector2 followPoint;
+
+        if (facingLeft) {
+            followPoint = pos.cpy().add(new Vector2(-0.025f, 0.125f));
+        } else {
+            followPoint = pos.cpy().add(new Vector2(0.025f, 0.125f));
+        }
+
+        for(HairPoint h : hairPoints) {
+            h.targetPos = followPoint;
+            h.update(delta);
+            followPoint = h.pos;
+        }
+    }
+
+    public void drawHair(SpriteBatch batch) {
+        for (HairPoint h : hairPoints) {
+            batch.setColor(currentColor);
+            h.draw(batch);
+            batch.setColor(Color.WHITE);
+        }
     }
 
     @Override
     void basicNeutral() {
-        if (moveCooldown == 0) {
-            moveCooldown = 1f;
+        if (!badelineActive) {
+            new Collider(new Vector2(20, 0), 10, 25, this, 2f, 2f, 0.25f, 0);
+        } else {
+            if (moveCooldown == 0) {
+                moveCooldown = 1f;
 
-            if (!badelineActive) {
-                new Collider(new Vector2(20, 0), 10, 25, this, 2f, 2f, 0.25f, 0);
-            } else {
                 // badeline projectile
                 Vector2 dir = moveVector.cpy();
 
@@ -215,7 +277,9 @@ public class Madeline extends Character {
     @Override
     void specialSide() {
         if (currentDash > 0) {
-            grounded = false;
+            if (moveVector.y > 0) {
+                grounded = false;
+            }
 
             new Collider(new Vector2(0, 0), 30, 30, this, 2f, 5.2f, 0.25f, 0);
 
