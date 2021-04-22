@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
 
+import java.util.Random;
+
 public class ShowSongName extends GameObject {
     private final BitmapFont font;
     private float timer = 4f;
@@ -34,8 +36,13 @@ public class ShowSongName extends GameObject {
 
         font = fontGenerator.generateFont(fontParameter);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Random rand = new Random();
 
-        layout.setText(font, Main.songName, Color.WHITE, 900f, Align.left, true);
+        if (rand.nextInt(100) == 2) {
+            layout.setText(font, "Ohw'v Pdnh D Ghdo! (Mxvw Vkdnh Pb Kdqg)", Color.WHITE, 1000f, Align.left, true);
+        } else {
+            layout.setText(font, Main.songName, Color.WHITE, 1000f, Align.left, true);
+        }
     }
 
     @Override

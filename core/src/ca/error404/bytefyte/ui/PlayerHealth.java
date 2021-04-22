@@ -3,6 +3,7 @@ package ca.error404.bytefyte.ui;
 import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
+import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 
 public class PlayerHealth extends GameObject {
 
@@ -19,6 +21,8 @@ public class PlayerHealth extends GameObject {
     private final Vector2 baseOffset = new Vector2();
     private final Vector2 countryOffset = new Vector2();
     private Vector2 pos = new Vector2();
+
+    protected static int nerds;
 
     private final Character chara;
 
@@ -33,6 +37,7 @@ public class PlayerHealth extends GameObject {
     private float numSpeed = 20f;
     private float num;
     private float prevNum = 0f;
+    private String charname;
 
     private Color color;
     private Color playerColor;
@@ -42,23 +47,44 @@ public class PlayerHealth extends GameObject {
         Main.objectsToAdd.remove(this);
         Main.uiToAdd.add(this);
         this.chara = chara;
+        Random rand = new Random();
 
         if (number == 1) {
             pos = new Vector2(25, 25);
+            this.charname = "I'M";
         } else if (number == 2) {
+            nerds = rand.nextInt(75);
             pos = new Vector2(525, 25);
+            this.charname = "WATCHING";
         } else if (number == 3) {
             pos = new Vector2(1025, 25);
+            this.charname = "YOU,";
         } else if (number == 4) {
             pos = new Vector2(1525, 25);
+            this.charname = "NERDS";
+        }
+
+        int bill = rand.nextInt(150);
+
+        if (CharacterSelect.characters[3] == null || nerds != 2) {
+            this.charname = chara.playerName;
         }
 
         TextureAtlas textureAtlas = Main.manager.get("sprites/battleUI.atlas", TextureAtlas.class);
 
+        if (bill == 2) {
+            playerHead = new TextureRegion(textureAtlas.findRegion("bill_ingame"));
+            stock = new TextureRegion(textureAtlas.findRegion("bill_stock"));
+            country = new TextureRegion(textureAtlas.findRegion("bill_country"));
+            if (nerds != 2) {
+                this.charname = "BILL";
+            }
+        } else {
+            playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
+            stock = new TextureRegion(textureAtlas.findRegion(String.format("%s_stock", charname)));
+            country = new TextureRegion(textureAtlas.findRegion(String.format("%s_country", charname)));
+        }
         playerBase = new TextureRegion(textureAtlas.findRegion(String.format("player_%d_ingame", number)));
-        playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
-        stock = new TextureRegion(textureAtlas.findRegion(String.format("%s_stock", charname)));
-        country = new TextureRegion(textureAtlas.findRegion(String.format("%s_country", charname)));
         fsCharge = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"));
         fsFull = new TextureRegion(textureAtlas.findRegion("fs_meter_full"));
 
@@ -66,10 +92,18 @@ public class PlayerHealth extends GameObject {
 
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
-        headOffset.x = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetX;
-        headOffset.y = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetY;
-        countryOffset.x = (textureAtlas.findRegion(String.format("%s_country", charname))).offsetX;
-        countryOffset.y = (textureAtlas.findRegion(String.format("%s_country", charname))).offsetY;
+
+        if (bill == 2) {
+            headOffset.x = (textureAtlas.findRegion("bill_ingame")).offsetX;
+            headOffset.y = (textureAtlas.findRegion("bill_ingame")).offsetY;
+            countryOffset.x = (textureAtlas.findRegion("bill_country")).offsetX;
+            countryOffset.y = (textureAtlas.findRegion("bill_country")).offsetY;
+        } else {
+            headOffset.x = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetX;
+            headOffset.y = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetY;
+            countryOffset.x = (textureAtlas.findRegion(String.format("%s_country", charname))).offsetX;
+            countryOffset.y = (textureAtlas.findRegion(String.format("%s_country", charname))).offsetY;
+        }
     }
 
     @Override
@@ -111,10 +145,10 @@ public class PlayerHealth extends GameObject {
         }
 
         for (int i=0; i < chara.stockCount; i++) {
-            batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
+            batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y - ((stock.getRegionHeight() / 2f) * 0.13f) + 20, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
         }
 
-        layout.setText(Main.battleNameFont, chara.playerName, Color.WHITE, 0, Align.center, false);
+        layout.setText(Main.battleNameFont, charname, Color.WHITE, 0, Align.center, false);
         Main.battleNameFont.draw(batch, layout, pos.x + 250, pos.y + 70);
     }
 

@@ -8,7 +8,9 @@ import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -23,11 +25,15 @@ public class Madeline extends Character {
     Vector2 rightOffset = new Vector2(15f, 5.5f);
 
     private LinkedList<HairPoint> hairPoints = new LinkedList<>();
-    private Vector2 hairVector;
 
     private float badelineMeter = 0;
     private final float badelineMaxMeter = 100;
     private boolean badelineActive = false;
+
+    private final Color oneDash = new Color(172 / 255f, 50 / 255f, 50 / 255f, 1);
+    private final Color twoDashes = new Color(255 / 255f, 109 / 255f, 239 / 255f, 1);
+    private final Color emptyDashes = new Color(68 / 255f, 183 / 255f, 255 / 255f, 1);
+    private Color currentColor;
 
     private boolean charging = false;
 
@@ -72,11 +78,11 @@ public class Madeline extends Character {
         fall.setFrameDuration(1/30f);
 
         projectilesOnScreen = new ArrayList<>(1);
+
+        createHair();
     }
 
     public void update (float delta) {
-        hairVector = pos.cpy().add(vel.cpy().scl(-1));
-
         if (moveCooldown > 0) {
             moveCooldown -= delta;
         } else {
@@ -136,6 +142,50 @@ public class Madeline extends Character {
             manualSpriteOffset = leftOffset;
         } else {
             manualSpriteOffset = rightOffset;
+        }
+
+        switch (currentDash) {
+            case 0:
+                currentColor = emptyDashes;
+                break;
+            case 1:
+                currentColor = oneDash;
+                break;
+            case 2:
+                currentColor = twoDashes;
+                break;
+        }
+
+        simulateHair(delta);
+    }
+
+    void createHair() {
+        for (int i = 0; i < 6; i++) {
+            hairPoints.add(new HairPoint(this, Color.PINK, Math.max(1, Math.min(7, 7-i)), "hair", charname));
+        }
+    }
+
+    void simulateHair(float delta) {
+        Vector2 followPoint;
+
+        if (facingLeft) {
+            followPoint = pos.cpy().add(new Vector2(-0.025f, 0.125f));
+        } else {
+            followPoint = pos.cpy().add(new Vector2(0.025f, 0.125f));
+        }
+
+        for(HairPoint h : hairPoints) {
+            h.targetPos = followPoint;
+            h.update(delta);
+            followPoint = h.pos;
+        }
+    }
+
+    public void drawHair(SpriteBatch batch) {
+        for (HairPoint h : hairPoints) {
+            batch.setColor(currentColor);
+            h.draw(batch);
+            batch.setColor(Color.WHITE);
         }
     }
 

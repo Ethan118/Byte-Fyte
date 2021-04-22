@@ -248,7 +248,17 @@ public class BattleMap implements Screen {
 
         viewport.apply();
 
-        for (GameObject obj : Main.gameObjects) obj.draw(game.batch);
+        for (GameObject obj : Main.gameObjects) {
+            try {
+                Madeline madeline = (Madeline) obj;
+                madeline.drawHair(game.batch);
+            } catch (Exception ignore) {
+
+            }
+
+            obj.draw(game.batch);
+        }
+
         game.batch.end();
 
         if (Main.debug) {

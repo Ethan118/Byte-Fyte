@@ -10,41 +10,36 @@ import com.badlogic.gdx.math.Vector2;
 
 public class HairPoint extends Sprite {
     private Character parent;
+
     public Vector2 pos;
     public Vector2 targetPos;
 
-    private TextureRegion texture;
+    public Color color;
+    public float size;
 
-    private Vector2 restPos;
-    public float maxDist;
-    private float size;
+    private TextureRegion textureRegion;
 
-    private Color color;
+    final float speed = 40.0f;
 
-    final float speed = 0.05f, ispeed = 1.0f-speed;
-
-    public HairPoint(Character parent, String texturePath, Vector2 restPos, float size, Color color) {
-        TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", parent.charname), TextureAtlas.class);
-        texture = textureAtlas.findRegion(texturePath);
-
+    public HairPoint(Character parent, Color color, float size, String texturePath, String atlasPath) {
         this.parent = parent;
 
-        this.restPos = restPos;
-        this.size = size;
-
+        this.pos = parent.pos.cpy();
+        this.targetPos = parent.pos.cpy();
         this.color = color;
+        this.size = size / 7;
 
-        setRegion(texture);
-        setBounds(pos.x - getWidth() / 2, pos.y - getHeight() / 2, getRegionWidth() / parent.spriteScale / Main.PPM, getRegionHeight() / parent.spriteScale / Main.PPM);
+        TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", atlasPath), TextureAtlas.class);
+        textureRegion = textureAtlas.findRegion(texturePath);
+
+        setRegion(textureRegion);
+        setBounds(pos.x - (getWidth() / 2), pos.y - (getHeight() / 2), (getRegionWidth() / this.parent.spriteScale / Main.PPM) * size, (getRegionHeight() / this.parent.spriteScale / Main.PPM) * size);
     }
 
     public void update(float delta) {
-        targetPos = parent.pos.cpy().add(restPos);
+        pos.lerp(targetPos, speed * delta);
 
-        pos.scl(ispeed);
-        targetPos.scl(speed);
-        pos.add(targetPos);
-
-        setBounds(pos.x - getWidth() / 2, pos.y - getHeight() / 2, getRegionWidth() / parent.spriteScale / Main.PPM, getRegionHeight() / parent.spriteScale / Main.PPM);
+        setRegion(textureRegion);
+        setBounds(pos.x - (getWidth() / 2), pos.y - (getHeight() / 2), (getRegionWidth() / this.parent.spriteScale / Main.PPM) * size, (getRegionHeight() / this.parent.spriteScale / Main.PPM) * size);
     }
 }
