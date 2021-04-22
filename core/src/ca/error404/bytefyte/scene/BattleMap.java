@@ -12,6 +12,7 @@ import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.tools.WorldContactListener;
 import ca.error404.bytefyte.ui.MenuCursor;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -37,6 +38,7 @@ import org.ini4j.Wini;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Set;
 
 public class BattleMap implements Screen {
@@ -68,6 +70,9 @@ public class BattleMap implements Screen {
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
         game.batch = new SpriteBatch();
+        Random rand = new Random();
+
+        PlayerHealth.nerds = rand.nextInt(75);
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -230,6 +235,7 @@ public class BattleMap implements Screen {
 
         for (int j=0; j < Main.transitions.size(); j++) Main.transitions.get(j).update(deltaTime);
     }
+
     public void render(float delta) {
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);

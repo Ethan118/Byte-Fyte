@@ -22,7 +22,7 @@ public class PlayerHealth extends GameObject {
     private final Vector2 countryOffset = new Vector2();
     private Vector2 pos = new Vector2();
 
-    protected static int nerds;
+    public static int nerds;
 
     private final Character chara;
 
@@ -53,7 +53,6 @@ public class PlayerHealth extends GameObject {
             pos = new Vector2(25, 25);
             this.charname = "I'M";
         } else if (number == 2) {
-            nerds = rand.nextInt(75);
             pos = new Vector2(525, 25);
             this.charname = "WATCHING";
         } else if (number == 3) {
@@ -64,7 +63,7 @@ public class PlayerHealth extends GameObject {
             this.charname = "NERDS";
         }
 
-        int bill = rand.nextInt(150);
+        int bill = rand.nextInt(200);
 
         if (CharacterSelect.characters[3] == null || nerds != 2) {
             this.charname = chara.playerName;
