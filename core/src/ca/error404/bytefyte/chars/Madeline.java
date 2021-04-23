@@ -31,9 +31,9 @@ public class Madeline extends Character {
 
     private boolean resetHair;
 
-    private float badelineMeter = 0;
-    private final float badelineMaxMeter = 100;
-    private boolean badelineActive = false;
+    public float badelineMeter = 0;
+    public final float badelineMaxMeter = 100;
+    public boolean badelineActive = false;
 
     private final Color oneDash = new Color(172 / 255f, 50 / 255f, 50 / 255f, 1);
     private final Color twoDashes = new Color(255 / 255f, 109 / 255f, 239 / 255f, 1);
@@ -177,19 +177,19 @@ public class Madeline extends Character {
         switch (animState) {
             case BASIC_N:
             case RUN:
-                followOffset = new Vector2(-0.05f, 0.13f);
+                followOffset = new Vector2(-0.04f, 0.14f);
                 break;
             case FALL:
             case JUMP:
-                followOffset = new Vector2(-0.05f, 0.15f);
+                followOffset = new Vector2(-0.04f, 0.16f);
                 break;
             case SPECIAL_S:
             case SPECIAL_U:
             case SPECIAL_D:
-                followOffset = new Vector2(-0.075f, 0.13f);
+                followOffset = new Vector2(-0.075f, 0.14f);
                 break;
             default:
-                followOffset = new Vector2(-0.025f, 0.13f);
+                followOffset = new Vector2(-0.015f, 0.14f);
 
         }
     }

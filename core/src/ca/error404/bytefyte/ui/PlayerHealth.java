@@ -3,8 +3,13 @@ package ca.error404.bytefyte.ui;
 import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
+import ca.error404.bytefyte.chars.Madeline;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -26,12 +31,12 @@ public class PlayerHealth extends GameObject {
 
     private final Character chara;
 
+    TextureAtlas textureAtlas;
+
     TextureRegion playerBase;
     TextureRegion playerHead;
     TextureRegion country;
     TextureRegion stock;
-    TextureRegion fsCharge;
-    TextureRegion fsFull;
 
     private final GlyphLayout layout = new GlyphLayout();
     private float numSpeed = 20f;
@@ -70,7 +75,7 @@ public class PlayerHealth extends GameObject {
             this.charname = chara.playerName;
         }
 
-        TextureAtlas textureAtlas = Main.manager.get("sprites/battleUI.atlas", TextureAtlas.class);
+        textureAtlas = Main.manager.get("sprites/battleUI.atlas", TextureAtlas.class);
 
         if (bill == 2) {
             playerHead = new TextureRegion(textureAtlas.findRegion("bill_ingame"));
@@ -85,8 +90,6 @@ public class PlayerHealth extends GameObject {
             country = new TextureRegion(textureAtlas.findRegion(String.format("%s_country", charname)));
         }
         playerBase = new TextureRegion(textureAtlas.findRegion(String.format("player_%d_ingame", number)));
-        fsCharge = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"));
-        fsFull = new TextureRegion(textureAtlas.findRegion("fs_meter_full"));
 
         playerColor = setPlayerColor(number);
 
@@ -104,6 +107,7 @@ public class PlayerHealth extends GameObject {
             countryOffset.x = (textureAtlas.findRegion(String.format("%s_country", charname))).offsetX;
             countryOffset.y = (textureAtlas.findRegion(String.format("%s_country", charname))).offsetY;
         }
+
     }
 
     @Override
@@ -146,6 +150,18 @@ public class PlayerHealth extends GameObject {
 
         for (int i=0; i < chara.stockCount; i++) {
             batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y - ((stock.getRegionHeight() / 2f) * 0.13f) + 20, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
+        }
+
+        if (chara.charname.equals("madeline")) {
+            Madeline madeline = (Madeline) chara;
+
+            TextureRegion barClip;
+            if (madeline.badelineActive) {
+                barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_full"), 0, 0, (int) (1530 + (1140 * (madeline.badelineMeter / madeline.badelineMaxMeter))), textureAtlas.findRegion("fs_meter_full").getRegionHeight());
+            } else {
+                barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"), 0, 0, (int) (1530 + (1140 * (madeline.badelineMeter / madeline.badelineMaxMeter))), textureAtlas.findRegion("fs_meter_charge").getRegionHeight());
+            }
+            batch.draw(barClip, pos.x, pos.y, barClip.getRegionWidth() * 0.13f, barClip.getRegionHeight() * 0.13f);
         }
 
         layout.setText(Main.battleNameFont, charname, Color.WHITE, 0, Align.center, false);
