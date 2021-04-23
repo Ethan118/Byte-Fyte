@@ -18,6 +18,7 @@ public class Collider extends GameObject {
     public Character parent;
     private final World world;
 
+    public Vector2 dir = null;
     public float power;
     public float damage;
 
@@ -106,6 +107,34 @@ public class Collider extends GameObject {
         this.lifeSteal = lifeSteal;
 
         this.world = parent.world;
+    }
+
+    /**
+     * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating
+     * post: instantiates a new collided with the parameters
+     */
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, Vector2 dir) {
+        this(offset, width, height, parent, power, damage, hitStun, delay);
+        this.dir = dir;
+    }
+
+
+    /**
+     * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating, amount of time
+     * post: defines the physics body and colliders
+     */
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, float timer, Vector2 dir) {
+        this(offset, width, height, parent, power, damage, hitStun, delay, timer);
+        this.dir = dir;
+    }
+
+    /**
+     * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, should take health?, duration before instantiating
+     * post: instantiates a new collided with the parameters
+     */
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, boolean lifeSteal, float delay, Vector2 dir) {
+        this(offset, width, height, parent, power, damage, hitStun, lifeSteal, delay);
+        this.dir = dir;
     }
 
     private void define() {

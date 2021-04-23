@@ -177,7 +177,7 @@ public class Madeline extends Character {
         switch (animState) {
             case BASIC_N:
             case RUN:
-                followOffset = new Vector2(-0.05f, 0.125f);
+                followOffset = new Vector2(-0.05f, 0.13f);
                 break;
             case FALL:
             case JUMP:
@@ -186,10 +186,10 @@ public class Madeline extends Character {
             case SPECIAL_S:
             case SPECIAL_U:
             case SPECIAL_D:
-                followOffset = new Vector2(-0.075f, 0.125f);
+                followOffset = new Vector2(-0.075f, 0.13f);
                 break;
             default:
-                followOffset = new Vector2(-0.025f, 0.125f);
+                followOffset = new Vector2(-0.025f, 0.13f);
 
         }
     }
