@@ -469,16 +469,16 @@ public abstract class Character extends GameObject {
             moveTimer -= deltaTime;
         }
 
-        // set variables
-        prevVel = vel;
-        prevPos.set(pos);
-        pos.set(b2body.getPosition());
-
         // Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
             prevGoToPos = goToPos;
         }
+
+        // set variables
+        prevVel = vel;
+        prevPos.set(pos);
+        pos.set(b2body.getPosition());
 
         // counts down stun timer
         if (stunTimer > 0) {
