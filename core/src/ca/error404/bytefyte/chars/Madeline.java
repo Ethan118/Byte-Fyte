@@ -25,17 +25,22 @@ public class Madeline extends Character {
     Vector2 rightOffset = new Vector2(15f, 5.5f);
 
     private LinkedList<HairPoint> hairPoints = new LinkedList<>();
+    private LinkedList<HairPoint> bgPoints = new LinkedList<>();
+    private Vector2 followPoint;
+    private Vector2 followOffset;
 
-    private float badelineMeter = 0;
-    private final float badelineMaxMeter = 100;
-    private boolean badelineActive = false;
+    private boolean resetHair;
+
+    public float badelineMeter = 0;
+    public final float badelineMaxMeter = 100;
+    public boolean badelineActive = false;
 
     private final Color oneDash = new Color(172 / 255f, 50 / 255f, 50 / 255f, 1);
     private final Color twoDashes = new Color(255 / 255f, 109 / 255f, 239 / 255f, 1);
     private final Color emptyDashes = new Color(68 / 255f, 183 / 255f, 255 / 255f, 1);
     private Color currentColor;
 
-    private boolean charging = false;
+    public boolean charging = false;
 
     private float moveCooldown;
 
@@ -79,6 +84,8 @@ public class Madeline extends Character {
 
         projectilesOnScreen = new ArrayList<>(1);
 
+        resetHair = true;
+
         createHair();
     }
 
@@ -96,6 +103,7 @@ public class Madeline extends Character {
         if (charging) {
             badelineMeter = Math.min(badelineMeter + (delta * 2), badelineMaxMeter);
 
+
             lockAnim = true;
             handleInput();
             if (attackState == AttackState.SPECIAL) {
@@ -110,6 +118,10 @@ public class Madeline extends Character {
         }
 
         super.update(delta);
+
+        if (resetHair) {
+            resetHair();
+        }
 
         if (grounded) {
             currentDash = maxDashes;
@@ -156,37 +168,104 @@ public class Madeline extends Character {
                 break;
         }
 
+        findFollow();
+
         simulateHair(delta);
+    }
+
+    void findFollow() {
+        switch (animState) {
+            case BASIC_N:
+            case RUN:
+                followOffset = new Vector2(-0.04f, 0.14f);
+                break;
+            case FALL:
+            case JUMP:
+                followOffset = new Vector2(-0.04f, 0.16f);
+                break;
+            case SPECIAL_S:
+            case SPECIAL_U:
+            case SPECIAL_D:
+                followOffset = new Vector2(-0.075f, 0.14f);
+                break;
+            default:
+                followOffset = new Vector2(-0.015f, 0.14f);
+
+        }
     }
 
     void createHair() {
         for (int i = 0; i < 6; i++) {
-            hairPoints.add(new HairPoint(this, Math.max(1, Math.min(7, 7-i)), "hair", charname));
+            hairPoints.add(new HairPoint(this, Math.max(3, Math.min(6, 6 - i)), "hair", charname));
+            bgPoints.add(new HairPoint(this, Math.max(4.5f, Math.min(7.5f, 7.5f - i)), "hair", charname));
         }
     }
 
     void simulateHair(float delta) {
-        Vector2 followPoint;
-
         if (facingLeft) {
-            followPoint = pos.cpy().add(new Vector2(-0.025f, 0.125f));
+            followPoint = pos.cpy().add(new Vector2(followOffset.x, followOffset.y));
         } else {
-            followPoint = pos.cpy().add(new Vector2(0.025f, 0.125f));
+            followPoint = pos.cpy().add(new Vector2(followOffset.x * -1, followOffset.y));
         }
 
-        for(HairPoint h : hairPoints) {
+        int i = 0;
+        for (HairPoint h : hairPoints) {
+            if (i == 0) {
+                h.pos = followPoint;
+            }
+
             h.targetPos = followPoint;
             h.update(delta);
             followPoint = h.pos;
+
+            i++;
+        }
+
+        if (facingLeft) {
+            followPoint = pos.cpy().add(new Vector2(followOffset.x, followOffset.y));
+        } else {
+            followPoint = pos.cpy().add(new Vector2(followOffset.x * -1, followOffset.y));
+        }
+        i = 0;
+        for (HairPoint h : bgPoints) {
+            if (i == 0) {
+                h.pos = followPoint;
+            }
+
+            h.targetPos = followPoint;
+            h.update(delta);
+            followPoint = h.pos;
+
+            i++;
         }
     }
 
     public void drawHair(SpriteBatch batch) {
-        for (HairPoint h : hairPoints) {
-            h.setColor(currentColor);
-            h.draw(batch);
-            h.setColor(Color.WHITE);
+        if (!charging) {
+            for (HairPoint h : bgPoints) {
+                h.setColor(Color.BLACK);
+                h.draw(batch);
+            }
+
+            for (HairPoint h : hairPoints) {
+                h.setColor(currentColor);
+                h.draw(batch);
+            }
         }
+    }
+
+    public void resetHair() {
+        for (HairPoint h : bgPoints) {
+            h.pos = pos.cpy();
+            h.targetPos = pos.cpy();
+        }
+
+        for (HairPoint h : hairPoints) {
+            h.pos = pos.cpy();
+            h.targetPos = pos.cpy();
+        }
+
+        resetHair = false;
     }
 
     @Override
@@ -335,5 +414,11 @@ public class Madeline extends Character {
     @Override
     void airDown() {
 
+    }
+
+    @Override
+    public void die() {
+        super.die();
+        resetHair = true;
     }
 }
