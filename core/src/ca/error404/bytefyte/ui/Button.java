@@ -26,6 +26,8 @@ public class Button {
     public Color selectedColor = Color.YELLOW;
     public GlyphLayout layout = new GlyphLayout();
 
+    private boolean prevSelect = false;
+
     public Button(Vector2 pos, Main game, String string) {
         this.buttonRect = new Rectangle();
         this.pos = pos;
@@ -64,12 +66,22 @@ public class Button {
             }
             Main.menuFont.draw(batch, layout, pos.x, pos.y);
         } else {
-            for (MenuCursor cursor : Main.cursors) {
-                if (isCursorOver(cursor)) {
-                    batch.draw(selectTexture, buttonRect.x, buttonRect.y);
-                    break;
-                } else {
+            if (Main.cursors.size() == 0) {
+                if (prevSelect) {
                     batch.draw(texture, buttonRect.x, buttonRect.y);
+                } else {
+                    batch.draw(selectTexture, buttonRect.x, buttonRect.y);
+                }
+            } else {
+                for (MenuCursor cursor : Main.cursors) {
+                    if (isCursorOver(cursor)) {
+                        batch.draw(selectTexture, buttonRect.x, buttonRect.y);
+                        prevSelect = false;
+                        break;
+                    } else {
+                        batch.draw(texture, buttonRect.x, buttonRect.y);
+                        prevSelect = true;
+                    }
                 }
             }
         }

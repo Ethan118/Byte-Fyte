@@ -98,6 +98,8 @@ public class Madeline extends Character {
 
         if (knockedOff) {
             badelineMeter = 0;
+            currentDash = 1;
+            knockedOff = false;
         }
 
         if (charging) {
@@ -118,6 +120,7 @@ public class Madeline extends Character {
         }
 
         super.update(delta);
+        afterUpB = false;
 
         if (resetHair) {
             resetHair();
@@ -311,7 +314,6 @@ public class Madeline extends Character {
 
     @Override
     void dashAttack() {
-
     }
 
     @Override
@@ -368,7 +370,7 @@ public class Madeline extends Character {
 
             currentDash -= 1;
 
-            animDuration = 1;
+            animDuration = 0.1f;
             Vector2 dir = moveVector;
             vel.set(dir.scl(7));
 

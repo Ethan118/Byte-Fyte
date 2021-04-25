@@ -9,6 +9,7 @@ import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.objects.BattleCam;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
+import ca.error404.bytefyte.shaders.GrayscaleShader;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.tools.WorldContactListener;
 import ca.error404.bytefyte.ui.MenuCursor;
@@ -72,7 +73,7 @@ public class BattleMap implements Screen {
         game.batch = new SpriteBatch();
         Random rand = new Random();
 
-        PlayerHealth.nerds = rand.nextInt(50);
+        PlayerHealth.nerds = rand.nextInt(100);
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -164,22 +165,6 @@ public class BattleMap implements Screen {
     }
 
     public void update(float deltaTime) {
-//        int i = 0;
-//        playersAlive = 0;
-//        for (Character character: Main.players) {
-//            i ++;
-//            if (character != null) {
-//                if (character.dead) {
-//                    Main.players.set(i, null);
-//                } else {
-//                    playersAlive += 1;
-//                }
-//            }
-//        }
-//
-//        if (playersAlive == 1) {
-//            new ScreenWipe(new VictoryScreen(game, characters), game);
-//        }
 
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;
@@ -240,10 +225,14 @@ public class BattleMap implements Screen {
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        game.batch.setShader(GrayscaleShader.grayscaleShader);
+//        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
 
         drawBackground();
 
         renderer.render();
+//        game.batch.setShader(null);
+//        renderer.getBatch().setShader(null);
 
         game.batch.begin();
         game.batch.setProjectionMatrix(gamecam.combined);

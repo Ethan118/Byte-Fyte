@@ -20,7 +20,7 @@ public class HairPoint extends Sprite {
 
     final float speed = 35.0f;
 
-    public HairPoint(Character parent, Color color, float size, String texturePath, String atlasPath) {
+    public HairPoint(Character parent, float size, String texturePath, String atlasPath) {
         this.parent = parent;
 
         this.pos = parent.pos.cpy();

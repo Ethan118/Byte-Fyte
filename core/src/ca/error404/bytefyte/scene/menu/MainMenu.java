@@ -48,8 +48,8 @@ public class MainMenu extends MenuScene {
 
         new Button(new Vector2(968, 540), game, new Texture[] { new Texture("sprites/menu/fawful.png"), new Texture("sprites/menu/fawful_selected.png") }) {
             public void click() {
-//                new ScreenWipe(new SettingsMenu(this.game), game);
-//                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
+                new ScreenWipe(new SaveSelect(this.game), game);
+                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
             }};
 
         new Button(new Vector2(1520, 707), game, new Texture[] { new Texture("sprites/menu/vault.png"), new Texture("sprites/menu/vault_selected.png") }) {

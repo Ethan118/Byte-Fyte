@@ -42,8 +42,8 @@ public class MenuScene implements Screen {
 
     @Override
     public void show() {
-        game.cursors.clear();
-        game.buttons.clear();
+        Main.cursors.clear();
+        Main.buttons.clear();
 
         shapeRenderer = new ShapeRenderer();
 

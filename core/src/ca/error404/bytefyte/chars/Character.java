@@ -116,7 +116,7 @@ public abstract class Character extends GameObject {
 
     protected double moveTimer = 0;
 
-    private boolean afterUpB = false;
+    protected boolean afterUpB = false;
     protected Boolean canDownB = true;
 
 

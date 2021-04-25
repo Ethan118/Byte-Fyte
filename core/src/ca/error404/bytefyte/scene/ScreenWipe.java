@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -27,7 +25,7 @@ public class ScreenWipe {
         Main.transitions.add(this);
         this.newScreen = newScreen;
         this.game = game;
-        game.cursors.clear();
+        Main.cursors.clear();
         Camera cam = new OrthographicCamera(1920, 1080);
         cam.position.set(960, 540, cam.position.z);
         cam.update();

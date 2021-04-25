@@ -122,11 +122,11 @@ public class Main extends Game {
 //		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
 //		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
 //		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
-		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
+//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
 //		setScreen(new LoadBattleMap("Fawful's Castle", this, new Vector2(0, 0), "mal"));
 //		setScreen(new LoadBattleMap("Castle Bleck", this, new Vector2(20, 0), "paper mario"));
 //		setScreen(new LoadBattleMap("Flowchart", this, new Vector2(50, -3000), null));
-//		setScreen(new TitleScreen(this));
+		setScreen(new TitleScreen(this));
 	}
 
 	public void reloadControllers() {
@@ -327,10 +327,12 @@ public class Main extends Game {
 
 				if (i > 0) {
 					for (int j=0; j < Integer.parseInt(data[6]); j++) {
-						names.add(data[0]);
-						songNames.add(data[1]);
-						start.add(Double.parseDouble(data[2]));
-						end.add(Double.parseDouble(data[3]));
+						if (!data[4].equalsIgnoreCase("n/a")) {
+							names.add(data[0]);
+							songNames.add(data[1]);
+							start.add(Double.parseDouble(data[2]));
+							end.add(Double.parseDouble(data[3]));
+						}
 					}
 				}
 
