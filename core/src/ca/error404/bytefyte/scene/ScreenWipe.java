@@ -1,6 +1,5 @@
 package ca.error404.bytefyte.scene;
 
-import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -42,6 +41,7 @@ public class ScreenWipe {
             timer -= delta;
             if (timer <= 0) {
                 hasSwitched = true;
+                Main.gameObjects.clear();
                 game.setScreen(newScreen);
             }
         } else if (rect.x > screen.getWorldWidth()) {

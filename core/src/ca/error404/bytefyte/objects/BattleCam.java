@@ -24,9 +24,11 @@ public class BattleCam extends OrthographicCamera {
         Vector3 cameraPosition = position;
 
         for (Character chara : Main.players) {
-            Vector2 vec = chara.b2body.getPosition();
-            sizes.add(new Vector2(chara.width * 2, chara.height * 2));
-            pos.add(new Vector3(vec.x, vec.y, 0));
+            if (chara != null) {
+                Vector2 vec = chara.b2body.getPosition();
+                sizes.add(new Vector2(chara.width * 2, chara.height * 2));
+                pos.add(new Vector3(vec.x, vec.y, 0));
+            }
         }
 
         Vector3 targetPos = average(pos);

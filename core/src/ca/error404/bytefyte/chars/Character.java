@@ -75,12 +75,14 @@ public abstract class Character extends GameObject {
     protected Vector2 spriteOffset = Vector2.Zero;
     public Vector2 manualSpriteOffset = Vector2.Zero;
 
+    public int rank;
+
     protected float elapsedTime = 0f;
 
     public Animation<TextureRegion> attackAnimation;
     public boolean lockAnim = false;
 
-    protected Animation<TextureRegion> idle;
+    public Animation<TextureRegion> idle;
     protected Animation<TextureRegion> walk;
     protected Animation<TextureRegion> run;
 
