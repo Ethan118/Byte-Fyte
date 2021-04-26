@@ -22,7 +22,7 @@ public class CutscenePlayer implements Disposable {
     // loads video file
     public CutscenePlayer(String filename) {
         file = Gdx.files.internal( "movies/" + filename + ".ogv");
-        cam = new OrthographicCamera();
+        cam = new OrthographicCamera(1920, 1080);
         viewport = new FitViewport(1920, 1080, cam);
     }
 
@@ -30,18 +30,16 @@ public class CutscenePlayer implements Disposable {
     public void play() {
         try {
             videoPlayer.play(file);
+            videoPlayer.update();
             videoPlayer.setVolume(Main.cutsceneVolume / 10f);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        videoPlayer.update();
     }
 
     // draws current frame to screen
     public void draw(SpriteBatch batch) {
         batch.setProjectionMatrix(cam.combined);
-        viewport.apply();
         videoPlayer.update();
         batch.draw(videoPlayer.getTexture(), -(1920f / 2f), -(1080f / 2f));
     }

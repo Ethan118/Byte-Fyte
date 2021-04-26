@@ -26,7 +26,12 @@ public class SettingsMenu extends MenuScene {
 
     public void show() {
         super.show();
-        background = new Texture("sprites/menu/settings_bg.png");
+        if (Main.internalSongName.equalsIgnoreCase("menu weird") && Main.bill) {
+            background = new Texture("sprites/menu/bill_bg.png");
+        } else {
+            background = new Texture("sprites/menu/settings_bg.png");
+        }
+
         xSpeed = 0;
 
         pointer = new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);

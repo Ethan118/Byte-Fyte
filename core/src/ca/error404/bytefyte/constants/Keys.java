@@ -21,7 +21,7 @@ public class Keys {
     public static int MENU_RIGHT = Input.Keys.D;
     public static int MENU_UP = Input.Keys.W;
     public static int MENU_DOWN = Input.Keys.S;
-    public static int MENU_SELECT = Input.Keys.E;
+    public static int MENU_SELECT = Input.Keys.SPACE;
 
 
     //    Miscellaneous

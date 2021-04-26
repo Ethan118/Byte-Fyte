@@ -4,11 +4,8 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-
-import java.util.Set;
 
 public class CharacterSelect extends MenuScene {
 
@@ -19,6 +16,7 @@ public class CharacterSelect extends MenuScene {
     public static String[] characters = {null, null, null, null};
 
     boolean keyboardUsed = false;
+
     // menuscene function
     public CharacterSelect(Main game) {
         super(game);
@@ -92,6 +90,13 @@ public class CharacterSelect extends MenuScene {
 
             }
         };
+
+        new Button(new Vector2(200, 100), game, "Back") {
+            public void click() {
+                new ScreenWipe(new MainMenu(game), game);
+                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
+            }
+        };
     }
 
     private boolean checkChars() {
@@ -117,7 +122,7 @@ public class CharacterSelect extends MenuScene {
 
     private void createButton() {
         if (checkChars()) {
-            startButton = new Button(new Vector2(600, 200), game, "Maps") {
+            startButton = new Button(new Vector2(960, 100), game, "Maps") {
                 public void click() {
                     new ScreenWipe(new MapSelect(game), game);
                     for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
