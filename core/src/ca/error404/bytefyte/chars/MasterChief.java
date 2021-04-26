@@ -38,7 +38,7 @@ public class MasterChief extends Character {
             moveVector = new Vector2(0, 0);
         }
         if ((upB.getKeyFrameIndex(elapsedTime) >= 12 && upB.getKeyFrameIndex(elapsedTime) <= 15) && animState == AnimationState.SPECIAL_U) {
-            vel.y = 6;
+            vel.y = 12;
         }
         if (downB.getKeyFrameIndex(elapsedTime) >= 20 && downB.getKeyFrameIndex(elapsedTime) <= 23 && animState == AnimationState.SPECIAL_D && projectilesOnScreen.isEmpty()) {
             projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0), new Vector2(0, -5), 0, 0f, 20, 3, 20, 1, "laser", "sprites/masterchief.atlas", 0));

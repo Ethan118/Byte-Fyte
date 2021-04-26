@@ -39,6 +39,7 @@ import org.ini4j.Wini;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class BattleMap implements Screen {
@@ -47,6 +48,8 @@ public class BattleMap implements Screen {
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
     private Vector2 scrollVector;
     private final Viewport viewport;
+    public static ArrayList<Integer> positions = new ArrayList<>();
+    private int numOfPlayers = 0;
 
     private final Main game;
     private final HUD hud;
@@ -61,6 +64,8 @@ public class BattleMap implements Screen {
     private int playersAlive;
 
     private Texture background;
+
+    public static ArrayList<Character> alive = new ArrayList<>();
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
@@ -156,6 +161,21 @@ public class BattleMap implements Screen {
         world.setContactListener(new WorldContactListener());
 
         hud = new HUD();
+
+        for (String character: CharacterSelect.characters) {
+            if (character != null) {
+                numOfPlayers += 1;
+            }
+        }
+
+
+        for (int i = 0; i < numOfPlayers; i++) {
+            positions.add(9);
+        }
+        System.out.println(positions.size());
+        alive.addAll(Main.players);
+        System.out.println(Main.players.size());
+        System.out.println(BattleMap.alive.size());
     }
 
     @Override
@@ -164,22 +184,33 @@ public class BattleMap implements Screen {
     }
 
     public void update(float deltaTime) {
-//        int i = 0;
-//        playersAlive = 0;
-//        for (Character character: Main.players) {
-//            i ++;
-//            if (character != null) {
-//                if (character.dead) {
-//                    Main.players.set(i, null);
-//                } else {
-//                    playersAlive += 1;
-//                }
-//            }
-//        }
-//
-//        if (playersAlive == 1) {
-//            new ScreenWipe(new VictoryScreen(game, characters), game);
-//        }
+        int i = -1;
+        playersAlive = 0;
+        for (int k = 0; k < Main.players.size(); k++) {
+            i ++;
+            Main.players.get(k).rank = Main.players.size();
+            if (Main.players.get(k) != null) {
+                if (Main.players.get(k).dead) {
+                    Main.players.set(i, null);
+                } else {
+                    playersAlive += 1;
+                }
+            }
+        }
+
+        if (playersAlive == 1) {
+            for (Character character : Main.players) {
+                i++;
+                if (character != null) {
+                    character.rank = 1;
+                }
+            }
+            Main.uiToAdd.clear();
+            Main.ui.clear();
+            Main.uiToRemove.clear();
+            Main.players.clear();
+            new ScreenWipe(new VictoryScreen(game), game);
+        }
 
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;

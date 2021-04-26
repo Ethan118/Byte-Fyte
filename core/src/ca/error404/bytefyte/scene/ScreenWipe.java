@@ -1,6 +1,5 @@
 package ca.error404.bytefyte.scene;
 
-import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -8,8 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -44,6 +41,7 @@ public class ScreenWipe {
             timer -= delta;
             if (timer <= 0) {
                 hasSwitched = true;
+                Main.gameObjects.clear();
                 game.setScreen(newScreen);
             }
         } else if (rect.x > screen.getWorldWidth()) {

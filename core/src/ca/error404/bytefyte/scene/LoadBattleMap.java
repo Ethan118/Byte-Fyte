@@ -48,6 +48,7 @@ public class LoadBattleMap implements Screen {
 
     @Override
     public void show() {
+        Main.buttons.clear();
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080, cam);
 
