@@ -1,6 +1,5 @@
 package ca.error404.bytefyte.scene.menu;
 
-
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.tools.CutscenePlayer;
@@ -32,15 +31,15 @@ public class MainMenu extends MenuScene {
 
     public void show() {
         super.show();
-        new MenuCursor(new Vector2(420, 540), Main.controllers[0], game);
 
         if (Main.bill) {
+            new MenuCursor(new Vector2(968, 540), Main.controllers[0], game);
+
             new Button(new Vector2(420, 540), game, new Texture[]{new Texture("sprites/menu/fyte_bill.png"), new Texture("sprites/menu/fyte_bill_selected.png")}) {
                 public void click() {
-//                    new ScreenWipe(new CharacterSelect(this.game), game);
-//                    for (MenuCursor cursor : Main.cursors) {
-//                        cursor.canMove = false;
-//                    }
+                    for (MenuCursor cursor : Main.cursors) {
+                        cursor.pos = new Vector2(968, 540);
+                    }
                 }
             };
 
@@ -64,11 +63,14 @@ public class MainMenu extends MenuScene {
 
             new Button(new Vector2(1520, 707), game, new Texture[]{new Texture("sprites/menu/vault.png"), new Texture("sprites/menu/vault_selected.png")}) {
                 public void click() {
-//                    new ScreenWipe(new SettingsMenu(this.game), game);
-//                    for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
+                    for (MenuCursor cursor : Main.cursors) {
+                        cursor.pos = new Vector2(968, 540);
+                    }
                 }
             };
         } else {
+            new MenuCursor(new Vector2(420, 540), Main.controllers[0], game);
+
             new Button(new Vector2(420, 540), game, new Texture[]{new Texture("sprites/menu/fyte.png"), new Texture("sprites/menu/fyte_selected.png")}) {
                 public void click() {
                     new ScreenWipe(new CharacterSelect(this.game), game);
@@ -118,8 +120,8 @@ public class MainMenu extends MenuScene {
                 } else {
                     game.music = game.newSong("menu");
                 }
-                game.music.setVolume(Main.musicVolume / 10f);
             }
+            game.music.setVolume(Main.musicVolume / 10f);
             game.music.play();
         }
     }
