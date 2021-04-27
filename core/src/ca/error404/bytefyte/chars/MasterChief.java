@@ -19,7 +19,7 @@ public class MasterChief extends Character {
 
         projectilesOnScreen = new ArrayList<>(1);
 
-        walk.setFrameDuration(1/60f);
+        walk.setFrameDuration(0.02f);
     }
 
     /*

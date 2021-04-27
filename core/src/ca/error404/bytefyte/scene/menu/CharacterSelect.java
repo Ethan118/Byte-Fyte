@@ -89,13 +89,13 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(929, 430), game, new Texture[] { new Texture("sprites/menu/characters/sans_hidden.png"), null }) {
-            public boolean isCursorOver(MenuCursor cursor) {
-                return false;
-            }
-
-            public void update() {
-
+        new Button(new Vector2(929, 430), game, new Texture[] { new Texture("sprites/menu/characters/sans.png"), new Texture("sprites/menu/characters/sans_selected.png") }) {
+            public void click() {
+                CharacterSelect.characters[cursor.getID()] = "";
+                CharacterSelect.characters[cursor.getID()] = "sans";
+                if (checkChars()) {
+                    createButton();
+                }
             }
         };
 
