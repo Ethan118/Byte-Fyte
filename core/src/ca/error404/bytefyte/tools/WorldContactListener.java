@@ -102,10 +102,14 @@ public class WorldContactListener implements ContactListener {
                     chara.Hit(collider.damage, force, collider.hitStun);
 
                     if (collider.lifeSteal) {
-                        if (collider.parent.percent >= collider.damage) {
-                            collider.parent.percent -= collider.damage;
+                        if (!chara.stamina) {
+                            if (collider.parent.percent >= collider.damage) {
+                                collider.parent.percent -= collider.damage;
+                            } else {
+                                collider.parent.percent = 0;
+                            }
                         } else {
-                            collider.parent.percent = 0;
+                            collider.parent.percent = Math.min(collider.parent.percent + collider.damage, 999.9f);
                         }
                     }
                 }

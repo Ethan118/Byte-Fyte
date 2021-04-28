@@ -5,6 +5,7 @@ import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.*;
 import ca.error404.bytefyte.chars.Character;
+import ca.error404.bytefyte.chars.bosses.Petey;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.objects.BattleCam;
@@ -104,10 +105,19 @@ public class BossRoom extends PlayRoom {
             new Wall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
-        for (MapObject object: map.getLayers().get("Death Barrier").getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+//        for (MapObject object: map.getLayers().get("Death Barrier").getObjects().getByType(RectangleMapObject.class)) {
+//            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+//
+//            new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
+//        }
 
-            new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
+        for (MapObject object: map.getLayers().get("Boss Point").getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            switch ((String) object.getProperties().get("boss name")) {
+                case "Petey":
+                default:
+                    new Petey(this, new Vector2(rect.getX(), rect.getY()));
+            }
         }
 
         for (MapObject object: map.getLayers().get("Spawn Point").getObjects().getByType(RectangleMapObject.class)) {
@@ -115,27 +125,27 @@ public class BossRoom extends PlayRoom {
             Character chara;
             if (CharacterSelect.characters[0].equalsIgnoreCase("masterchief")) {
                 try {
-                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1);
+                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
                 } catch (Exception e) {
-                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, 1);
+                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
                 }
             } else if (CharacterSelect.characters[0].equalsIgnoreCase("shyguy")) {
                 try {
-                    chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1);
+                    chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
                 } catch (Exception e) {
-                    chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, 1);
+                    chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
                 }
             } else if (CharacterSelect.characters[0].equalsIgnoreCase("madeline")) {
                 try {
-                    chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1);
+                    chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
                 } catch (Exception e) {
-                    chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, 1);
+                    chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
                 }
             } else {
                 try {
-                    chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1);
+                    chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
                 } catch (Exception e) {
-                    chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, 1);
+                    chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
                 }
             }
             chara.facingLeft = true;
@@ -151,18 +161,7 @@ public class BossRoom extends PlayRoom {
         world.setContactListener(new WorldContactListener());
 
         hud = new HUD();
-
-        for (String character: CharacterSelect.characters) {
-            if (character != null) {
-                numOfPlayers += 1;
-            }
-        }
-
-
-        for (int i = 0; i < numOfPlayers; i++) {
-            positions.add(9);
-        }
-        System.out.println(positions.size());
+        gamecam.scale = gamecam.scale * 2.5f;
         alive.addAll(Main.players);
         System.out.println(Main.players.size());
         System.out.println(BattleMap.alive.size());
