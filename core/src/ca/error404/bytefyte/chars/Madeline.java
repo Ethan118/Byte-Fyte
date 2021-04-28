@@ -47,8 +47,12 @@ public class Madeline extends Character {
     private int maxDashes = 1;
     private int currentDash = maxDashes;
 
-    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
-        super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f);
+    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
+        super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f, stamina);
         manualSpriteOffset = rightOffset;
 
         weight = 1.1f;

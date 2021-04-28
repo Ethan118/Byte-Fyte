@@ -43,6 +43,7 @@ public class PlayerHealth extends GameObject {
     private float num;
     private float prevNum = 0f;
     private String charname;
+    public boolean stamina;
 
     private Color color;
     private Color playerColor;
@@ -129,7 +130,11 @@ public class PlayerHealth extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        setColor();
+        if (stamina) {
+            setColorStamina();
+        } else {
+            setColor();
+        }
 
         batch.setColor(playerColor);
         batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
@@ -143,7 +148,11 @@ public class PlayerHealth extends GameObject {
 
             layout.setText(Main.percentNumFont, String.format("%d", (int) num), color, 0, Align.right, false);
             Main.percentNumFont.draw(batch, layout, pos.x + 325, pos.y + 159);
-            layout.setText(Main.percentFont, form.format(num - Math.floor(num)) + "%", color, 0, Align.right, false);
+            if (stamina) {
+                layout.setText(Main.percentFont, form.format(num - Math.floor(num)) + "HP", color, 0, Align.right, false);
+            } else {
+                layout.setText(Main.percentFont, form.format(num - Math.floor(num)) + "%", color, 0, Align.right, false);
+            }
             Main.percentFont.draw(batch, layout, pos.x + 360, pos.y + 107);
         }
 
@@ -194,6 +203,34 @@ public class PlayerHealth extends GameObject {
         } else if (chara.percent <= 249) {
             color = new Color(168 / 255f, 38 / 255f, 49 / 255f, 1);
         } else if (chara.percent <= 299) {
+            color = new Color(145 / 255f, 31 / 255f, 38 / 255f, 1);
+        } else {
+            color = new Color(112 / 255f, 22 / 255f, 34 / 255f, 1);
+        }
+    }
+
+    private void setColorStamina() {
+        if (chara.percent >= 300 - 19) {
+            color = new Color(255, 255, 255, 1);
+        } else if (chara.percent >= 300 - 29) {
+            color = new Color(253 / 255f, 240 / 255f, 210 / 255f, 1);
+        } else if (chara.percent >= 300 - 39) {
+            color = new Color(252 / 255f, 220 / 255f, 120 / 255f, 1);
+        } else if (chara.percent >= 300 - 49) {
+            color = new Color(248 / 255f, 193 / 255f, 70 / 255f, 1);
+        } else if (chara.percent >= 300 - 59) {
+            color = new Color(243 / 255f, 153 / 255f, 62 / 255f, 1);
+        } else if (chara.percent >= 300 - 69) {
+            color = new Color(241 / 255f, 127 / 255f, 58 / 255f, 1);
+        } else if (chara.percent >= 300 - 79) {
+            color = new Color(239 / 255f, 98 / 255f, 54 / 255f, 1);
+        } else if (chara.percent >= 300 - 149) {
+            color = new Color(237 / 255f, 59 / 255f, 51 / 255f, 1);
+        } else if (chara.percent >= 300 - 199) {
+            color = new Color(206 / 255f, 47 / 255f, 43 / 255f, 1);
+        } else if (chara.percent >= 300 - 249) {
+            color = new Color(168 / 255f, 38 / 255f, 49 / 255f, 1);
+        } else if (chara.percent >= 300 - 299) {
             color = new Color(145 / 255f, 31 / 255f, 38 / 255f, 1);
         } else {
             color = new Color(112 / 255f, 22 / 255f, 34 / 255f, 1);

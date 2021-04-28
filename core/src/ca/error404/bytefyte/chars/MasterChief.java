@@ -11,7 +11,11 @@ import java.util.ArrayList;
 public class MasterChief extends Character {
 
     public MasterChief(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF");
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public MasterChief(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF", stamina);
         weight = 1.2f;
         walkSpeed = 0.9f;
         runSpeed = 1.8f;

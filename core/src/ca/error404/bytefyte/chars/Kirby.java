@@ -25,7 +25,11 @@ public class Kirby extends Character {
     private boolean rock;
 
     public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f, stamina);
         weight = 0.8f;
         maxJumps = 10;
         defaultGravity = downGravity;

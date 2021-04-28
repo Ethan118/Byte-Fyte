@@ -193,11 +193,34 @@ public abstract class Character extends GameObject {
     public String playerName;
     public float width;
     public float height;
+    public boolean stamina = false;
+    public int defaultStamina = 0;
+    public PlayerHealth health;
 
     /**
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
+    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale, int hp) {
+        this(screen, spawnPoint, controller, playerNumber, charname, playerName, spriteScale, hitboxScale);
+        this.percent = hp;
+        defaultStamina = hp;
+        if (hp != 0) {
+            stamina = true;
+            health.stamina = true;
+        }
+    }
+
+    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, int hp) {
+        this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
+        this.percent = hp;
+        defaultStamina = hp;
+        if (hp != 0) {
+            stamina = true;
+            health.stamina = true;
+        }
+    }
+
     public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
     }
@@ -213,7 +236,7 @@ public abstract class Character extends GameObject {
         this.world = screen.getWorld();
         this.controller = controller;
 
-        new PlayerHealth(playerNumber, charname, this);
+        health = new PlayerHealth(playerNumber, charname, this);
 
         attackState = AttackState.NONE;
         prevAttackState = AttackState.NONE;
@@ -443,6 +466,10 @@ public abstract class Character extends GameObject {
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
+        if (stamina && percent <= 0) {
+            die();
+        }
+
         hasBeenHit = false;
         if (dead) {
             Main.players.remove(this);
@@ -914,8 +941,13 @@ public abstract class Character extends GameObject {
             hasBeenHit = true;
             animState = AnimationState.HIT;
 
-            percent = Math.min(percent + damage, 999.9f);
-            vel.set(force.scl(((percent / 100) + 1) / weight));
+            if (stamina) {
+                percent = Math.max(percent - damage, 0f);
+                vel.set(force.scl(1.2f / weight));
+            } else {
+                percent = Math.min(percent + damage, 999.9f);
+                vel.set(force.scl(((percent / 100) + 1) / weight));
+            }
 
             stunTimer = hitStun;
 
@@ -928,9 +960,12 @@ public abstract class Character extends GameObject {
      * post: reset player, set position
      */
     public void die() {
-
 //        Resets player for a potential respawn
-        percent = 0;
+        if (!stamina) {
+            percent = 0;
+        } else {
+            percent = defaultStamina;
+        }
         animDuration = -1;
         lockAnim = false;
         stunTimer = 0;
@@ -955,6 +990,7 @@ public abstract class Character extends GameObject {
         } else {
             dead = true;
             stockCount = 0;
+            percent = 0;
         }
     }
 

@@ -27,7 +27,11 @@ public class ShyGuy extends Character {
     private float flyAcceleration = 0f;
 
     public ShyGuy(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY");
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public ShyGuy(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY", stamina);
         manualSpriteOffset = new Vector2(2200, 300);
         projectilesOnScreen = new ArrayList<>(1);
 
