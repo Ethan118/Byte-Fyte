@@ -3,6 +3,7 @@ package ca.error404.bytefyte;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Globals;
+import ca.error404.bytefyte.scene.LoadBattleMap;
 import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.scene.menu.TitleScreen;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import org.apache.commons.io.FileUtils;
 import org.ini4j.Wini;
@@ -130,16 +132,15 @@ public class Main extends Game {
 
 		reloadControllers();
 
-		CharacterSelect.characters = new String[] {"madeline", "masterchief", null, null};
-//		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
+		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
 //		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
 //		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
 //		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
-//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
+		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
 //		setScreen(new LoadBattleMap("Fawful's Castle", this, new Vector2(0, 0), "mal"));
 //		setScreen(new LoadBattleMap("Castle Bleck", this, new Vector2(20, 0), "paper mario"));
 //		setScreen(new LoadBattleMap("Flowchart", this, new Vector2(50, -3000), null));
-		setScreen(new TitleScreen(this));
+//		setScreen(new TitleScreen(this));
 	}
 
 	public void reloadControllers() {
