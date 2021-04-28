@@ -7,6 +7,7 @@ import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
@@ -201,7 +202,7 @@ public abstract class Character extends GameObject {
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
-    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale, int hp) {
+    public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale, int hp) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, spriteScale, hitboxScale);
         this.percent = hp;
         defaultStamina = hp;
@@ -211,7 +212,7 @@ public abstract class Character extends GameObject {
         }
     }
 
-    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, int hp) {
+    public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, int hp) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
         this.percent = hp;
         defaultStamina = hp;
@@ -221,11 +222,11 @@ public abstract class Character extends GameObject {
         }
     }
 
-    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
+    public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
     }
 
-    public Character(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
+    public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
         super();
         this.spriteScale = spriteScale;
         this.hitboxScale = hitboxScale;

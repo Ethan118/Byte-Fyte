@@ -28,21 +28,24 @@ public class LoadBossRoom implements Screen {
     float rotation = 0;
     int rotateSpeed = 180;
     String tmap;
+    String tileset;
+    String background;
     String series;
     String mapName;
     Texture loadTex;
     Texture loadTexSpin;
     TiledMap map;
     TmxMapLoader mapLoader = new TmxMapLoader();
-    Texture tex;
 
     private float minLoadTime = 10f;
 
-    public LoadBossRoom(String tmap, Main game, Vector2 scrollVector, String series) {
+    public LoadBossRoom(String tmap, String tileset, String background, Main game, Vector2 scrollVector, String series) {
         this.game = game;
         this.scrollVector = scrollVector;
         game.music = this.game.music;
         this.tmap = tmap;
+        this.tileset = tileset;
+        this.background = background;
         this.series = series;
     }
 
@@ -52,9 +55,9 @@ public class LoadBossRoom implements Screen {
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080, cam);
 
-        Main.manager.load(String.format("sprites/maps/%s.png", tmap), Texture.class);
+        Main.manager.load(String.format("sprites/single player/%s.png", tileset), Texture.class);
         Main.manager.finishLoading();
-        Main.manager.load(String.format("sprites/maps/%s_background.png", tmap), Texture.class);
+        Main.manager.load(String.format("sprites/single player/%s.png", background), Texture.class);
         Main.manager.load("sprites/battleUI.atlas", TextureAtlas.class);
 
         // Convert String Array to List
@@ -76,21 +79,17 @@ public class LoadBossRoom implements Screen {
         }
 
         mapName = tmap;
-        tmap = String.format("sprites/maps/%s.tmx", tmap);
+        tmap = String.format("sprites/single player/%s.tmx", tmap);
 
         mapLoader.getDependencies(tmap, Gdx.files.internal(tmap), null);
         mapLoader.loadAsync(Main.manager, tmap, Gdx.files.internal(tmap), null);
         map = mapLoader.loadSync(Main.manager, tmap, Gdx.files.internal(tmap), null);
 
         // plays a song so I can hear things
-        if (game.music != null) {
+        if (!Main.internalSongName.equalsIgnoreCase(series) && game.music != null) {
             game.music.stop();
         }
-        if (series != null) {
-            game.music = game.songFromSeries(series);
-        } else {
-            game.music = game.newSong();
-        }
+        game.music = game.newSong(series);
         game.music.setVolume(Main.musicVolume / 10f);
         game.music.play();
 
@@ -105,7 +104,7 @@ public class LoadBossRoom implements Screen {
             loadTex.dispose();
             loadTexSpin.dispose();
             new ShowSongName();
-            game.setScreen(new BattleMap(game, map, scrollVector, Main.manager.get(String.format("sprites/maps/%s_background.png", mapName), Texture.class)));
+            game.setScreen(new BossRoom(game, map, scrollVector, Main.manager.get(String.format("sprites/single player/%s.png", background), Texture.class)));
         }
 
         // game.music looping

@@ -43,24 +43,13 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class BattleMap implements Screen {
-    private final BattleCam gamecam;
-    private final OrthographicCamera bgCam;
+public class BattleMap extends PlayRoom {
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
     private Vector2 scrollVector;
-    private final Viewport viewport;
     public static ArrayList<Integer> positions = new ArrayList<>();
     private int numOfPlayers = 0;
 
-    private final Main game;
     private final HUD hud;
-
-    private final TiledMap map;
-    private final OrthogonalTiledMapRenderer renderer;
-
-    private final MapProperties mProp;
-    private final World world;
-    private final Box2DDebugRenderer b2dr;
 
     private int playersAlive;
 
@@ -74,27 +63,8 @@ public class BattleMap implements Screen {
     private CharacterSelect characterSelect;
 
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
-        this.game = game;
-        game.batch = new SpriteBatch();
-        Random rand = new Random();
-
-        PlayerHealth.nerds = rand.nextInt(100);
-
-        gamecam = new BattleCam();
-        bgCam = new OrthographicCamera(1920, 1080);
-        this.scrollVector = scrollVector;
+        super(game, map, scrollVector, background);
         this.background = background;
-
-        viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
-
-        this.map = map;
-        renderer = new OrthogonalTiledMapRenderer(map, 1/Main.PPM);
-
-        mProp = map.getProperties();
-
-
-        world = new World(new Vector2(0, 0), true);
-        b2dr = new Box2DDebugRenderer();
 
         Vector2 pos = Vector2.Zero;
 
@@ -265,14 +235,14 @@ public class BattleMap implements Screen {
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.setShader(GrayscaleShader.grayscaleShader);
-        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
+//        game.batch.setShader(GrayscaleShader.grayscaleShader);
+//        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
 
         drawBackground();
 
         renderer.render();
-        game.batch.setShader(null);
-        renderer.getBatch().setShader(null);
+//        game.batch.setShader(null);
+//        renderer.getBatch().setShader(null);
 
         game.batch.begin();
         game.batch.setProjectionMatrix(gamecam.combined);
@@ -379,11 +349,6 @@ public class BattleMap implements Screen {
         map.dispose();
 
 
-    }
-
-//  Gets the world
-    public World getWorld() {
-        return world;
     }
 
 }
