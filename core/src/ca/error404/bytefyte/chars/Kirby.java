@@ -20,11 +20,16 @@ public class Kirby extends Character {
     private float defaultGravity;
     private float defaultFall;
     private float defaultMaxFall;
+    private Collider upBCollider;
 
     private boolean rock;
 
     public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f, stamina);
         weight = 0.8f;
         maxJumps = 10;
         defaultGravity = downGravity;
@@ -216,7 +221,7 @@ public class Kirby extends Character {
             animDuration = 1.8f;
         }
 
-        new Collider(new Vector2(0, -20), 15, 30, this, 3f, 2f, 0.25f, 0);
+        upBCollider = new Collider(new Vector2(0, -20), 15, 30, this, 3f, 0.25f, 0, 0);
 //        Exponentially flies him up after the initial frame
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;

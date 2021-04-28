@@ -104,7 +104,7 @@ comma
   index: -1
 decimal
   rotate: false
-  xy: 5993, 3944
+  xy: 6697, 5084
   size: 126, 128
   orig: 142, 170
   offset: 8, 40
@@ -125,7 +125,7 @@ fs_meter_full
   index: -1
 hp
   rotate: false
-  xy: 5706, 3610
+  xy: 4525, 1943
   size: 313, 205
   orig: 315, 213
   offset: 1, 4
@@ -174,7 +174,7 @@ kirby_ingame
   index: -1
 kirby_stock
   rotate: false
-  xy: 7791, 5678
+  xy: 3813, 1774
   size: 175, 168
   orig: 175, 168
   offset: 0, 0
@@ -223,10 +223,17 @@ madeline_ingame
   index: -1
 madeline_stock
   rotate: false
-  xy: 5731, 4074
+  xy: 5706, 3572
   size: 443, 170
   orig: 443, 170
   offset: 0, 0
+  index: -1
+marioluigi_country
+  rotate: false
+  xy: 4869, 2966
+  size: 468, 465
+  orig: 2835, 1701
+  offset: 2323, 1158
   index: -1
 marioluigi_ingame
   rotate: false
@@ -235,37 +242,44 @@ marioluigi_ingame
   orig: 2835, 1701
   offset: 194, 222
   index: -1
+marioluigi_stock
+  rotate: false
+  xy: 7791, 5389
+  size: 239, 221
+  orig: 239, 221
+  offset: 0, 0
+  index: -1
 masterchief_1_country
-  rotate: false
-  xy: 4869, 2718
-  size: 514, 249
-  orig: 2835, 1701
-  offset: 2135, 1282
-  index: -1
-masterchief_2_country
-  rotate: false
-  xy: 4869, 2467
-  size: 514, 249
-  orig: 2835, 1701
-  offset: 2135, 1282
-  index: -1
-masterchief_3_country
   rotate: false
   xy: 3486, 560
   size: 514, 249
   orig: 2835, 1701
   offset: 2135, 1282
   index: -1
-masterchief_4_country
+masterchief_2_country
   rotate: false
   xy: 4009, 2105
   size: 514, 249
   orig: 2835, 1701
   offset: 2135, 1282
   index: -1
-masterchief_country
+masterchief_3_country
   rotate: false
   xy: 4009, 1854
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_4_country
+  rotate: false
+  xy: 5731, 3995
+  size: 514, 249
+  orig: 2835, 1701
+  offset: 2135, 1282
+  index: -1
+masterchief_country
+  rotate: false
+  xy: 5706, 3744
   size: 514, 249
   orig: 2835, 1701
   offset: 2135, 1282
@@ -279,14 +293,14 @@ masterchief_ingame
   index: -1
 masterchief_stock
   rotate: false
-  xy: 5706, 3817
+  xy: 4525, 2150
   size: 285, 255
   orig: 285, 255
   offset: 0, 0
   index: -1
 percent
   rotate: false
-  xy: 4525, 2171
+  xy: 7791, 5612
   size: 236, 234
   orig: 241, 241
   offset: 2, 4
@@ -321,7 +335,7 @@ player_4_ingame
   index: -1
 sans_country
   rotate: false
-  xy: 4869, 2969
+  xy: 4869, 2502
   size: 462, 462
   orig: 2835, 1701
   offset: 2259, 1098
@@ -335,7 +349,7 @@ sans_ingame
   index: -1
 sans_stock
   rotate: false
-  xy: 3813, 1781
+  xy: 7970, 6575
   size: 182, 161
   orig: 182, 161
   offset: 0, 0

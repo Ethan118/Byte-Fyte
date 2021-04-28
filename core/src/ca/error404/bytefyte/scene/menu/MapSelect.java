@@ -5,12 +5,7 @@ import ca.error404.bytefyte.scene.LoadBattleMap;
 import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class MapSelect extends MenuScene {
@@ -61,5 +56,13 @@ public class MapSelect extends MenuScene {
             new ScreenWipe(new LoadBattleMap("Flowchart", game, new Vector2(50, -3000), "other"), game);
             for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
         }};
+
+        new Button(new Vector2(200, 100), game, "Back") {
+            public void click() {
+                CharacterSelect.characters = new String[] {null, null, null, null};
+                new ScreenWipe(new CharacterSelect(game), game);
+                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
+            }
+        };
     }
 }

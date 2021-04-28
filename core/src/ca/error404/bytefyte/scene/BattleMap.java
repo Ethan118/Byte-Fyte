@@ -9,9 +9,11 @@ import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.objects.BattleCam;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
+import ca.error404.bytefyte.shaders.GrayscaleShader;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.tools.WorldContactListener;
 import ca.error404.bytefyte.ui.MenuCursor;
+import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -37,6 +39,8 @@ import org.ini4j.Wini;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class BattleMap implements Screen {
@@ -45,6 +49,8 @@ public class BattleMap implements Screen {
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
     private Vector2 scrollVector;
     private final Viewport viewport;
+    public static ArrayList<Integer> positions = new ArrayList<>();
+    private int numOfPlayers = 0;
 
     private final Main game;
     private final HUD hud;
@@ -60,6 +66,8 @@ public class BattleMap implements Screen {
 
     private Texture background;
 
+    public static ArrayList<Character> alive = new ArrayList<>();
+
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
     private String[] characters;
@@ -68,6 +76,9 @@ public class BattleMap implements Screen {
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
         game.batch = new SpriteBatch();
+        Random rand = new Random();
+
+        PlayerHealth.nerds = rand.nextInt(100);
 
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
@@ -116,7 +127,6 @@ public class BattleMap implements Screen {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
-
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
@@ -157,6 +167,21 @@ public class BattleMap implements Screen {
         world.setContactListener(new WorldContactListener());
 
         hud = new HUD();
+
+        for (String character: CharacterSelect.characters) {
+            if (character != null) {
+                numOfPlayers += 1;
+            }
+        }
+
+
+        for (int i = 0; i < numOfPlayers; i++) {
+            positions.add(9);
+        }
+        System.out.println(positions.size());
+        alive.addAll(Main.players);
+        System.out.println(Main.players.size());
+        System.out.println(BattleMap.alive.size());
     }
 
     @Override
@@ -165,22 +190,33 @@ public class BattleMap implements Screen {
     }
 
     public void update(float deltaTime) {
-//        int i = 0;
-//        playersAlive = 0;
-//        for (Character character: Main.players) {
-//            i ++;
-//            if (character != null) {
-//                if (character.dead) {
-//                    Main.players.set(i, null);
-//                } else {
-//                    playersAlive += 1;
-//                }
-//            }
-//        }
-//
-//        if (playersAlive == 1) {
-//            new ScreenWipe(new VictoryScreen(game, characters), game);
-//        }
+        int i = -1;
+        playersAlive = 0;
+        for (int k = 0; k < Main.players.size(); k++) {
+            i ++;
+            Main.players.get(k).rank = Main.players.size();
+            if (Main.players.get(k) != null) {
+                if (Main.players.get(k).dead) {
+                    Main.players.set(i, null);
+                } else {
+                    playersAlive += 1;
+                }
+            }
+        }
+
+        if (playersAlive == 1) {
+            for (Character character : Main.players) {
+                i++;
+                if (character != null) {
+                    character.rank = 1;
+                }
+            }
+            Main.uiToAdd.clear();
+            Main.ui.clear();
+            Main.uiToRemove.clear();
+            Main.players.clear();
+            new ScreenWipe(new VictoryScreen(game), game);
+        }
 
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;
@@ -197,36 +233,30 @@ public class BattleMap implements Screen {
             videoPlayer.stop();
         }
 
-        // start video if not playing
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
-            videoPlayer.play();
-            game.music.pause();
-        } else if (!videoPlayer.isPlaying()) {
-            // update all objects and physics objects
-            world.step(1 / 60f, 6, 2);
-            for (GameObject obj : Main.gameObjects) {
-                if (obj.remove) {
-                    try {
-                        world.destroyBody(obj.b2body);
-                    } catch (Exception ignored) {}
-                    Main.objectsToRemove.add(obj);
-                } else {
-                    obj.update(deltaTime);
-                }
+        // update all objects and physics objects
+        world.step(1 / 60f, 6, 2);
+        for (GameObject obj : Main.gameObjects) {
+            if (obj.remove) {
+                try {
+                    world.destroyBody(obj.b2body);
+                } catch (Exception ignored) {}
+                Main.objectsToRemove.add(obj);
+            } else {
+                obj.update(deltaTime);
             }
-
-            // Manage which game objects are active
-            Main.gameObjects.addAll(Main.objectsToAdd);
-            Main.gameObjects.removeAll(Main.objectsToRemove);
-            Main.objectsToAdd.clear();
-            Main.objectsToRemove.clear();
-
-            if (!game.music.isPlaying()) {
-                game.music.play();
-            }
-
-            hud.update(deltaTime);
         }
+
+        // Manage which game objects are active
+        Main.gameObjects.addAll(Main.objectsToAdd);
+        Main.gameObjects.removeAll(Main.objectsToRemove);
+        Main.objectsToAdd.clear();
+        Main.objectsToRemove.clear();
+
+        if (!game.music.isPlaying()) {
+            game.music.play();
+        }
+
+        hud.update(deltaTime);
 
         // clear all controller inputs
         Set<Controller> keys = Main.recentButtons.keySet();
@@ -236,14 +266,19 @@ public class BattleMap implements Screen {
 
         for (int j=0; j < Main.transitions.size(); j++) Main.transitions.get(j).update(deltaTime);
     }
+
     public void render(float delta) {
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        game.batch.setShader(GrayscaleShader.grayscaleShader);
+        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
 
         drawBackground();
 
         renderer.render();
+        game.batch.setShader(null);
+        renderer.getBatch().setShader(null);
 
         game.batch.begin();
         game.batch.setProjectionMatrix(gamecam.combined);

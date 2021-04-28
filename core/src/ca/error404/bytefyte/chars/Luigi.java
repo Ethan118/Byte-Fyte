@@ -1,16 +1,9 @@
 package ca.error404.bytefyte.chars;
 
-import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
-import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-
-import java.util.ArrayList;
 
 public class Luigi extends Character {
     Mario parent;

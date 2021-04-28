@@ -47,8 +47,12 @@ public class Madeline extends Character {
     private int maxDashes = 1;
     private int currentDash = maxDashes;
 
-    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
-        super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f);
+    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
+        super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f, stamina);
         manualSpriteOffset = rightOffset;
 
         weight = 1.1f;
@@ -98,6 +102,8 @@ public class Madeline extends Character {
 
         if (knockedOff) {
             badelineMeter = 0;
+            currentDash = 1;
+            knockedOff = false;
         }
 
         if (charging) {
@@ -118,6 +124,7 @@ public class Madeline extends Character {
         }
 
         super.update(delta);
+        afterUpB = false;
 
         if (resetHair) {
             resetHair();
@@ -324,7 +331,6 @@ public class Madeline extends Character {
 
     @Override
     void dashAttack() {
-
     }
 
     @Override
@@ -383,7 +389,7 @@ public class Madeline extends Character {
 
             currentDash -= 1;
 
-            animDuration = 1;
+            animDuration = 0.1f;
             Vector2 dir = moveVector;
             vel.set(dir.scl(7));
 

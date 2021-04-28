@@ -3,14 +3,9 @@ package ca.error404.bytefyte;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Globals;
-import ca.error404.bytefyte.constants.Keys;
-import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.LoadBattleMap;
 import ca.error404.bytefyte.scene.ScreenWipe;
-import ca.error404.bytefyte.scene.VictoryScreen;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
-import ca.error404.bytefyte.scene.menu.MainMenu;
-import ca.error404.bytefyte.scene.menu.MenuScene;
 import ca.error404.bytefyte.scene.menu.TitleScreen;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
@@ -28,14 +23,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.BufferUtils;
 import org.apache.commons.io.FileUtils;
+import org.ini4j.Wini;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
-import java.nio.IntBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -87,8 +81,28 @@ public class Main extends Game {
 	public static BitmapFont percentFont;
 	public static BitmapFont menuFont;
 
+	public static boolean bill = false;
+
 	@Override
 	public void create () {
+		File save = new File(Globals.workingDirectory + "universal.ini");
+
+		try {
+			Wini ini = new Wini(save);
+
+			bill = Boolean.parseBoolean(ini.get("Menu", "bill"));
+		} catch (Exception e) {
+			try {
+				save.createNewFile();
+
+				Wini ini = new Wini(save);
+
+				ini.add("Menu", "bill", bill);
+				ini.store();
+			} catch (Exception ignored) {
+			}
+		}
+
 		for (int i=0; i < 24; i++) {
 			try {
 				String fileName = String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1);
@@ -121,8 +135,8 @@ public class Main extends Game {
 		CharacterSelect.characters = new String[] {"marioluigi", "masterchief", "shyguy", "kirby"};
 //		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
 //		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
-//		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
-		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
+		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
+//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
 //		setScreen(new LoadBattleMap("Fawful's Castle", this, new Vector2(0, 0), "mal"));
 //		setScreen(new LoadBattleMap("Castle Bleck", this, new Vector2(20, 0), "paper mario"));
 //		setScreen(new LoadBattleMap("Flowchart", this, new Vector2(50, -3000), null));
@@ -327,10 +341,12 @@ public class Main extends Game {
 
 				if (i > 0) {
 					for (int j=0; j < Integer.parseInt(data[6]); j++) {
-						names.add(data[0]);
-						songNames.add(data[1]);
-						start.add(Double.parseDouble(data[2]));
-						end.add(Double.parseDouble(data[3]));
+						if (!data[4].equalsIgnoreCase("n/a")) {
+							names.add(data[0]);
+							songNames.add(data[1]);
+							start.add(Double.parseDouble(data[2]));
+							end.add(Double.parseDouble(data[3]));
+						}
 					}
 				}
 

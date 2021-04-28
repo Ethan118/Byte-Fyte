@@ -17,7 +17,11 @@ public class TitleScreen extends MenuScene {
 
     public TitleScreen(Main game) {
         super(game);
-        background = new Texture("sprites/menu/title_screen_bg.png");
+        if (Main.internalSongName.equalsIgnoreCase("menu weird") && Main.bill) {
+            background = new Texture("sprites/menu/bill_bg.png");
+        } else {
+            background = new Texture("sprites/menu/title_screen_bg.png");
+        }
         xSpeed = 0;
     }
 
@@ -32,7 +36,9 @@ public class TitleScreen extends MenuScene {
 
         super.update(deltaTime);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || controllerPressed) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || controllerPressed) {
             new ScreenWipe(new MainMenu(game), game);
         }
 
@@ -47,8 +53,10 @@ public class TitleScreen extends MenuScene {
 
         game.batch.begin();
         game.batch.draw(logo, 0, 0);
-        layout.setText(Main.menuFont, "PRESS ANY BUTTON", new Color(1, 1, 1, (float) Math.toDegrees(Math.sin(alpha)) / 57), 0, Align.center, false);
+        layout.setText(Main.menuFont, "PRESS ANY BUTTON TO START", new Color(1, 1, 1, (float) Math.toDegrees(Math.sin(alpha)) / 57), 0, Align.center, false);
         Main.menuFont.draw(game.batch, layout, 960, 400);
+        layout.setText(Main.menuFont, "PRESS ESC TO EXIT", new Color(1, 1, 1, (float) Math.toDegrees(Math.sin(alpha)) / 57), 0, Align.center, false);
+        Main.menuFont.draw(game.batch, layout, 960, 300);
         game.batch.setColor(Color.WHITE);
         game.batch.end();
 
