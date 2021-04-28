@@ -5,6 +5,7 @@ import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,11 +22,14 @@ public class Sans extends Character{
     private boolean sit = false;
     private boolean usingDownB = false;
     private float moveCooldown;
+    private boolean usingDTilt = false;
+    private GasterBlaster gasterBlaster;
+    private Laser laser;
 
     private TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", charname), TextureAtlas.class);
     private boolean hasTeleported = false;
 
-    public Sans(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+    public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         super(screen, spawnPoint, controller, playernumber, "sans", "SANS", 0.8f, 0.9f);
         upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_start"), Animation.PlayMode.NORMAL);
 
@@ -100,14 +104,24 @@ public class Sans extends Character{
             }
 
             if (animDuration > 0) {
-                if (percent - deltaTime <= 0) {
-                    percent = 0;
+                lockAnim = true;
+                if (!stamina) {
+                    if (percent <= deltaTime) {
+                        percent = 0;
+                    } else {
+                        percent -= deltaTime;
+                    }
                 } else {
-                    percent -= deltaTime;
+                    if (percent + deltaTime >= 999.9) {
+                        percent = 999.9f;
+                    } else {
+                        percent += deltaTime;
+                    }
                 }
 
             } else {
                 usingDownB = false;
+                lockAnim = false;
             }
         }
 
@@ -115,6 +129,19 @@ public class Sans extends Character{
             if (animDuration == 0) {
                 animDuration = 0.4f;
                 airNeutral();
+            }
+        }
+
+        if (animState == AnimationState.BASIC_D) {
+            if (!usingDTilt) {
+                animDuration = 0.5f;
+                usingDTilt = true;
+            }
+            if (animDuration > 0) {
+                lockAnim = true;
+            } else {
+                lockAnim = false;
+                usingDTilt = false;
             }
         }
 
@@ -166,7 +193,7 @@ public class Sans extends Character{
 
     @Override
     void basicDown() {
-        new Collider(new Vector2(20, 0), 30, 25, this, 2f, 6.5f, 0.25f, 0.3f);
+        new Collider(new Vector2(0, 0f), 75, 35, this, 2f, 5f, 0.25f, 0);
 
         resetControls();
     }
@@ -182,21 +209,10 @@ public class Sans extends Character{
         if (moveCooldown == 0) {
             moveCooldown = 1f;
 
+            gasterBlaster = new GasterBlaster(this, 10f, laser);
 
-            if (controller != null) {
-                if (facingLeft) {
-                    new Laser(this, new Vector2(-0.1f, 0.1f), rStick.cpy(), 100, 2.5f, 4, 0.5f, 0.5f, 1f, "gb_laser", "sprites/sans.atlas", 3f);
-                } else {
-                    new Laser(this, new Vector2(0.1f, 0.1f), rStick.cpy(), 100, 2.5f, 4, 0.5f, 0.5f, 1f, "gb_laser", "sprites/sans.atlas", 3f);
-                }
-            } else {
-                if (facingLeft) {
-                    new Laser(this, new Vector2(-0.1f, 0.1f), moveVector.cpy(), 100, 2.5f, 4, 0.5f, 0.5f, 1f, "gb_laser", "sprites/sans.atlas", 3f);
-                } else {
-                    new Laser(this, new Vector2(0.1f, 0.1f), moveVector.cpy(), 100, 2.5f, 4, 0.5f, 0.5f, 1f, "gb_laser", "sprites/sans.atlas", 3f);
-                }
-            }
         }
+        resetControls();
     }
 
     @Override

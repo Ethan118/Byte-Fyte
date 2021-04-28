@@ -59,17 +59,6 @@ public class BattleMap extends PlayRoom {
         super(game, map, scrollVector, background);
         this.background = background;
 
-        viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
-
-        this.map = map;
-        renderer = new OrthogonalTiledMapRenderer(map, 1/Main.PPM);
-
-        mProp = map.getProperties();
-
-
-        world = new World(new Vector2(0, 0), true);
-        b2dr = new Box2DDebugRenderer();
-
         alive = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
             alive.add(null);
@@ -106,21 +95,21 @@ public class BattleMap extends PlayRoom {
             if (CharacterSelect.characters[i-1] != null) {
                 if (CharacterSelect.characters[i-1].equalsIgnoreCase("masterchief")) {
                     try {
-                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
-                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
-                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
-                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("madeline")) {
                     try {
-                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
-                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
                 }else if (CharacterSelect.characters[i-1].equalsIgnoreCase("sans")){
                     try {
@@ -130,9 +119,9 @@ public class BattleMap extends PlayRoom {
                     }
                 } else {
                     try {
-                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
-                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
                 }
                 alive.set(i - 1, chara);
@@ -222,14 +211,14 @@ public class BattleMap extends PlayRoom {
 
         // update all objects and physics objects
         world.step(1 / 60f, 6, 2);
-        for (GameObject obj : Main.gameObjects) {
-            if (obj.remove) {
+        for (int j = 0; j < Main.gameObjects.size(); j++) {
+            if (Main.gameObjects.get(j).remove) {
                 try {
-                    world.destroyBody(obj.b2body);
+                    world.destroyBody(Main.gameObjects.get(j).b2body);
                 } catch (Exception ignored) {}
-                Main.objectsToRemove.add(obj);
+                Main.objectsToRemove.add(Main.gameObjects.get(j));
             } else {
-                obj.update(deltaTime);
+                Main.gameObjects.get(j).update(deltaTime);
             }
         }
 

@@ -17,14 +17,15 @@ public class MasterChief extends Character {
 
     public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
         super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF", stamina);
-        weight = 1.2f;
-        walkSpeed = 0.9f;
-        runSpeed = 1.8f;
+        weight = 1.05f;
+        walkSpeed = 1f;
+        runSpeed = 2f;
         manualSpriteOffset = new Vector2(1100, 350);
 
         projectilesOnScreen = new ArrayList<>(1);
 
         walk.setFrameDuration(0.02f);
+        idle.setFrameDuration(0.02f);
     }
 
     /*
@@ -43,7 +44,7 @@ public class MasterChief extends Character {
             moveVector = new Vector2(0, 0);
         }
         if ((upB.getKeyFrameIndex(elapsedTime) >= 12 && upB.getKeyFrameIndex(elapsedTime) <= 15) && animState == AnimationState.SPECIAL_U) {
-            vel.y = 12;
+            vel.y = 9;
         }
         if (downB.getKeyFrameIndex(elapsedTime) >= 20 && downB.getKeyFrameIndex(elapsedTime) <= 23 && animState == AnimationState.SPECIAL_D && projectilesOnScreen.isEmpty()) {
             projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0), new Vector2(0, -5), 0, 0f, 20, 3, 20, 1, "laser", "sprites/masterchief.atlas", 0));
