@@ -5,6 +5,7 @@ import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.*;
 import ca.error404.bytefyte.chars.Character;
+import ca.error404.bytefyte.chars.bosses.Petey;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.constants.ScreenSizes;
 import ca.error404.bytefyte.objects.BattleCam;
@@ -45,7 +46,6 @@ import java.util.Set;
 
 public class BattleMap extends PlayRoom {
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
-    private Vector2 scrollVector;
     public static ArrayList<Integer> positions = new ArrayList<>();
     private int numOfPlayers = 0;
 
@@ -94,27 +94,27 @@ public class BattleMap extends PlayRoom {
             if (CharacterSelect.characters[i-1] != null) {
                 if (CharacterSelect.characters[i-1].equalsIgnoreCase("masterchief")) {
                     try {
-                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
                     } catch (Exception e) {
-                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
-                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
                     } catch (Exception e) {
-                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("madeline")) {
                     try {
-                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
                     } catch (Exception e) {
-                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
                     }
                 } else {
                     try {
-                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i, 300);
                     } catch (Exception e) {
-                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
                     }
                 }
                 chara.facingLeft = (boolean) object.getProperties().get("left");

@@ -72,6 +72,8 @@ public class LoadBossRoom implements Screen {
             characters.add(charname);
         }
 
+        Main.manager.load("sprites/enemies/petey piranha.atlas", TextureAtlas.class);
+
         if (characters.contains("shyguy")) {
             for (int i = 0; i < 24; i++) {
                 Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1), Sound.class);

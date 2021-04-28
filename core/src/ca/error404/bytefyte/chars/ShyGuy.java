@@ -70,7 +70,11 @@ public class ShyGuy extends Character {
 //        Heals shy guy for song duration
         if (animState == AnimationState.SPECIAL_D) {
             if (animDuration <= 0.1) {
-                percent = Math.max(percent - (currentSongLength), 0);
+                if (stamina) {
+                    percent = Math.min(percent + (currentSongLength), 999.9f);
+                } else {
+                    percent = Math.max(percent - (currentSongLength), 0);
+                }
             }
         }
 

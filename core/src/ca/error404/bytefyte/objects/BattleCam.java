@@ -14,6 +14,8 @@ public class BattleCam extends OrthographicCamera {
     public Vector2 min = new Vector2(0, 0);
     public Vector2 max = new Vector2();
 
+    public float scale = 2.5f;
+
     public BattleCam() {
         super();
     }
@@ -36,7 +38,7 @@ public class BattleCam extends OrthographicCamera {
         targetPos.scl(speed);
         cameraPosition.add(targetPos);
 
-        float width = 2.5f, height = width * hRatio;
+        float width = scale, height = width * hRatio;
 
         Vector2 max = max(pos);
         Vector2 min = min(pos);
