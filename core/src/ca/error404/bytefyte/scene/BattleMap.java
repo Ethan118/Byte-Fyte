@@ -34,24 +34,13 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
-public class BattleMap implements Screen {
-    private final BattleCam gamecam;
-    private final OrthographicCamera bgCam;
+public class BattleMap extends PlayRoom {
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
     private Vector2 scrollVector;
-    private final Viewport viewport;
     public static ArrayList<Integer> positions = new ArrayList<>();
     private int numOfPlayers = 0;
 
-    private final Main game;
     private final HUD hud;
-
-    private final TiledMap map;
-    private final OrthogonalTiledMapRenderer renderer;
-
-    private final MapProperties mProp;
-    private final World world;
-    private final Box2DDebugRenderer b2dr;
 
     private int playersAlive;
 
@@ -65,15 +54,7 @@ public class BattleMap implements Screen {
     private CharacterSelect characterSelect;
 
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
-        this.game = game;
-        game.batch = new SpriteBatch();
-        Random rand = new Random();
-
-        PlayerHealth.nerds = rand.nextInt(100);
-
-        gamecam = new BattleCam();
-        bgCam = new OrthographicCamera(1920, 1080);
-        this.scrollVector = scrollVector;
+        super(game, map, scrollVector, background);
         this.background = background;
 
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
@@ -126,7 +107,6 @@ public class BattleMap implements Screen {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
                         chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
-
                     }
                 } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
                     try {
@@ -238,36 +218,30 @@ public class BattleMap implements Screen {
             videoPlayer.stop();
         }
 
-        // start video if not playing
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P) && !videoPlayer.isPlaying()) {
-            videoPlayer.play();
-            game.music.pause();
-        } else if (!videoPlayer.isPlaying()) {
-            // update all objects and physics objects
-            world.step(1 / 60f, 6, 2);
-            for (GameObject obj : Main.gameObjects) {
-                if (obj.remove) {
-                    try {
-                        world.destroyBody(obj.b2body);
-                    } catch (Exception ignored) {}
-                    Main.objectsToRemove.add(obj);
-                } else {
-                    obj.update(deltaTime);
-                }
+        // update all objects and physics objects
+        world.step(1 / 60f, 6, 2);
+        for (GameObject obj : Main.gameObjects) {
+            if (obj.remove) {
+                try {
+                    world.destroyBody(obj.b2body);
+                } catch (Exception ignored) {}
+                Main.objectsToRemove.add(obj);
+            } else {
+                obj.update(deltaTime);
             }
-
-            // Manage which game objects are active
-            Main.gameObjects.addAll(Main.objectsToAdd);
-            Main.gameObjects.removeAll(Main.objectsToRemove);
-            Main.objectsToAdd.clear();
-            Main.objectsToRemove.clear();
-
-            if (!game.music.isPlaying()) {
-                game.music.play();
-            }
-
-            hud.update(deltaTime);
         }
+
+        // Manage which game objects are active
+        Main.gameObjects.addAll(Main.objectsToAdd);
+        Main.gameObjects.removeAll(Main.objectsToRemove);
+        Main.objectsToAdd.clear();
+        Main.objectsToRemove.clear();
+
+        if (!game.music.isPlaying()) {
+            game.music.play();
+        }
+
+        hud.update(deltaTime);
 
         // clear all controller inputs
         Set<Controller> keys = Main.recentButtons.keySet();
@@ -396,11 +370,6 @@ public class BattleMap implements Screen {
         map.dispose();
 
 
-    }
-
-//  Gets the world
-    public World getWorld() {
-        return world;
     }
 
 }

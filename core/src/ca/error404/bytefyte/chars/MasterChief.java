@@ -3,6 +3,7 @@ package ca.error404.bytefyte.chars;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 
@@ -10,8 +11,12 @@ import java.util.ArrayList;
 
 public class MasterChief extends Character {
 
-    public MasterChief(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF");
+    public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF", stamina);
         weight = 1.2f;
         walkSpeed = 0.9f;
         runSpeed = 1.8f;

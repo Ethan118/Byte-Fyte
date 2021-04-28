@@ -4,6 +4,13 @@ size: 4096, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+dead
+  rotate: false
+  xy: 2610, 112
+  size: 258, 146
+  orig: 500, 500
+  offset: 155, 125
+  index: 1
 fall
   rotate: false
   xy: 496, 20
@@ -209,28 +216,28 @@ idle
   index: 19
 idle
   rotate: false
-  xy: 2946, 22
+  xy: 2870, 22
   size: 170, 234
   orig: 500, 500
   offset: 165, 125
   index: 7
 idle
   rotate: false
-  xy: 2946, 22
+  xy: 2870, 22
   size: 170, 234
   orig: 500, 500
   offset: 165, 125
   index: 17
 idle
   rotate: false
-  xy: 3118, 12
+  xy: 3212, 8
   size: 166, 240
   orig: 500, 500
   offset: 167, 125
   index: 8
 idle
   rotate: false
-  xy: 3118, 12
+  xy: 3212, 8
   size: 166, 240
   orig: 500, 500
   offset: 167, 125
@@ -335,15 +342,15 @@ walk
   index: 6
 walk
   rotate: false
-  xy: 2608, 14
-  size: 166, 242
-  orig: 500, 500
-  offset: 167, 129
-  index: 7
-walk
-  rotate: false
-  xy: 2776, 18
+  xy: 3042, 12
   size: 168, 240
   orig: 500, 500
   offset: 166, 130
   index: 8
+walk
+  rotate: false
+  xy: 3380, 6
+  size: 166, 242
+  orig: 500, 500
+  offset: 167, 129
+  index: 7

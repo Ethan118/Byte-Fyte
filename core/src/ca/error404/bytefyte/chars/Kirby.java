@@ -3,6 +3,7 @@ package ca.error404.bytefyte.chars;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,8 +25,12 @@ public class Kirby extends Character {
 
     private boolean rock;
 
-    public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
+    public Kirby(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Kirby(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f, stamina);
         weight = 0.8f;
         maxJumps = 10;
         defaultGravity = downGravity;
