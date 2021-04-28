@@ -110,7 +110,6 @@ public class VictoryScreen extends MenuScene {
 
         for (int i = 0; i < numOfPlayers; i++) {
             Character character = BattleMap.alive.get(i);
-            System.out.println(character);
 
             character.facingLeft = false;
             shapeRenderer.setColor(colors[i]);

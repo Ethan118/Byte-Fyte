@@ -617,7 +617,7 @@ public abstract class Character extends GameObject {
             animState = AnimationState.JUMP;
 
 //        If they are not on the ground with a y velocity below 0, user is falling
-        } else if (vel.y <= 0 && !grounded) {
+        } else if (vel.y <= 0 && !grounded && animState != AnimationState.SPECIAL_U) {
             moveState = MovementState.FALL;
             animState = AnimationState.FALL;
 

@@ -132,7 +132,7 @@ public class Main extends Game {
 
 		reloadControllers();
 
-//		CharacterSelect.characters = new String[] {"sans", "masterchief", null, null};
+//		CharacterSelect.characters = new String[] {"sans", "madeline", null, null};
 //		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
 //		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
 //		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
