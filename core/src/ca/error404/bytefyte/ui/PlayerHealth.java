@@ -80,7 +80,7 @@ public class PlayerHealth extends GameObject {
             playerHead = new TextureRegion(textureAtlas.findRegion("bill_ingame"));
             stock = new TextureRegion(textureAtlas.findRegion("bill_stock"));
             country = new TextureRegion(textureAtlas.findRegion("bill_country"));
-            if (nerds != 2) {
+            if (CharacterSelect.characters[3] == null || nerds != 2) {
                 this.charname = "BILL";
             }
         } else {
