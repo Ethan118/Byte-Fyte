@@ -137,7 +137,7 @@ public class Main extends Game {
 
 //		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
 //		CharacterSelect.characters = new String[] {"shyguy", null, null, null};
-		CharacterSelect.characters = new String[] {"sans", "masterchief", null, null};
+		CharacterSelect.characters = new String[] {"masterchief", "shyguy", null, null};
 //		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
 		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
 //		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));

@@ -10,6 +10,7 @@ import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.PlayRoom;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
@@ -23,6 +24,8 @@ public abstract class Character extends GameObject {
     public Controller controller;
     public float deadzone = Main.deadZone;
     public boolean hasBeenHit = false;
+
+    private Music hitSFX;
 
     public float percent = 0f;
     public float stunTimer;
@@ -210,6 +213,10 @@ public abstract class Character extends GameObject {
             stamina = true;
             health.stamina = true;
         }
+
+        hitSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/playerHit.wav"));
+        hitSFX.setLooping(false);
+        hitSFX.setVolume(5);
     }
 
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, int hp) {
@@ -220,10 +227,12 @@ public abstract class Character extends GameObject {
             stamina = true;
             health.stamina = true;
         }
+
     }
 
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
+
     }
 
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
@@ -236,6 +245,10 @@ public abstract class Character extends GameObject {
         this.playerName = playerName;
         this.world = screen.getWorld();
         this.controller = controller;
+
+        hitSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/playerHit.wav"));
+        hitSFX.setLooping(false);
+        hitSFX.setVolume(5);
 
         health = new PlayerHealth(playerNumber, charname, this);
 
@@ -475,6 +488,7 @@ public abstract class Character extends GameObject {
         if (dead) {
             Main.players.remove(this);
             destroy();
+            hitSFX.dispose();
         }
 
         // counts the animation duration down to zero
@@ -886,6 +900,7 @@ public abstract class Character extends GameObject {
                 region = hit.getKeyFrame(elapsedTime, true);
                 attackAnimation = null;
                 afterUpB = false;
+                hitSFX.play();
                 break;
             case IDLE:
             default:

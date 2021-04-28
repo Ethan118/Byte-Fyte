@@ -2,10 +2,12 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
+import ca.error404.bytefyte.objects.GasterBlaster;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.PlayRoom;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,7 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public class Sans extends Character{
-
+    private Music healSFX;
     private boolean upBStart = true;
     private boolean upBEnd = false;
     private boolean usingUpB = false;
@@ -42,6 +44,10 @@ public class Sans extends Character{
 
 
         walk.setFrameDuration(0.02f);
+
+        healSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/fullRestore.wav"));
+        healSFX.setLooping(false);
+        healSFX.setVolume(5);
     }
 
     /*
@@ -68,6 +74,10 @@ public class Sans extends Character{
             }
         }
         super.update(deltaTime);
+
+        if (dead) {
+            healSFX.dispose();
+        }
 
         if (upBStart) {
             upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_start"), Animation.PlayMode.NORMAL);
@@ -101,6 +111,7 @@ public class Sans extends Character{
             if (!usingDownB) {
                 animDuration = 1.75f;
                 usingDownB = true;
+                healSFX.play();
             }
 
             if (animDuration > 0) {

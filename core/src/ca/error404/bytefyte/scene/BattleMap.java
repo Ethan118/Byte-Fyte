@@ -63,7 +63,6 @@ public class BattleMap extends PlayRoom {
         for (int i = 0; i < 4; i++) {
             alive.add(null);
         }
-        System.out.println(alive.size());
 
         Vector2 pos = Vector2.Zero;
 
@@ -89,8 +88,7 @@ public class BattleMap extends PlayRoom {
         for (MapObject object: map.getLayers().get("Spawn Points").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             int i = (int) object.getProperties().get("player");
-            System.out.println(i);
-            System.out.println(CharacterSelect.characters[i - 1]);
+
             Character chara;
             if (CharacterSelect.characters[i-1] != null) {
                 if (CharacterSelect.characters[i-1].equalsIgnoreCase("masterchief")) {
@@ -155,9 +153,7 @@ public class BattleMap extends PlayRoom {
 
     @Override
     public void show() {
-        for (int l = 0; l < BattleMap.alive.size(); l ++) {
-            System.out.println(BattleMap.alive.get(l));
-        }
+
     }
 
     public void update(float deltaTime) {

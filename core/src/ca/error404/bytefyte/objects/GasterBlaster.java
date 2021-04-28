@@ -1,8 +1,11 @@
-package ca.error404.bytefyte.chars;
+package ca.error404.bytefyte.objects;
 
 import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.objects.Laser;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,6 +26,9 @@ public class GasterBlaster extends GameObject {
     private Vector2 angle;
     private boolean laserHasSpawned = false;
     private Vector2 offset = new Vector2(0, 0);
+    private Music arriveSFX;
+    private Music fireSFX;
+    private boolean arriveHasPlayed = false;
 
 
 
@@ -48,6 +54,13 @@ public class GasterBlaster extends GameObject {
         }
 
         setRotation(angle.angleDeg() + 90);
+        arriveSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/gasterBlasterArrive.wav"));
+        arriveSFX.setLooping(false);
+        arriveSFX.setVolume(5);
+
+        fireSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/gasterBlasterFire.wav"));
+        fireSFX.setLooping(false);
+        fireSFX.setVolume(5);
 
     }
 
@@ -62,17 +75,19 @@ public class GasterBlaster extends GameObject {
             elapsedTime += delta;
 
             if (!laserHasSpawned) {
+                fireSFX.play();
+
                 if (parent.controller != null) {
                     if (parent.facingLeft) {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
+                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
                     } else {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
+                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
                     }
                 } else {
                     if (parent.facingLeft) {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
+                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
                     } else {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
+                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
                     }
                 }
 
@@ -83,7 +98,12 @@ public class GasterBlaster extends GameObject {
             if (elapsedTime > 1) {
                 destroy();
             }
+        } else if (!arriveHasPlayed) {
+            arriveSFX.play();
+            arriveHasPlayed = true;
         }
+
+
         if (laserHasSpawned) {
             Main.gameObjects.remove(this);
             Main.gameObjects.add(this);
@@ -98,5 +118,12 @@ public class GasterBlaster extends GameObject {
 
 
 
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        fireSFX.dispose();
+        arriveSFX.dispose();
     }
 }

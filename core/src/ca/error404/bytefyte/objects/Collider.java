@@ -4,6 +4,7 @@ import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.Tags;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -28,6 +29,8 @@ public class Collider extends GameObject {
 
     private float delay;
     private float timer;
+
+    private Music sfx = null;
 
     private Character.AnimationState parentAnim;
 
@@ -118,6 +121,11 @@ public class Collider extends GameObject {
         this.dir = dir;
     }
 
+    public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, Music sfx) {
+        this(offset, width, height, parent, power, damage, hitStun, delay);
+        this.sfx = sfx;
+    }
+
 
     /**
      * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating, amount of time
@@ -169,6 +177,9 @@ public class Collider extends GameObject {
         // checks if the body has been removed or the delay is still active
         if (!remove && (delay <= 0)) {
 
+            if (sfx != null) {
+                sfx.play();
+            }
             // if the body is not defined, define it
             if (b2body == null) {
                 define();
@@ -187,6 +198,9 @@ public class Collider extends GameObject {
             if (parent.animState != parentAnim || timer <= 0) {
                 b2body.setTransform(-5000f, -5000f, 0);
                 destroy();
+                if (sfx != null) {
+                    sfx.dispose();
+                }
             }
         } else {
             delay -= delta;
