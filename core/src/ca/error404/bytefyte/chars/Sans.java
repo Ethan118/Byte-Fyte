@@ -39,14 +39,25 @@ public class Sans extends Character{
     * Post: A new instance of the character Sans that is playable by the user
     * */
     public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-<<<<<<<<< Temporary merge branch 1
 
 //        Calling the character constructor
         super(screen, spawnPoint, controller, playernumber, "sans", "SANS", 0.8f, 0.9f);
+        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_start"), Animation.PlayMode.NORMAL);
 
-//        Assigning variables values
-=========
-        this(screen, spawnPoint, controller, playernumber, 0);
+        weight = 0.9f;
+        walkSpeed = 1.1f;
+        runSpeed = 2.2f;
+        manualSpriteOffset = new Vector2(50, 15f);
+
+        projectilesOnScreen = new ArrayList<>(1);
+
+
+        walk.setFrameDuration(0.02f);
+
+//        Preparing sound effects
+        healSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/fullRestore.wav"));
+        healSFX.setLooping(false);
+        healSFX.setVolume(5);
     }
 
     public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
@@ -281,7 +292,7 @@ public class Sans extends Character{
     @Override
     void dashAttack() {
 //        Adds collider
-        new Collider(new Vector2(7.5f, 0), 15, 30, this, 3f, 9f, 0.25f, 0);
+        new Collider(new Vector2(7.5f, 0), 15, 30, this, 3f, 4f, 0.25f, 0);
         resetControls();
     }
 

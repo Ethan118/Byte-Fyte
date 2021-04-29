@@ -188,7 +188,7 @@ public class Button {
     * */
     public void update() {
 
-//        If the button is clicked, call the click method
+//        If the button is clicked, call the click method and play sound effect
         if (isClicked()) {
             click();
             clickSound.play();

@@ -122,7 +122,10 @@ public class CharacterSelectSingle extends MenuScene {
         };
     }
 
-    // checks if there is a character selected
+    /*
+    * Pre: None
+    * Post: Checks if all characters have been selected
+    * */
     private boolean checkChars() {
         check();
         for (int i = 0; i < Main.cursors.size(); i++) {
@@ -133,7 +136,10 @@ public class CharacterSelectSingle extends MenuScene {
         return true;
     }
 
-    // checks how many characters are selected
+    /*
+     * Pre: None
+     * Post: Checks if a character has been selected
+     * */
     public void check() {
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] != null) {
@@ -145,7 +151,10 @@ public class CharacterSelectSingle extends MenuScene {
     }
 
 
-    // creates buttons
+    /*
+    * Pre: None
+    * Post: Creates menu button
+    * */
     private void createButton() {
         if (checkChars()) {
 
@@ -158,6 +167,10 @@ public class CharacterSelectSingle extends MenuScene {
         }
     }
 
+    /*
+    * Pre: None
+    * Post: Calls render method
+    * */
     public void render(float delta) {
         super.render(delta);
     }

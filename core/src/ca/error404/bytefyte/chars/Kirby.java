@@ -67,10 +67,6 @@ public class Kirby extends Character {
 
         super.update(deltaTime);
 
-        if (knockedOff) {
-            rock = false;
-        }
-
         friction = defaultFriction;
 
 //        Allowing the animation of up b to play
