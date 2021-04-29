@@ -18,6 +18,7 @@ import java.util.Random;
 
 public class PlayerHealth extends GameObject {
 
+    // Var init
     private final Vector2 headOffset = new Vector2();
     private final Vector2 baseOffset = new Vector2();
     private final Vector2 countryOffset = new Vector2();
@@ -44,6 +45,9 @@ public class PlayerHealth extends GameObject {
     private Color color;
     private Color playerColor;
 
+    /* Pre: int, string, character object
+       Post: loads player ui element
+     */
     public PlayerHealth(int number, String charname, Character chara) {
         super();
         Main.objectsToAdd.remove(this);
@@ -51,28 +55,32 @@ public class PlayerHealth extends GameObject {
         this.chara = chara;
         Random rand = new Random();
 
+        // Sets position as well as spoopy threat
         if (number == 1) {
             pos = new Vector2(25, 25);
-            this.charname = "BOWSER";
+            this.charname = "I'M";
         } else if (number == 2) {
             pos = new Vector2(525, 25);
-            this.charname = "WAS";
+            this.charname = "WATCHING";
         } else if (number == 3) {
             pos = new Vector2(1025, 25);
-            this.charname = "HERE,";
+            this.charname = "YOU,";
         } else if (number == 4) {
             pos = new Vector2(1525, 25);
-            this.charname = "BWAHAHA";
+            this.charname = "NERDS";
         }
 
-        int chanceForBowser = rand.nextInt(200);
+        // Sets the random chance for Bill Cipher and Bowser to make a cameo in the player's place
+        int chanceForBowser = rand.nextInt(500);
 
+        // Overrides the spoopy message if there are less than 4 players, or the random number was incorrect
         if (CharacterSelect.characters[3] == null || nerds != 2) {
             this.charname = chara.playerName;
         }
 
         textureAtlas = Main.manager.get("sprites/battleUI.atlas", TextureAtlas.class);
 
+        // Sets images to Bowser
         if (chanceForBowser == 2) {
             playerHead = new TextureRegion(textureAtlas.findRegion("bowser_ingame"));
             stock = new TextureRegion(textureAtlas.findRegion("bowser_stock"));
@@ -80,6 +88,15 @@ public class PlayerHealth extends GameObject {
             if (CharacterSelect.characters[3] == null || nerds != 2) {
                 this.charname = "BOWSER";
             }
+        // Sets images to Bill Cipher
+        } else if (chanceForBowser == 3) {
+            playerHead = new TextureRegion(textureAtlas.findRegion("bill_ingame"));
+            stock = new TextureRegion(textureAtlas.findRegion("bill_stock"));
+            country = new TextureRegion(textureAtlas.findRegion("bill_country"));
+            if (CharacterSelect.characters[3] == null || nerds != 2) {
+                this.charname = "BILL";
+            }
+        // Sets images to the default character
         } else {
             playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
             stock = new TextureRegion(textureAtlas.findRegion(String.format("%s_stock", charname)));
@@ -92,11 +109,19 @@ public class PlayerHealth extends GameObject {
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
 
-        if (chanceForBowser == 2) {
+        // Sets offset to bowser's
+        if (chanceForBowser == 3) {
             headOffset.x = (textureAtlas.findRegion("bill_ingame")).offsetX;
             headOffset.y = (textureAtlas.findRegion("bill_ingame")).offsetY;
             countryOffset.x = (textureAtlas.findRegion("bill_country")).offsetX;
             countryOffset.y = (textureAtlas.findRegion("bill_country")).offsetY;
+        // Sets offset to bill's
+        } else if (chanceForBowser == 2) {
+            headOffset.x = (textureAtlas.findRegion("bowser_ingame")).offsetX;
+            headOffset.y = (textureAtlas.findRegion("bowser_ingame")).offsetY;
+            countryOffset.x = (textureAtlas.findRegion("bowser_country")).offsetX;
+            countryOffset.y = (textureAtlas.findRegion("bowser_country")).offsetY;
+        // Sets offset to the player's
         } else {
             headOffset.x = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetX;
             headOffset.y = (textureAtlas.findRegion(String.format("%s_ingame", charname))).offsetY;
@@ -106,6 +131,9 @@ public class PlayerHealth extends GameObject {
 
     }
 
+    /* Pre: the time in between the last frame and this one
+       Post: set the number to display in the percent spot
+     */
     @Override
     public void update(float delta) {
         float margain = delta * numSpeed;
@@ -124,6 +152,9 @@ public class PlayerHealth extends GameObject {
         num = (float) round(num);
     }
 
+    /* Pre: a sprite batch
+    Post: the image is drawn to the screen
+     */
     @Override
     public void draw(SpriteBatch batch) {
         if (stamina) {
@@ -132,13 +163,19 @@ public class PlayerHealth extends GameObject {
             setColor();
         }
 
+        // Draw base and name
         batch.setColor(playerColor);
         batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
         batch.setColor(Color.WHITE);
 
         batch.draw(playerBase, pos.x + (baseOffset.x * 0.13f), pos.y + (baseOffset.y * 0.13f), playerBase.getRegionWidth() * 0.13f, playerBase.getRegionHeight() * 0.13f);
+
+        layout.setText(Main.battleNameFont, charname, Color.WHITE, 0, Align.center, false);
+        Main.battleNameFont.draw(batch, layout, pos.x + 250, pos.y + 70);
+
         batch.draw(playerHead, pos.x + (headOffset.x * 0.13f), pos.y + (headOffset.y * 0.13f), playerHead.getRegionWidth() * 0.13f, playerHead.getRegionHeight() * 0.13f);
 
+        // Draw percent
         if (chara.stockCount > 0 || num != 0) {
             DecimalFormat form = new DecimalFormat(".#");
 
@@ -152,6 +189,7 @@ public class PlayerHealth extends GameObject {
             Main.percentFont.draw(batch, layout, pos.x + 360, pos.y + 107);
         }
 
+        // Draw stock icons and smash meter
         for (int i=0; i < chara.stockCount; i++) {
             batch.draw(stock, pos.x + (stock.getRegionWidth() * 0.13f * i) + (5 * i) + 100, pos.y - ((stock.getRegionHeight() / 2f) * 0.13f) + 20, stock.getRegionWidth() * 0.13f, stock.getRegionHeight() * 0.13f);
         }
@@ -167,9 +205,6 @@ public class PlayerHealth extends GameObject {
             }
             batch.draw(barClip, pos.x, pos.y, barClip.getRegionWidth() * 0.13f, barClip.getRegionHeight() * 0.13f);
         }
-
-        layout.setText(Main.battleNameFont, charname, Color.WHITE, 0, Align.center, false);
-        Main.battleNameFont.draw(batch, layout, pos.x + 250, pos.y + 70);
     }
 
     private static double round(double value) {
@@ -177,6 +212,7 @@ public class PlayerHealth extends GameObject {
         return (double) Math.round(value * scale) / scale;
     }
 
+    // set the color of the percent text in normal gameplay
     private void setColor() {
         if (chara.percent <= 19) {
             color = new Color(255, 255, 255, 1);
@@ -205,6 +241,7 @@ public class PlayerHealth extends GameObject {
         }
     }
 
+    // set the color of the percent text in stamina mode
     private void setColorStamina() {
         if (chara.percent >= 300 - 19) {
             color = new Color(255, 255, 255, 1);
@@ -233,6 +270,7 @@ public class PlayerHealth extends GameObject {
         }
     }
 
+    // sets the color of the series icon in the corner
     private Color setPlayerColor(int num) {
         if (num == 1) {
             return new Color(255/255f, 17/255f, 35/255f, 1);

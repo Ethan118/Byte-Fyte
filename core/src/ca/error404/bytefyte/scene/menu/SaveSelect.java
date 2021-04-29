@@ -32,5 +32,14 @@ public class SaveSelect extends MenuScene {
                 for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
             }
         };
+
+        new Button(new Vector2(968, 540), game, new Texture[]{new Texture("sprites/menu/petey.png"), new Texture("sprites/menu/petey_selected.png")}) {
+            public void click() {
+                new ScreenWipe(new CharacterSelectSingle(this.game), game);
+                for (MenuCursor cursor : Main.cursors) {
+                    cursor.canMove = false;
+                }
+            }
+        };
     }
 }

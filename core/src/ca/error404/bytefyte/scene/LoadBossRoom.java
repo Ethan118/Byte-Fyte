@@ -47,6 +47,8 @@ public class LoadBossRoom implements Screen {
         this.tileset = tileset;
         this.background = background;
         this.series = series;
+
+        Main.bill = false;
     }
 
     @Override

@@ -2,7 +2,9 @@ package ca.error404.bytefyte.tools;
 
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.DeathWall;
+import ca.error404.bytefyte.chars.Mario;
 import ca.error404.bytefyte.chars.Wall;
+import ca.error404.bytefyte.chars.bosses.Boss;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Laser;
@@ -23,11 +25,13 @@ public class WorldContactListener implements ContactListener {
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         Character chara;
+        Boss boss;
         Projectile projectile;
         Laser laser;
         Wall wall;
         DeathWall deathWall;
         Collider collider;
+        int tag;
 
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
@@ -140,8 +144,21 @@ public class WorldContactListener implements ContactListener {
                     projectile.destroy();
                 }
                 break;
+            case Tags.PROJECTILE_BIT | Tags.BOSS_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.BOSS_BIT) {
+                    boss = (Boss) fixA.getUserData();
+                    projectile = (Projectile) fixB.getUserData();
+                } else {
+                    boss = (Boss) fixB.getUserData();
+                    projectile = (Projectile) fixA.getUserData();
+                }
 
-            case  Tags.LASER_BIT | Tags.PLAYER_BIT:
+                boss.hit(projectile.damage);
+
+                projectile.destroy();
+                break;
+
+            case Tags.LASER_BIT | Tags.PLAYER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     laser = (Laser) fixB.getUserData();
@@ -169,6 +186,61 @@ public class WorldContactListener implements ContactListener {
 
                 projectile.destroy();
                 break;
+            case Tags.GROUND_BIT | Tags.BOSS_SIDE_BIT:
+            case Tags.GROUND_BIT | Tags.BOSS_HEAD_BIT:
+            case Tags.GROUND_BIT | Tags.BOSS_FEET_BIT:
+            case Tags.DEATH_BARRIER_BIT | Tags.BOSS_SIDE_BIT:
+            case Tags.DEATH_BARRIER_BIT | Tags.BOSS_HEAD_BIT:
+            case Tags.DEATH_BARRIER_BIT | Tags.BOSS_FEET_BIT:
+            case Tags.PLAYER_BIT | Tags.BOSS_FEET_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.GROUND_BIT || fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT || fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
+                    boss = (Boss) fixB.getUserData();
+                    tag = fixB.getFilterData().categoryBits;
+                } else {
+                    boss = (Boss) fixA.getUserData();
+                    tag = fixA.getFilterData().categoryBits;
+                }
+
+                boss.hitWall(tag);
+                break;
+            case Tags.ATTACK_BIT | Tags.BOSS_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.BOSS_BIT) {
+                    boss = (Boss) fixA.getUserData();
+                    collider = (Collider) fixB.getUserData();
+                } else {
+                    boss = (Boss) fixB.getUserData();
+                    collider = (Collider) fixA.getUserData();
+                }
+
+                boss.hit(collider.damage);
+                break;
+            case  Tags.LASER_BIT | Tags.BOSS_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.BOSS_BIT) {
+                    boss = (Boss) fixA.getUserData();
+                    laser = (Laser) fixB.getUserData();
+                } else {
+                    boss = (Boss) fixB.getUserData();
+                    laser = (Laser) fixA.getUserData();
+                }
+
+                boss.hit(laser.damage);
+                break;
+            case  Tags.BOSS_BIT | Tags.PLAYER_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
+                    chara = (Character) fixA.getUserData();
+                    boss = (Boss) fixB.getUserData();
+                } else {
+                    chara = (Character) fixB.getUserData();
+                    boss = (Boss) fixA.getUserData();
+                }
+
+                Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (boss.b2body.getTransform().getPosition().x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (boss.b2body.getTransform().getPosition().y)) * 100.0f) / 100.0f);
+                direction.x = Math.signum(direction.x);
+                direction.y = Math.signum(direction.y);
+
+                Vector2 force = new Vector2(direction.x * boss.damage, direction.y * boss.damage);
+                chara.Hit(boss.damage, force, boss.hitStun);
+                break;
         }
     }
 
@@ -176,6 +248,9 @@ public class WorldContactListener implements ContactListener {
     public void endContact(Contact contact) {
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
+
+        int tag;
+        Boss boss;
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
@@ -187,6 +262,7 @@ public class WorldContactListener implements ContactListener {
                 } else {
                     ((Character) fixB.getUserData()).grounded = false;
                 }
+                break;
         }
     }
 

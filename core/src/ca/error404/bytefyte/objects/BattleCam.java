@@ -1,7 +1,9 @@
 package ca.error404.bytefyte.objects;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.chars.Badeline;
 import ca.error404.bytefyte.chars.Character;
+import ca.error404.bytefyte.chars.bosses.Boss;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -29,6 +31,30 @@ public class BattleCam extends OrthographicCamera {
             if (chara != null) {
                 Vector2 vec = chara.b2body.getPosition();
                 sizes.add(new Vector2(chara.width * 2, chara.height * 2));
+                pos.add(new Vector3(vec.x, vec.y, 0));
+            }
+        }
+
+        for (Character chara : Main.luigis) {
+            if (chara != null) {
+                Vector2 vec = chara.b2body.getPosition();
+                sizes.add(new Vector2(chara.width * 2, chara.height * 2));
+                pos.add(new Vector3(vec.x, vec.y, 0));
+            }
+        }
+
+        for (Badeline chara : Main.badeline) {
+            if (chara != null) {
+                Vector2 vec = chara.b2body.getPosition();
+                sizes.add(new Vector2(chara.width * 2, chara.height * 2));
+                pos.add(new Vector3(vec.x, vec.y, 0));
+            }
+        }
+
+        for (Boss boss : Main.bosses) {
+            if (boss != null) {
+                Vector2 vec = boss.b2body.getPosition();
+                sizes.add(new Vector2(boss.width * 2, boss.height * 2));
                 pos.add(new Vector3(vec.x, vec.y, 0));
             }
         }

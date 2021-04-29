@@ -1,6 +1,7 @@
 package ca.error404.bytefyte.scene.menu;
 
 import ca.error404.bytefyte.Main;
+import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.LoadBattleMap;
 import ca.error404.bytefyte.scene.ScreenWipe;
 import ca.error404.bytefyte.ui.Button;
@@ -13,12 +14,20 @@ public class MapSelect extends MenuScene {
     // menuscene function
     public MapSelect(Main game) {
         super(game);
+
+        if (BattleMap.alive != null) {
+            BattleMap.alive.clear();
+        }
     }
 
     public void show() {
         super.show();
+        if (Main.bill) {
+            background = new Texture("sprites/menu/bill_bg.png");
+        } else {
+            background = new Texture("sprites/menu/char_bg.png");
+        }
         xSpeed = 0;
-        background = new Texture("sprites/menu/char_bg.png");
 
         new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
 

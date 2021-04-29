@@ -14,6 +14,7 @@ public class Keys {
     public static int MOVE_UP = Input.Keys.W;
     public static int MOVE_DOWN = Input.Keys.S;
     public static int JUMP = Input.Keys.SPACE;
+    public static int JUMP_ALT = Input.Keys.M;
     public static int RUN = Input.Keys.SHIFT_LEFT;
     public static int BASIC = Input.Keys.J;
     public static int SMASH = Input.Keys.K;
