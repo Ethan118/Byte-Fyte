@@ -31,6 +31,9 @@ public class MasterChief extends Character {
 
         walk.setFrameDuration(0.02f);
         idle.setFrameDuration(0.02f);
+        neutralAttack.setFrameDuration(0.01f);
+        sideTilt.setFrameDuration(0.01f);
+
 
         laserSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/laser.wav"));
 
@@ -79,13 +82,13 @@ public class MasterChief extends Character {
 //    All abilities.  Will add colliders or move master chief as applicable
     @Override
     void basicNeutral() {
-        new Collider(new Vector2(30, 7), 25, 17, this, 2f, 5f, 0.25f, 0.4f);
+        new Collider(new Vector2(30, 7), 25, 20, this, 2f, 5f, 0.25f, 0.2f);
         resetControls();
     }
 
     @Override
     void basicSide() {
-        new Collider(new Vector2(35, 3), 40, 17, this, 2f, 8f, 0.25f, 0.4f);
+        new Collider(new Vector2(35, 3), 40, 17, this, 2f, 8f, 0.25f, 0.2f);
 
         resetControls();
     }
