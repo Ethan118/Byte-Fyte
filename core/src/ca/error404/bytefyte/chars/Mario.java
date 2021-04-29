@@ -87,7 +87,11 @@ public class Mario extends Character {
 
     @Override
     void basicNeutral() {
-        
+        if (facingLeft) {
+            new Projectile(this, new Vector2(-0.1f, 0f), new Vector2(-5, 0), 0, 0, 10, 2f, 2f, 0.15f, "fireball", "sprites/marioluigi.atlas", 0, 0.4f);
+        } else {
+            new Projectile(this, new Vector2(0.1f, 0f), new Vector2(5, 0), 0, 0, 10, 2f, 2f, 0.15f, "fireball", "sprites/marioluigi.atlas", 0, 0.4f);
+        }
     }
 
     @Override
@@ -117,9 +121,9 @@ public class Mario extends Character {
     @Override
     void smashSide() {
         if (facingLeft) {
-            new Projectile(this, new Vector2(-0.1f, 0.2f), new Vector2(-5, 0), 0, 0, 10, 4f, 5f, 0.25f, "red-shell", "sprites/marioluigi.atlas", 10 / 30f, spriteScale);
+            new Projectile(this, new Vector2(-0.1f, -0.07f), new Vector2(-5, 0), 0, 0, 10, 4f, 5f, 0.25f, "red-shell", "sprites/marioluigi.atlas", 10 / 30f, spriteScale);
         } else {
-            new Projectile(this, new Vector2(0.1f, 0.2f), new Vector2(5, 0), 0, 0, 10, 4f, 5f, 0.25f, "red-shell", "sprites/marioluigi.atlas", 10 / 30f, spriteScale);
+            new Projectile(this, new Vector2(0.1f, -0.07f), new Vector2(5, 0), 0, 0, 10, 4f, 5f, 0.25f, "red-shell", "sprites/marioluigi.atlas", 10 / 30f, spriteScale);
         }
     }
 

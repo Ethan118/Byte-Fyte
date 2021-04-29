@@ -3,6 +3,8 @@ package ca.error404.bytefyte.chars;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
+import ca.error404.bytefyte.objects.Laser;
+import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
@@ -96,22 +98,39 @@ public class Luigi extends Character {
 
             running = Gdx.input.isKeyPressed(Keys.RUN);
         }
+
+        attackState = parent.attackState;
     }
 
     @Override
     public void update(float delta) {
         targetPos.set(parent.followPoint.cpy());
+
+        handleInput();
+
+        if (attackState != AttackState.NONE) {
+            facingLeft = !parent.facingLeft;
+        }
+
         super.update(delta);
     }
 
     @Override
     void basicNeutral() {
-
+        if (facingLeft) {
+            new Laser(this, new Vector2(-2, 2), new Vector2(0, -1), 20, 5, 10, 0.5f, 0f, 20f/30f, "lightning", "sprites/marioluigi.atlas", 1f);
+        } else {
+            new Laser(this, new Vector2(2, 2f), new Vector2(0, -1), 20, 5, 10, 0.5f, 0f, 20f/30f, "lightning", "sprites/marioluigi.atlas", 1f);
+        }
     }
 
     @Override
     void basicSide() {
-
+        if (facingLeft) {
+            new Projectile(this, new Vector2(-0.1f, 0f), new Vector2(-5, 0), 0, 0, 10, 2f, 2f, 0.15f, "fireball", "sprites/marioluigi.atlas", 20f/30f, 0.4f);
+        } else {
+            new Projectile(this, new Vector2(0.1f, 0f), new Vector2(5, 0), 0, 0, 10, 2f, 2f, 0.15f, "fireball", "sprites/marioluigi.atlas", 20f/30f, 0.4f);
+        }
     }
 
     @Override
@@ -131,7 +150,11 @@ public class Luigi extends Character {
 
     @Override
     void smashSide() {
-
+        if (facingLeft) {
+            new Projectile(this, new Vector2(-0.1f, -0.07f), new Vector2(-5, 0), 0, 0, 10, 4f, 5f, 0.25f, "red-shell", "sprites/marioluigi.atlas", 10 / 30f, spriteScale);
+        } else {
+            new Projectile(this, new Vector2(0.1f, -0.07f), new Vector2(5, 0), 0, 0, 10, 4f, 5f, 0.25f, "red-shell", "sprites/marioluigi.atlas", 10 / 30f, spriteScale);
+        }
     }
 
     @Override
