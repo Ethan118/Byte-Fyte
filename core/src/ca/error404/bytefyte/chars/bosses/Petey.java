@@ -153,7 +153,7 @@ public class Petey extends Boss {
     @Override
     public void hit(float damage) {
         if (state.getCurrentState() != PeteyState.HIT) {
-            hitSFX.play();
+            hitSFX.play(Main.sfxVolume / 10f);
             state.changeState(PeteyState.HIT);
             hp -= damage;
         }

@@ -190,8 +190,8 @@ public class Button {
 
 //        If the button is clicked, call the click method and play sound effect
         if (isClicked()) {
+            clickSound.play(Main.sfxVolume / 10f);
             click();
-            clickSound.play();
         }
     }
 

@@ -65,11 +65,11 @@ public class GasterBlaster extends GameObject {
 //        Instantiating sound effects
         arriveSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/gasterBlasterArrive.wav"));
         arriveSFX.setLooping(false);
-        arriveSFX.setVolume(5);
+        arriveSFX.setVolume(Main.sfxVolume / 10f);
 
         fireSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/gasterBlasterFire.wav"));
         fireSFX.setLooping(false);
-        fireSFX.setVolume(5);
+        fireSFX.setVolume(Main.sfxVolume / 10f);
 
     }
 
