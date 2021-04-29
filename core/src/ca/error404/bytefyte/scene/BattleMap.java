@@ -345,17 +345,23 @@ public class BattleMap extends PlayRoom {
             b2dr.render(world, gamecam.combined);
         }
 
+//        Draw hud and transitions
         hud.draw();
 
         for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
+    /*
+    * Pre: None
+    * Post: Draws the background
+    * */
     public void drawBackground() {
         game.batch.begin();
         game.batch.setProjectionMatrix(bgCam.combined);
         float h;
         float w;
 
+//        Sets width and height
         if (background.getHeight() <= background.getWidth()) {
             h = bgCam.viewportHeight;
             w = (bgCam.viewportHeight / background.getHeight()) * background.getWidth();
@@ -364,24 +370,28 @@ public class BattleMap extends PlayRoom {
             w = bgCam.viewportWidth;
         }
 
+//        Sets x
         if (bgPos.x <= -(w + (1920 / 2f))) {
             bgPos.x += w;
         } else if (bgPos.x >= (w + (1920 / 2f))) {
             bgPos.x -= w;
         }
 
+//        Sets y
         if (bgPos.y <= -(h - (-1080 / 2f))) {
             bgPos.y += h;
         } else if (bgPos.y >= (h - (-1080 / 2f))) {
             bgPos.y -= h;
         }
 
+//        Adjusts x
         float x = bgPos.x;
 
         while (x > -(bgCam.viewportWidth)) {
             x -= w;
         }
 
+//        Draws background
         while (x < bgCam.viewportWidth) {
             game.batch.draw(background, x, bgPos.y, w, h);
             game.batch.draw(background, x, bgPos.y + h, w, h);
@@ -393,28 +403,49 @@ public class BattleMap extends PlayRoom {
         game.batch.end();
     }
 
-    // updates screen size
+    /*
+    * Pre: Width and height
+    * Post: Updates screen size
+    * */
     @Override
     public void resize(int width, int height) {
+
+//        Update screen size
         viewport.update(width, height);
         gamecam.update();
     }
 
+    /*
+     * Pre: None
+     * Post: Pauses music
+     * */
     @Override
     public void pause() {
         game.music.pause();
     }
 
+    /*
+     * Pre: None
+     * Post: Resumes music
+     * */
     @Override
     public void resume() {
         game.music.play();
     }
 
+    /*
+     * Pre: None
+     * Post: Hides screen
+     * */
     @Override
     public void hide() {
 
     }
 
+    /*
+     * Pre: None
+     * Post: Disposes of all assets
+     * */
     @Override
     public void dispose() {
         world.dispose();
