@@ -34,6 +34,8 @@ public class DesktopLauncher {
 			ini.add("Settings", "cutscene volume", Main.cutsceneVolume);
 			ini.add("Settings", "fullscreen", ScreenSizes.fullScreen);
 			ini.add("Settings", "debug", Main.debug);
+			ini.add("Menu", "bill", Main.bill);
+			ini.add("Menu", "stamina", Main.stamina);
 			ini.store();
 		} else {
 			Wini ini = new Wini(settings);
@@ -44,6 +46,8 @@ public class DesktopLauncher {
 				Main.sfxVolume = Integer.parseInt(ini.get("Settings", "sfx volume"));
 				ScreenSizes.fullScreen = Boolean.parseBoolean(ini.get("Settings", "fullscreen"));
 				Main.debug = Boolean.parseBoolean(ini.get("Settings", "debug"));
+				Main.bill = Boolean.parseBoolean(ini.get("Menu", "bill"));
+				Main.stamina = Boolean.parseBoolean(ini.get("Menu", "stamina"));
 			} catch (Exception ignored) {
 
 			}

@@ -4,6 +4,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -28,6 +29,8 @@ public class Button {
 
     private boolean prevSelect = false;
 
+    private Sound clickSound;
+
     public Button(Vector2 pos, Main game, String string) {
         this.buttonRect = new Rectangle();
         this.pos = pos;
@@ -38,6 +41,7 @@ public class Button {
         layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
 
         this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/menuChoose.wav"));
     }
 
     public Button(Vector2 pos, Main game, Texture[] texture) {
@@ -52,6 +56,7 @@ public class Button {
         Main.buttons.add(this);
 
         this.buttonRect.set(pos.x - (texture[0].getWidth() / 2f), pos.y - (texture[0].getHeight() / 2f), texture[0].getWidth(), texture[0].getHeight());
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/menuChoose.wav"));
     }
 
     public void draw(SpriteBatch batch) {
@@ -115,6 +120,7 @@ public class Button {
     public void update() {
         if (isClicked()) {
             click();
+            clickSound.play();
         }
     }
 

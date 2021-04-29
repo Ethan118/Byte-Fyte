@@ -262,7 +262,8 @@ public class SettingsMenu extends MenuScene {
                     ini.add("Settings", "cutscene volume", Main.cutsceneVolume);
                     ini.add("Settings", "fullscreen", ScreenSizes.fullScreen);
                     ini.add("Settings", "debug", Main.debug);
-                    ini.add("Settings", "stamina", Main.stamina);
+                    ini.add("Menu", "stamina", Main.stamina);
+                    ini.add("Menu", "bill", Main.bill);
                     ini.store();
 
                     if (ScreenSizes.fullScreen) {

@@ -82,7 +82,7 @@
  </objectgroup>
  <objectgroup id="6" name="Death Barrier">
   <object id="7" x="1868" y="-1084" width="244" height="2256"/>
-  <object id="8" x="-324" y="-952" width="2604" height="208"/>
+  <object id="8" x="-404" y="-488" width="2604" height="208"/>
   <object id="9" x="-480" y="984" width="2460" height="312"/>
   <object id="10" x="-496" y="-1212" width="344" height="2492"/>
  </objectgroup>
