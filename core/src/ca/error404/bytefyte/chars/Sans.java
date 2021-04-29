@@ -39,6 +39,13 @@ public class Sans extends Character{
     * Post: A new instance of the character Sans that is playable by the user
     * */
     public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+<<<<<<<<< Temporary merge branch 1
+
+//        Calling the character constructor
+        super(screen, spawnPoint, controller, playernumber, "sans", "SANS", 0.8f, 0.9f);
+
+//        Assigning variables values
+=========
         this(screen, spawnPoint, controller, playernumber, 0);
     }
 
