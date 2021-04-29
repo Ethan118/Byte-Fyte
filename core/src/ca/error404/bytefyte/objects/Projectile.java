@@ -178,8 +178,11 @@ public class Projectile extends GameObject {
                 } else if (vel.x == 0) {
                     setRotation(90);
                 }
+            } else if (animPath.equals("red-shell") || animPath.equals("green-shell")) {
+                setRotation(0);
+                disableEditing = true;
             } else {
-                setRotation((float) Math.toDegrees(b2body.getAngle()));
+                    setRotation((float) Math.toDegrees(b2body.getAngle()));
             }
         } else {
             delay -= delta;
