@@ -15,6 +15,11 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+
+/*
+ * Pre: delta time, HUD is called
+ * Post: creates and updates a heads up display for the screen
+ * */
 public class HUD implements Disposable {
     public Stage stage;
     private final Viewport viewport;
@@ -29,6 +34,10 @@ public class HUD implements Disposable {
     private final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private final BitmapFont font;
 
+    /*
+     * Pre: delta time, class is called
+     * Post: creates a hud
+     * */
     public HUD() {
         batch = new SpriteBatch();
         timeCount = 300f;
@@ -68,6 +77,10 @@ public class HUD implements Disposable {
 
     }
 
+    /*
+     * Pre: delta time, class is called
+     * Post: updates the hud
+     * */
     public void update(float delta) {
         for (GameObject ui : Main.ui) {
             ui.update(delta);
@@ -81,6 +94,10 @@ public class HUD implements Disposable {
         timerLabel.setText(String.format("%.2f", timeCount));
     }
 
+    /*
+     * Pre: delta time, class is called
+     * Post: draws the hud
+     * */
     public void draw() {
         stage.draw();
         batch.begin();
@@ -91,6 +108,10 @@ public class HUD implements Disposable {
     }
 
     @Override
+    /*
+     * Pre: delta time, class is called
+     * Post: deletes the hud
+     * */
     public void dispose() {
         stage.dispose();
         font.dispose();

@@ -11,11 +11,18 @@ import org.ini4j.Wini;
 import java.io.File;
 import java.io.IOException;
 
+
+/*
+ * Pre: game launched button clicked
+ * Post: launches the game with its settings
+ * */
 public class DesktopLauncher {
 
+	//setting
 	public static void main (String[] arg) throws IOException {
 		new Globals();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+
 		// Window settings
 		config.forceExit = false;
 

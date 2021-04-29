@@ -10,6 +10,11 @@ import ca.error404.bytefyte.objects.Projectile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
+
+/*
+ * Pre: delta time, Contact listener, scene, chars
+ * Post: handles contact between objects
+ * */
 public class WorldContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
@@ -33,6 +38,7 @@ public class WorldContactListener implements ContactListener {
                     chara = ((Character) fixB.getUserData());
                 }
 
+                // handles friction
                 if ((Math.abs(chara.vel.x) >= 3 || Math.abs(chara.vel.y) >= 3) && chara.stunTimer > 0) {
                     chara.vel.y *= -0.5;
                 } else if (chara.vel.y <= 0) {

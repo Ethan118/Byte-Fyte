@@ -1,6 +1,8 @@
 package ca.error404.bytefyte.constants;
 
-// object category tags
+/*
+ *  handles specific variables
+ * */
 public class Tags {
     public static final int NOTHING = 0;
     public static final int PLAYER_FEET_BIT = 1;
