@@ -104,8 +104,6 @@ public class Main extends Game {
 			stamina = Boolean.parseBoolean(ini.get("Menu", "stamina"));
 		} catch (Exception e) {
 			try {
-				save.createNewFile();
-
 				Wini ini = new Wini(save);
 
 				ini.add("Menu", "bill", bill);
