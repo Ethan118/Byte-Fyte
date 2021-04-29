@@ -340,6 +340,7 @@ public class BattleMap extends PlayRoom {
 
         game.batch.end();
 
+//        Debug renderer
         if (Main.debug) {
             b2dr.render(world, gamecam.combined);
         }

@@ -281,5 +281,9 @@ public class Kirby extends Character {
         resetControls();
     }
 
-
+    @Override
+    public void die() {
+        super.die();
+        rock = false;
+    }
 }
