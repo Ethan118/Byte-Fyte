@@ -119,8 +119,8 @@ public class Button {
 
     public void update() {
         if (isClicked()) {
+            clickSound.play(Main.sfxVolume / 10f);
             click();
-            clickSound.play();
         }
     }
 
