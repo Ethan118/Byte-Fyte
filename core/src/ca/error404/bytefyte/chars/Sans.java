@@ -13,10 +13,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
 
+// Class for Sans.  Extends character to create a new character.
 public class Sans extends Character{
+
+//    Instantiating all variables
     private Music healSFX;
     private boolean upBStart = true;
     private boolean upBEnd = false;
@@ -31,8 +33,16 @@ public class Sans extends Character{
     private TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", charname), TextureAtlas.class);
     private boolean hasTeleported = false;
 
+    /*
+    * Pre: Inputted parameters
+    * Post: A new instance of the character Sans that is playable by the user
+    * */
     public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+
+//        Calling the character constructor
         super(screen, spawnPoint, controller, playernumber, "sans", "SANS", 0.8f, 0.9f);
+
+//        Assigning variables values
         upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_start"), Animation.PlayMode.NORMAL);
 
         weight = 0.9f;
@@ -45,6 +55,7 @@ public class Sans extends Character{
 
         walk.setFrameDuration(0.02f);
 
+//        Preparing Music
         healSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/fullRestore.wav"));
         healSFX.setLooping(false);
         healSFX.setVolume(5);
