@@ -59,16 +59,14 @@ public class VictoryScreen extends MenuScene {
 
     public void render(float delta) {
         super.render(delta);
+        drawIcon();
         if (checkReady()) {
             if (!hasTransitioned) {
-                BattleMap.alive.clear();
                 new ScreenWipe(new CharacterSelect(game), game);
                 hasTransitioned = true;
             }
-        } else {
-            drawIcon();
         }
-
+        for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
     @Override

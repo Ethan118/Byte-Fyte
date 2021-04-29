@@ -212,18 +212,34 @@ public class SettingsMenu extends MenuScene {
 
         // Controlller Rebind
 
-//        new Button(new Vector2(1920 / 2f, 350), game, "Change Keyboard Controls") {
-//            public void click() {
-//                new ScreenWipe(new KeyboardRebind(game), game);
-//            }
-//        };
-//
-//        new Button(new Vector2(1920 / 2f, 275), game, "Change Controller Controls") {
-//            public void click() {
-//                new ScreenWipe(new ControllerRebind(game), game);
-//            }
-//        };
 
+        new Button(new Vector2(1920 / 2f, 350), game, "Stamina") {
+            public boolean isCursorOver(MenuCursor cursor) {
+                return false;
+            }
+        };
+
+        new Button(new Vector2(1920 / 2f, 275), game, "Off") {
+            public void update() {
+                if (isClicked()) {
+                    click();
+                }
+
+                if (Main.stamina) {
+                    string = "On";
+                } else {
+                    string = "Off";
+                }
+
+                layout.setText(Main.menuFont, string, selectedColor, 0, Align.center, false);
+
+                this.buttonRect.set(pos.x - (layout.width / 2), pos.y - layout.height, layout.width, layout.height);
+            }
+
+            public void click() {
+                Main.stamina = !Main.stamina;
+            }
+        };
         // Navigation Buttons
 
         new Button(new Vector2(200, 100), game, "Back") {
@@ -246,6 +262,7 @@ public class SettingsMenu extends MenuScene {
                     ini.add("Settings", "cutscene volume", Main.cutsceneVolume);
                     ini.add("Settings", "fullscreen", ScreenSizes.fullScreen);
                     ini.add("Settings", "debug", Main.debug);
+                    ini.add("Settings", "stamina", Main.stamina);
                     ini.store();
 
                     if (ScreenSizes.fullScreen) {

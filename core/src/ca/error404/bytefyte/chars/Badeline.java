@@ -20,6 +20,9 @@ public class Badeline extends GameObject {
     Vector2 leftOffset;
     Vector2 rightOffset;
 
+    public float width;
+    public float height;
+
     private boolean lockAnim;
 
     private final Animation<TextureRegion> idle;
@@ -48,6 +51,7 @@ public class Badeline extends GameObject {
 
     public Badeline(Character parent) {
         super();
+        Main.badeline.add(this);
 
         leftOffset =  new Vector2(15f / spriteScale / Main.PPM, 15f / spriteScale / Main.PPM);
         rightOffset =  new Vector2(-15f / spriteScale / Main.PPM, 15f / spriteScale / Main.PPM);
@@ -79,6 +83,9 @@ public class Badeline extends GameObject {
 
         setBounds(parent.pos.x - (getWidth() / 2), parent.pos.y - (getHeight() / 2), getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
         setRegion(sprite);
+
+        width = getRegionWidth();
+        height = getRegionHeight();
     }
 
     @Override
@@ -103,6 +110,7 @@ public class Badeline extends GameObject {
 
         setRegion(getFrame(delta));
         setBounds(pos.x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), pos.y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
+        b2body.setTransform(pos, 0);
     }
 
     private void getState() {

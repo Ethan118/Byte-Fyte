@@ -34,7 +34,7 @@ public class PlayRoom implements Screen {
     protected final TiledMap map;
     protected final OrthogonalTiledMapRenderer renderer;
 
-    protected final MapProperties mProp;
+    public final MapProperties mProp;
     public final World world;
     protected final Box2DDebugRenderer b2dr;
     protected Random rand = new Random();

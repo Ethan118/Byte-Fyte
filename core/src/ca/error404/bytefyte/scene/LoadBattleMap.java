@@ -44,6 +44,8 @@ public class LoadBattleMap implements Screen {
         game.music = this.game.music;
         this.tmap = tmap;
         this.series = series;
+
+        Main.bill = false;
     }
 
     @Override
