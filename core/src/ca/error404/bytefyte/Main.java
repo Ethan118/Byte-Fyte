@@ -4,7 +4,6 @@ import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.scene.ScreenWipe;
-import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import ca.error404.bytefyte.scene.menu.TitleScreen;
 import ca.error404.bytefyte.ui.Button;
 import ca.error404.bytefyte.ui.MenuCursor;
@@ -27,7 +26,10 @@ import org.ini4j.Wini;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -130,14 +132,7 @@ public class Main extends Game {
 
 		reloadControllers();
 
-		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
-//		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
-//		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
-//		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
-//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
-//		setScreen(new LoadBattleMap("Fawful's Castle", this, new Vector2(0, 0), "mal"));
-//		setScreen(new LoadBattleMap("Castle Bleck", this, new Vector2(20, 0), "paper mario"));
-//		setScreen(new LoadBattleMap("Flowchart", this, new Vector2(50, -3000), null));
+
 		setScreen(new TitleScreen(this));
 	}
 

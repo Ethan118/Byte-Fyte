@@ -4,6 +4,7 @@ import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.Tags;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,6 +41,8 @@ public class Projectile extends GameObject {
     private final String animPath;
 
     private boolean disableEditing = false;
+
+    private Music sfx = null;
 
     /**
      * pre: parent Character, position, velocity, gravity, spin, max distance to travel, force applied on hit, damage dealt, duration of stun on hit, path to the animation, path to the atlas containing animation, duration before spawned
@@ -86,6 +89,12 @@ public class Projectile extends GameObject {
         this.spriteScale = spriteScale;
     }
 
+    public Projectile (Character parent, Vector2 offset, Vector2 vel, float gravity, float spin, float maxDistance, float power, float damage, float hitStun, String animPath, String atlasPath, float delay, Music sfx) {
+        this(parent, offset, vel, gravity, spin, maxDistance, power, damage, hitStun, animPath, atlasPath, delay);
+
+        this.sfx = sfx;
+    }
+
     /**
      * pre:
      * post: defines the physics body and colliders
@@ -124,7 +133,9 @@ public class Projectile extends GameObject {
     public void update(float delta) {
         // checks if the body has been removed or the delay is still active
         if (!remove && (delay <= 0)) {
-
+            if (sfx != null) {
+                sfx.play();
+            }
             // if the body is not defined, define it
             if (b2body == null) {
                 pos = new Vector2(parent.pos.x + offset.x, parent.pos.y + offset.y);
@@ -204,6 +215,10 @@ public class Projectile extends GameObject {
             parent.projectilesOnScreen.remove(this);
         } catch (Exception ignored) {
 
+        }
+
+        if (sfx != null) {
+            sfx.dispose();
         }
     }
 }

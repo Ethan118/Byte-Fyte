@@ -13,4 +13,8 @@ public class Tags {
     public static final int WALL_TRIGGER_BIT = 128;
     public static final int PLAYER_SIDE_BIT = 256;
     public static final int LASER_BIT = 512;
+    public static final int BOSS_BIT = 1028;
+    public static final int BOSS_HEAD_BIT = 2048;
+    public static final int BOSS_SIDE_BIT = 4096;
+    public static final int BOSS_FEET_BIT = 8192;
 }

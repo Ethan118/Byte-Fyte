@@ -5,11 +5,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.Madeline;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -43,6 +39,7 @@ public class PlayerHealth extends GameObject {
     private float num;
     private float prevNum = 0f;
     private String charname;
+    public boolean stamina;
 
     private Color color;
     private Color playerColor;
@@ -56,19 +53,19 @@ public class PlayerHealth extends GameObject {
 
         if (number == 1) {
             pos = new Vector2(25, 25);
-            this.charname = "I'M";
+            this.charname = "BOWSER";
         } else if (number == 2) {
             pos = new Vector2(525, 25);
-            this.charname = "WATCHING";
+            this.charname = "WAS";
         } else if (number == 3) {
             pos = new Vector2(1025, 25);
-            this.charname = "YOU,";
+            this.charname = "HERE,";
         } else if (number == 4) {
             pos = new Vector2(1525, 25);
-            this.charname = "NERDS";
+            this.charname = "BWAHAHA";
         }
 
-        int bill = rand.nextInt(200);
+        int chanceForBowser = rand.nextInt(200);
 
         if (CharacterSelect.characters[3] == null || nerds != 2) {
             this.charname = chara.playerName;
@@ -76,12 +73,12 @@ public class PlayerHealth extends GameObject {
 
         textureAtlas = Main.manager.get("sprites/battleUI.atlas", TextureAtlas.class);
 
-        if (bill == 2) {
-            playerHead = new TextureRegion(textureAtlas.findRegion("bill_ingame"));
-            stock = new TextureRegion(textureAtlas.findRegion("bill_stock"));
-            country = new TextureRegion(textureAtlas.findRegion("bill_country"));
-            if (nerds != 2) {
-                this.charname = "BILL";
+        if (chanceForBowser == 2) {
+            playerHead = new TextureRegion(textureAtlas.findRegion("bowser_ingame"));
+            stock = new TextureRegion(textureAtlas.findRegion("bowser_stock"));
+            country = new TextureRegion(textureAtlas.findRegion("bowser_country"));
+            if (CharacterSelect.characters[3] == null || nerds != 2) {
+                this.charname = "BOWSER";
             }
         } else {
             playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
@@ -95,7 +92,7 @@ public class PlayerHealth extends GameObject {
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
 
-        if (bill == 2) {
+        if (chanceForBowser == 2) {
             headOffset.x = (textureAtlas.findRegion("bill_ingame")).offsetX;
             headOffset.y = (textureAtlas.findRegion("bill_ingame")).offsetY;
             countryOffset.x = (textureAtlas.findRegion("bill_country")).offsetX;
@@ -129,7 +126,11 @@ public class PlayerHealth extends GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
-        setColor();
+        if (stamina) {
+            setColorStamina();
+        } else {
+            setColor();
+        }
 
         batch.setColor(playerColor);
         batch.draw(country, pos.x + (countryOffset.x * 0.13f), pos.y + (countryOffset.y * 0.13f), country.getRegionWidth() * 0.13f, country.getRegionHeight() * 0.13f);
@@ -143,7 +144,11 @@ public class PlayerHealth extends GameObject {
 
             layout.setText(Main.percentNumFont, String.format("%d", (int) num), color, 0, Align.right, false);
             Main.percentNumFont.draw(batch, layout, pos.x + 325, pos.y + 159);
-            layout.setText(Main.percentFont, form.format(num - Math.floor(num)) + "%", color, 0, Align.right, false);
+            if (stamina) {
+                layout.setText(Main.percentFont, form.format(num - Math.floor(num)) + "HP", color, 0, Align.right, false);
+            } else {
+                layout.setText(Main.percentFont, form.format(num - Math.floor(num)) + "%", color, 0, Align.right, false);
+            }
             Main.percentFont.draw(batch, layout, pos.x + 360, pos.y + 107);
         }
 
@@ -194,6 +199,34 @@ public class PlayerHealth extends GameObject {
         } else if (chara.percent <= 249) {
             color = new Color(168 / 255f, 38 / 255f, 49 / 255f, 1);
         } else if (chara.percent <= 299) {
+            color = new Color(145 / 255f, 31 / 255f, 38 / 255f, 1);
+        } else {
+            color = new Color(112 / 255f, 22 / 255f, 34 / 255f, 1);
+        }
+    }
+
+    private void setColorStamina() {
+        if (chara.percent >= 300 - 19) {
+            color = new Color(255, 255, 255, 1);
+        } else if (chara.percent >= 300 - 29) {
+            color = new Color(253 / 255f, 240 / 255f, 210 / 255f, 1);
+        } else if (chara.percent >= 300 - 39) {
+            color = new Color(252 / 255f, 220 / 255f, 120 / 255f, 1);
+        } else if (chara.percent >= 300 - 49) {
+            color = new Color(248 / 255f, 193 / 255f, 70 / 255f, 1);
+        } else if (chara.percent >= 300 - 59) {
+            color = new Color(243 / 255f, 153 / 255f, 62 / 255f, 1);
+        } else if (chara.percent >= 300 - 69) {
+            color = new Color(241 / 255f, 127 / 255f, 58 / 255f, 1);
+        } else if (chara.percent >= 300 - 79) {
+            color = new Color(239 / 255f, 98 / 255f, 54 / 255f, 1);
+        } else if (chara.percent >= 300 - 149) {
+            color = new Color(237 / 255f, 59 / 255f, 51 / 255f, 1);
+        } else if (chara.percent >= 300 - 199) {
+            color = new Color(206 / 255f, 47 / 255f, 43 / 255f, 1);
+        } else if (chara.percent >= 300 - 249) {
+            color = new Color(168 / 255f, 38 / 255f, 49 / 255f, 1);
+        } else if (chara.percent >= 300 - 299) {
             color = new Color(145 / 255f, 31 / 255f, 38 / 255f, 1);
         } else {
             color = new Color(112 / 255f, 22 / 255f, 34 / 255f, 1);

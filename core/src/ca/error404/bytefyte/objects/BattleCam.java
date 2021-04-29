@@ -14,6 +14,8 @@ public class BattleCam extends OrthographicCamera {
     public Vector2 min = new Vector2(0, 0);
     public Vector2 max = new Vector2();
 
+    public float scale = 2.5f;
+
     public BattleCam() {
         super();
     }
@@ -24,9 +26,11 @@ public class BattleCam extends OrthographicCamera {
         Vector3 cameraPosition = position;
 
         for (Character chara : Main.players) {
-            Vector2 vec = chara.b2body.getPosition();
-            sizes.add(new Vector2(chara.width * 2, chara.height * 2));
-            pos.add(new Vector3(vec.x, vec.y, 0));
+            if (chara != null) {
+                Vector2 vec = chara.b2body.getPosition();
+                sizes.add(new Vector2(chara.width * 2, chara.height * 2));
+                pos.add(new Vector3(vec.x, vec.y, 0));
+            }
         }
 
         Vector3 targetPos = average(pos);
@@ -34,7 +38,7 @@ public class BattleCam extends OrthographicCamera {
         targetPos.scl(speed);
         cameraPosition.add(targetPos);
 
-        float width = 2.5f, height = width * hRatio;
+        float width = scale, height = width * hRatio;
 
         Vector2 max = max(pos);
         Vector2 min = min(pos);

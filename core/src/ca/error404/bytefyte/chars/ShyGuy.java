@@ -5,13 +5,14 @@ import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 
 import javax.sound.sampled.AudioFormat;
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,9 +26,15 @@ public class ShyGuy extends Character {
 
     private boolean hasHovered = false;
     private float flyAcceleration = 0f;
+    private Sound healSFX;
+    private boolean soundIsPlaying = false;
 
-    public ShyGuy(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY");
+    public ShyGuy(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public ShyGuy(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY", stamina);
         manualSpriteOffset = new Vector2(2200, 300);
         projectilesOnScreen = new ArrayList<>(1);
 
@@ -54,6 +61,7 @@ public class ShyGuy extends Character {
                 }
             }
         }
+        healSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/fullRestore.wav"));
     }
 
     /*
@@ -62,10 +70,25 @@ public class ShyGuy extends Character {
     * */
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        if (dead) {
+            healSFX.dispose();
+        }
+
 //        Heals shy guy for song duration
         if (animState == AnimationState.SPECIAL_D) {
             if (animDuration <= 0.1) {
-                percent = Math.max(percent - (currentSongLength), 0);
+                if (!soundIsPlaying) {
+                    healSFX.play();
+                    soundIsPlaying = true;
+                }
+                if (stamina) {
+                    percent = Math.min(percent + (currentSongLength), 999.9f);
+                } else {
+                    percent = Math.max(percent - (currentSongLength), 0);
+                }
+            } else {
+                soundIsPlaying = false;
             }
         }
 
@@ -154,7 +177,7 @@ public class ShyGuy extends Character {
     @Override
     void specialNeutral() {
         new MultiHit(new Vector2(20, 0), 25, 30, this, 1f, 0f, 9, 0, 3, 0.25f, 2.2f, true);
-//        new Collider(new Vector2(20, 0), 25, 30, this, 0f, 4f, 70f / 60f, true, 0);
+        healSFX.play();
         resetControls();
     }
 

@@ -24,9 +24,4 @@ public class Keys {
     public static int MENU_SELECT = Input.Keys.SPACE;
 
 
-    //    Miscellaneous
-    public static int FILL_METER = Input.Keys.Z;
-    public static int EMPTY_METER = Input.Keys.X;
-
-
 }

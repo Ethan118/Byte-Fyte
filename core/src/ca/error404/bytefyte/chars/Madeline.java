@@ -1,12 +1,11 @@
 package ca.error404.bytefyte.chars;
 
-import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.HairPoint;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -47,8 +46,12 @@ public class Madeline extends Character {
     private int maxDashes = 1;
     private int currentDash = maxDashes;
 
-    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
-        super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f);
+    public Madeline(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Madeline(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
+        super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f, stamina);
         manualSpriteOffset = rightOffset;
 
         weight = 1.1f;

@@ -2,12 +2,11 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
 
 public class Kirby extends Character {
@@ -20,11 +19,16 @@ public class Kirby extends Character {
     private float defaultGravity;
     private float defaultFall;
     private float defaultMaxFall;
+    private Collider upBCollider;
 
     private boolean rock;
 
-    public Kirby(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
-        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f);
+    public Kirby(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Kirby(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+        super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f, stamina);
         weight = 0.8f;
         maxJumps = 10;
         defaultGravity = downGravity;
@@ -62,6 +66,10 @@ public class Kirby extends Character {
         }
 
         super.update(deltaTime);
+
+        if (knockedOff) {
+            rock = false;
+        }
 
         friction = defaultFriction;
 
@@ -187,14 +195,14 @@ public class Kirby extends Character {
 
     @Override
     void specialNeutral() {
-        new Collider(new Vector2(25, 0), 50, 40, this, 8f, 4f, 0.25f, 1f);
+        new Collider(new Vector2(25, 0), 50, 40, this, 3f, 4f, 0.25f, 1f);
 
         resetControls();
     }
 
     @Override
     void specialSide() {
-        new Collider(new Vector2(0, 5), 40, 60, this, 8f, 4f, 0.25f, 0);
+        new Collider(new Vector2(0, 5), 40, 60, this, 2f, 4f, 0.25f, 0);
         animDuration = 1f;
 
         vel.set(new Vector2(7 * moveVector.x, 3));
@@ -216,7 +224,7 @@ public class Kirby extends Character {
             animDuration = 1.8f;
         }
 
-        new Collider(new Vector2(0, -20), 15, 30, this, 3f, 2f, 0.25f, 0);
+        upBCollider = new Collider(new Vector2(0, -20), 15, 30, this, 3f, 0.25f, 0, 0);
 //        Exponentially flies him up after the initial frame
         vel.y = (flyAcceleration * flyAcceleration);
         flyAcceleration += 0.02;
@@ -231,7 +239,7 @@ public class Kirby extends Character {
 
     @Override
     void specialDown() {
-        new Collider(new Vector2(0, 0), 30, 30, this, 8f, 4f, 0.5f, 13/60f, 2f);
+        new Collider(new Vector2(0, 0), 30, 30, this, 2f, 4f, 0.5f, 13/60f, 2f);
         resetControls();
         rock = true;
     }
