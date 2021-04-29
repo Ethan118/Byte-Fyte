@@ -1,12 +1,10 @@
 package ca.error404.bytefyte.chars;
 
-import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.HairPoint;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Color;

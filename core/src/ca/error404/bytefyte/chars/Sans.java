@@ -245,7 +245,7 @@ public class Sans extends Character{
 
     @Override
     void specialSide() {
-        new Collider(new Vector2(0, 5), 40, 60, this, 8f, 4f, 0.25f, 0);
+        new Collider(new Vector2(0, 5), 40, 60, this, 2f, 4f, 0.25f, 0);
         animDuration = 1f;
 
         vel.set(new Vector2(7 * moveVector.x, 0));

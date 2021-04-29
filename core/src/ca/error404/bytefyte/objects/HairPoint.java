@@ -2,7 +2,6 @@ package ca.error404.bytefyte.objects;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

@@ -1,7 +1,6 @@
 package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.constants.Tags;
-import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;

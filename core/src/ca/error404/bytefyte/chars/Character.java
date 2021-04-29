@@ -6,13 +6,15 @@ import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.PlayRoom;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -25,7 +27,7 @@ public abstract class Character extends GameObject {
     public float deadzone = Main.deadZone;
     public boolean hasBeenHit = false;
 
-    private Music hitSFX;
+    private Sound hitSFX;
 
     public float percent = 0f;
     public float stunTimer;
@@ -181,7 +183,7 @@ public abstract class Character extends GameObject {
 
     protected float animDuration;
 
-    private float ultMeter = 0;
+    private final float ultMeter = 0;
 
     protected AttackState attackState;
     protected final AttackState prevAttackState;
@@ -214,9 +216,6 @@ public abstract class Character extends GameObject {
             health.stamina = true;
         }
 
-        hitSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/playerHit.wav"));
-        hitSFX.setLooping(false);
-        hitSFX.setVolume(5);
     }
 
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, int hp) {
@@ -246,9 +245,8 @@ public abstract class Character extends GameObject {
         this.world = screen.getWorld();
         this.controller = controller;
 
-        hitSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/playerHit.wav"));
-        hitSFX.setLooping(false);
-        hitSFX.setVolume(5);
+        hitSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/playerHit.wav"));
+
 
         health = new PlayerHealth(playerNumber, charname, this);
 
@@ -440,12 +438,6 @@ public abstract class Character extends GameObject {
 //            If the user did not just up special, and they pressed the jump key, they jump
             if (!afterUpB) {
                 jumping = Gdx.input.isKeyJustPressed(Keys.JUMP);
-            }
-
-//            Next two lines are for testing purposes, will be removed in final game
-//            if (Gdx.input.isKeyJustPressed(Keys.EMPTY_METER)) ultMeter = 0;
-            if (Gdx.input.isKeyJustPressed(Keys.FILL_METER)) {
-                ultMeter = 100;
             }
 
 //            Checks if the user pressed the key corresponding to a special move
@@ -900,7 +892,6 @@ public abstract class Character extends GameObject {
                 region = hit.getKeyFrame(elapsedTime, true);
                 attackAnimation = null;
                 afterUpB = false;
-                hitSFX.play();
                 break;
             case IDLE:
             default:
@@ -953,6 +944,7 @@ public abstract class Character extends GameObject {
      * post: sets animation to hit, deals damage, applies knock-back, sets stun timer
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
+        hitSFX.play();
         if (respawnTimer <= 0) {
             hasBeenHit = true;
             animState = AnimationState.HIT;

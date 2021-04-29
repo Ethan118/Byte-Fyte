@@ -1,6 +1,5 @@
 package ca.error404.bytefyte.scene;
 
-import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.BattleCam;
 import ca.error404.bytefyte.ui.PlayerHealth;

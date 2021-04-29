@@ -5,16 +5,14 @@ import ca.error404.bytefyte.constants.Globals;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.MultiHit;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 
 import javax.sound.sampled.AudioFormat;
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 

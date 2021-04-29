@@ -2,7 +2,6 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
 import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -197,14 +196,14 @@ public class Kirby extends Character {
 
     @Override
     void specialNeutral() {
-        new Collider(new Vector2(25, 0), 50, 40, this, 8f, 4f, 0.25f, 1f);
+        new Collider(new Vector2(25, 0), 50, 40, this, 3f, 4f, 0.25f, 1f);
 
         resetControls();
     }
 
     @Override
     void specialSide() {
-        new Collider(new Vector2(0, 5), 40, 60, this, 8f, 4f, 0.25f, 0);
+        new Collider(new Vector2(0, 5), 40, 60, this, 2f, 4f, 0.25f, 0);
         animDuration = 1f;
 
         vel.set(new Vector2(7 * moveVector.x, 3));
@@ -241,7 +240,7 @@ public class Kirby extends Character {
 
     @Override
     void specialDown() {
-        new Collider(new Vector2(0, 0), 30, 30, this, 8f, 4f, 0.5f, 13/60f, 2f);
+        new Collider(new Vector2(0, 0), 30, 30, this, 2f, 4f, 0.5f, 13/60f, 2f);
         resetControls();
         rock = true;
     }
