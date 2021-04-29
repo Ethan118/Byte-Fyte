@@ -18,6 +18,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Set;
 
+/*constructor
+ * Pre: game instance
+ * Post: creates the menuscene screen
+ * */
 public class MenuScene implements Screen {
 
     //delairing variables
@@ -41,8 +45,8 @@ public class MenuScene implements Screen {
         Main.cursors.clear();
         Main.buttons.clear();
 
+        // sets up variables
         shapeRenderer = new ShapeRenderer();
-
         cam = new OrthographicCamera(1920, 1080);
         cam.position.set(960, 540, cam.position.z);
         cam.update();
@@ -50,7 +54,10 @@ public class MenuScene implements Screen {
     }
 
     @Override
-    //render function
+    /*constructor
+     * Pre: game instance
+     * Post: handles the rendering for the screen
+     * */
     public void render(float delta) {
         //drawing things
         update(delta);
@@ -85,6 +92,10 @@ public class MenuScene implements Screen {
         for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
+    /*constructor
+     * Pre: game instance
+     * Post: creates the background
+     * */
     public void drawBackground() {
         float w = background.getWidth();
         float h = background.getHeight();
@@ -107,6 +118,7 @@ public class MenuScene implements Screen {
             x -= w;
         }
 
+        //draws the background
         while (x < cam.viewportWidth) {
             game.batch.draw(background, x, bgPos.y);
             game.batch.draw(background, x, bgPos.y + h);
@@ -118,10 +130,16 @@ public class MenuScene implements Screen {
         }
     }
 
+    /*constructor
+     * Pre: game instance
+     * Post: handles the update function
+     * */
     public void update(float deltaTime) {
         bgPos.x += xSpeed * deltaTime;
         bgPos.y += ySpeed * deltaTime;
 
+
+        // changes the music
         if (game.music != null) {
             if (game.music.getPosition() >= game.songLoopEnd) {
                 game.music.setPosition((float) (game.music.getPosition() - (game.songLoopEnd - game.songLoopStart)));

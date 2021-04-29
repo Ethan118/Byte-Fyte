@@ -10,11 +10,20 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.graphics.Color;
 
+/*constructor
+ * Pre: game launch
+ * Post: creates the title screen
+ * */
 public class TitleScreen extends MenuScene {
     public Texture logo = new Texture("sprites/menu/logo_title.png");
     private final GlyphLayout layout = new GlyphLayout();
     private float alpha = 4.5f;
 
+
+    /*constructor
+     * Pre: game instance
+     * Post: handles the imports and variables needed
+     * */
     public TitleScreen(Main game) {
         super(game);
         if (Main.internalSongName.equalsIgnoreCase("menu weird") && Main.bill) {
@@ -25,9 +34,14 @@ public class TitleScreen extends MenuScene {
         xSpeed = 0;
     }
 
+    /*constructor
+     * Pre: game instance
+     * Post: handles the screen updating
+     * */
     public void update(float deltaTime) {
         boolean controllerPressed = false;
 
+        //checks if a controller has been pressed
         for (Controller controller : Main.allControllers) {
             if (Main.recentButtons.get(controller).size > 0) {
                 controllerPressed = true;
@@ -36,6 +50,7 @@ public class TitleScreen extends MenuScene {
 
         super.update(deltaTime);
 
+        //handles if the user presses escape button
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || controllerPressed) {
@@ -48,6 +63,10 @@ public class TitleScreen extends MenuScene {
         }
     }
 
+    /*constructor
+     * Pre: game instance
+     * Post: handles the rendering for the screen
+     * */
     public void render(float delta) {
         super.render(delta);
 

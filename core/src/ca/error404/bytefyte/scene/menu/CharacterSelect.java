@@ -99,6 +99,7 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
+        //mario and luigi button
         new Button(new Vector2(1510, 840), game, new Texture[] { new Texture("sprites/menu/characters/mal.png"), new Texture("sprites/menu/characters/mal_selected.png") }) {
             public void click() {
                 CharacterSelect.characters[cursor.getID()] = "";
@@ -120,6 +121,7 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
+        // back button
         new Button(new Vector2(200, 100), game, "Back") {
             public void click() {
                 new ScreenWipe(new MainMenu(game), game);
@@ -128,6 +130,7 @@ public class CharacterSelect extends MenuScene {
         };
     }
 
+    // checks characters
     private boolean checkChars() {
         check();
         for (int i = 0; i < Main.cursors.size(); i++) {
@@ -139,6 +142,7 @@ public class CharacterSelect extends MenuScene {
         return true;
     }
 
+    // checks for multiple characters
     public void check() {
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] != null) {
@@ -149,9 +153,14 @@ public class CharacterSelect extends MenuScene {
         }
     }
 
+    // actually creates the buttons
     private void createButton() {
         if (checkChars()) {
+
+            //creates the start button
             startButton = new Button(new Vector2(960, 100), game, "Maps") {
+
+                // if you click the start button it goes to the map select screen
                 public void click() {
                     new ScreenWipe(new MapSelect(game), game);
                     for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
@@ -160,6 +169,10 @@ public class CharacterSelect extends MenuScene {
         }
     }
 
+    /*constructor
+     * Pre: game instance
+     * Post: renders the images that appear on screen
+     * */
     public void render(float delta) {
         super.render(delta);
         System.out.println(Main.cursors.size());

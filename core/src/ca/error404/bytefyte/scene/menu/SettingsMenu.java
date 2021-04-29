@@ -15,15 +15,25 @@ import org.ini4j.Wini;
 import java.io.File;
 import java.io.IOException;
 
+/*constructor
+ * Pre: game instance
+ * Post: creates the settingsMenu screen
+ * */
 public class SettingsMenu extends MenuScene {
+
+    //declaring variables
     public MenuCursor pointer;
     public static boolean toRefresh = false;
     public static float timer;
-
     public SettingsMenu(Main game) {
         super(game);
     }
 
+
+    /*constructor
+     * Pre: game instance
+     * Post: handles what the screen shows to the user
+     * */
     public void show() {
         super.show();
         if (Main.internalSongName.equalsIgnoreCase("menu weird") && Main.bill) {
@@ -34,16 +44,17 @@ public class SettingsMenu extends MenuScene {
 
         xSpeed = 0;
 
+        //creates cursor
         pointer = new MenuCursor(new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2), Main.controllers[0], game);
 
         // Screen Settings
-
         new Button(new Vector2(500, 1000), game, "Screen Size") {
             public boolean isCursorOver(MenuCursor cursor) {
                 return false;
             }
         };
 
+        //create button for screen size
         new Button(new Vector2(500, 925), game, "< " +  ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0) + "x" + ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1) + " >") {
             public void update() {
                 if (isClicked()) {
@@ -58,6 +69,8 @@ public class SettingsMenu extends MenuScene {
             }
 
             public void click() {
+
+                //changes the screen size up or down an interval
                 if (cursor.pos.x < pos.x) {
                     ScreenSizes.screenSize = ScreenSizes.screenSize <= 0 ? ScreenSizes.screenSizes.size() - 1 : ScreenSizes.screenSize - 1;
                 } else {
@@ -66,12 +79,14 @@ public class SettingsMenu extends MenuScene {
             }
         };
 
+        //creates the full screen button
         new Button(new Vector2(1300, 1000), game, "Full Screen") {
             public boolean isCursorOver(MenuCursor cursor) {
                 return false;
             }
         };
 
+        //creates the "off" button
         new Button(new Vector2(1300, 925), game, "Off") {
             public void update() {
                 if (isClicked()) {
@@ -95,13 +110,13 @@ public class SettingsMenu extends MenuScene {
         };
 
         // Volume Settings
-
         new Button(new Vector2(1920 / 2f, 800), game, "Music Volume") {
             public boolean isCursorOver(MenuCursor cursor) {
                 return false;
             }
         };
 
+        //creates button to change volume
         new Button(new Vector2(1920 / 2f, 725), game, "< " +  Main.musicVolume + " >") {
             public void update() {
                 if (isClicked()) {
@@ -116,6 +131,8 @@ public class SettingsMenu extends MenuScene {
             }
 
             public void click() {
+
+                //makes the music volume go up or down
                 if (cursor.pos.x < pos.x) {
                     Main.musicVolume = Math.max(Main.musicVolume - 1, 0);
                 } else {
@@ -124,12 +141,14 @@ public class SettingsMenu extends MenuScene {
             }
         };
 
+        //creates the SFX volume button
         new Button(new Vector2(400, 725), game, "SFX Volume") {
             public boolean isCursorOver(MenuCursor cursor) {
                 return false;
             }
         };
 
+        //creates another sfx volume button
         new Button(new Vector2(400, 650), game, "< " +  Main.sfxVolume + " >") {
             public void update() {
                 if (isClicked()) {
@@ -144,6 +163,8 @@ public class SettingsMenu extends MenuScene {
             }
 
             public void click() {
+
+                //makes the SFX volume go up or down
                 if (cursor.pos.x < pos.x) {
                     Main.sfxVolume = Math.max(Main.sfxVolume - 1, 0);
                 } else {
@@ -152,12 +173,15 @@ public class SettingsMenu extends MenuScene {
             }
         };
 
+
+        //creates a video volume button
         new Button(new Vector2(1550, 725), game, "Video Volume") {
             public boolean isCursorOver(MenuCursor cursor) {
                 return false;
             }
         };
 
+        //creates another volume button
         new Button(new Vector2(1550, 650), game, "< " +  Main.cutsceneVolume + " >") {
             public void update() {
                 if (isClicked()) {
@@ -172,6 +196,8 @@ public class SettingsMenu extends MenuScene {
             }
 
             public void click() {
+
+                //makes the video volume go up or down
                 if (cursor.pos.x < pos.x) {
                     Main.cutsceneVolume = Math.max(Main.cutsceneVolume - 1, 0);
                 } else {
@@ -181,13 +207,13 @@ public class SettingsMenu extends MenuScene {
         };
 
         // Debug Settings
-
         new Button(new Vector2(1920 / 2f, 600), game, "Hitboxes") {
             public boolean isCursorOver(MenuCursor cursor) {
                 return false;
             }
         };
 
+        //creates the button for hitboxes and if the user can see them
         new Button(new Vector2(1920 / 2f, 525), game, "Invisible") {
             public void update() {
                 if (isClicked()) {
@@ -212,13 +238,14 @@ public class SettingsMenu extends MenuScene {
 
         // Controlller Rebind
 
-
+        //stamina button, changes the
         new Button(new Vector2(1920 / 2f, 350), game, "Stamina") {
             public boolean isCursorOver(MenuCursor cursor) {
                 return false;
             }
         };
 
+        //on or off button for stamina
         new Button(new Vector2(1920 / 2f, 275), game, "Off") {
             public void update() {
                 if (isClicked()) {
@@ -242,6 +269,7 @@ public class SettingsMenu extends MenuScene {
         };
         // Navigation Buttons
 
+        //creates back button
         new Button(new Vector2(200, 100), game, "Back") {
             public void click() {
                 new ScreenWipe(new MainMenu(game), game);
@@ -254,6 +282,7 @@ public class SettingsMenu extends MenuScene {
 
                 File settings = new File(Globals.workingDirectory + "settings.ini");
 
+                //try and catch statement for swapping setting, detects errors
                 try {
                     Wini ini = new Wini(settings);
                     ini.add("Settings", "screen size", ScreenSizes.screenSize);
@@ -288,6 +317,11 @@ public class SettingsMenu extends MenuScene {
         };
     }
 
+
+    /*constructor
+     * Pre: game instance
+     * Post: handles the screen updating
+     * */
     public void update(float delta) {
         if (toRefresh && timer <= 0) {
             Main.cursors.clear();
