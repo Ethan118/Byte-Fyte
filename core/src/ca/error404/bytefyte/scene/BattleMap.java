@@ -100,6 +100,12 @@ public class BattleMap extends PlayRoom {
                     } catch (Exception e) {
                         chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
+                } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("marioluigi")) {
+                    try {
+                        chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
+                    } catch (Exception e) {
+                        chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                    }
                 } else {
                     try {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
@@ -142,11 +148,6 @@ public class BattleMap extends PlayRoom {
     }
 
     public void update(float deltaTime) {
-
-//        for (int l = 0; l < Main.players.size(); l ++) {
-//            System.out.println(Main.players.get(l));
-//        }
-
         int i = -1;
         playersAlive = 0;
         for (int k = 0; k < Main.players.size(); k++) {

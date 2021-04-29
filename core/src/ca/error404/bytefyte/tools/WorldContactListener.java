@@ -2,6 +2,7 @@ package ca.error404.bytefyte.tools;
 
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.DeathWall;
+import ca.error404.bytefyte.chars.Mario;
 import ca.error404.bytefyte.chars.Wall;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;

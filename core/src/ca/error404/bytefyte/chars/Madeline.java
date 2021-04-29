@@ -182,6 +182,19 @@ public class Madeline extends Character {
     void findFollow() {
         switch (animState) {
             case BASIC_N:
+            case BASIC_S:
+            case BASIC_U:
+            case BASIC_D:
+            case SMASH_S:
+            case SMASH_U:
+            case SMASH_D:
+            case AIR_N:
+            case AIR_F:
+            case AIR_B:
+            case AIR_U:
+            case AIR_D:
+                followOffset = new Vector2(-0.065f, 0.14f);
+                break;
             case RUN:
                 followOffset = new Vector2(-0.04f, 0.14f);
                 break;
@@ -337,6 +350,8 @@ public class Madeline extends Character {
                     new Laser(this, new Vector2(-0.3f, 0.3f), moveVector.cpy(), 100, 5, 10, 0.5f, 53f / 30f, 74f / 30f, "beam", "sprites/madeline.atlas", 0.4f);
                 }
             }
+        } else {
+            basicNeutral();
         }
     }
 
@@ -398,27 +413,27 @@ public class Madeline extends Character {
 
     @Override
     void airNeutral() {
-
+        basicNeutral();
     }
 
     @Override
     void airForward() {
-
+        basicNeutral();
     }
 
     @Override
     void airBack() {
-
+        basicNeutral();
     }
 
     @Override
     void airUp() {
-
+        basicNeutral();
     }
 
     @Override
     void airDown() {
-
+        basicNeutral();
     }
 
     @Override

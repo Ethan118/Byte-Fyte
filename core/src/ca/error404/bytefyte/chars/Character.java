@@ -5,6 +5,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.constants.Tags;
+import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.PlayRoom;
 import ca.error404.bytefyte.ui.PlayerHealth;
