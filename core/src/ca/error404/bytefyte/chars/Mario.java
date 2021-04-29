@@ -3,6 +3,7 @@ package ca.error404.bytefyte.chars;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 
 import com.badlogic.gdx.math.Vector2;
@@ -18,8 +19,12 @@ public class Mario extends Character {
     private Vector2 leftFollow = new Vector2(0.2f, 0);
     private Vector2 rightFollow = new Vector2(-0.2f, 0);
 
-    public Mario(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
-        super(screen, spawnPoint, controller, playerNumber, "marioluigi", "MARIO & LUIGI", 1, 1);
+    public Mario(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
+    public Mario(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
+        super(screen, spawnPoint, controller, playerNumber, "marioluigi", "MARIO & LUIGI", 1, 1, stamina);
 
         manualSpriteOffset = new Vector2(250, 250);
         projectilesOnScreen = new ArrayList<>(1);

@@ -37,8 +37,9 @@ public class MainMenu extends MenuScene {
 
             new Button(new Vector2(420, 540), game, new Texture[]{new Texture("sprites/menu/fyte_bill.png"), new Texture("sprites/menu/fyte_bill_selected.png")}) {
                 public void click() {
+                    new ScreenWipe(new CharacterSelect(this.game), game);
                     for (MenuCursor cursor : Main.cursors) {
-                        cursor.pos = new Vector2(968, 540);
+                        cursor.canMove = false;
                     }
                 }
             };
@@ -63,9 +64,8 @@ public class MainMenu extends MenuScene {
 
             new Button(new Vector2(1520, 707), game, new Texture[]{new Texture("sprites/menu/vault.png"), new Texture("sprites/menu/vault_selected.png")}) {
                 public void click() {
-                    for (MenuCursor cursor : Main.cursors) {
-                        cursor.pos = new Vector2(968, 540);
-                    }
+                    new ScreenWipe(new SettingsMenu(this.game), game);
+                    for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
                 }
             };
         } else {

@@ -20,8 +20,11 @@ public class CharacterSelect extends MenuScene {
     // menuscene function
     public CharacterSelect(Main game) {
         super(game);
-        xSpeed = 0;
-        background = new Texture("sprites/menu/char_bg.png");
+        xSpeed = 0;if (Main.bill) {
+            background = new Texture("sprites/menu/bill_bg.png");
+        } else {
+            background = new Texture("sprites/menu/char_bg.png");
+        }
         CharacterSelect.characters = new String[]{null, null, null, null};
         charsSelected = new boolean[]{false, false, false, false};
     }
@@ -79,13 +82,13 @@ public class CharacterSelect extends MenuScene {
             }
         };
 
-        new Button(new Vector2(1510, 840), game, new Texture[] { new Texture("sprites/menu/characters/mal_hidden.png"), null }) {
-            public boolean isCursorOver(MenuCursor cursor) {
-                return false;
-            }
-
-            public void update() {
-
+        new Button(new Vector2(1510, 840), game, new Texture[] { new Texture("sprites/menu/characters/mal.png"), new Texture("sprites/menu/characters/mal_selected.png") }) {
+            public void click() {
+                CharacterSelect.characters[cursor.getID()] = "";
+                CharacterSelect.characters[cursor.getID()] = "marioluigi";
+                if (checkChars()) {
+                    createButton();
+                }
             }
         };
 

@@ -4,6 +4,7 @@ import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.DeathWall;
 import ca.error404.bytefyte.chars.Mario;
 import ca.error404.bytefyte.chars.Wall;
+import ca.error404.bytefyte.chars.bosses.Boss;
 import ca.error404.bytefyte.constants.Tags;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Laser;
@@ -19,11 +20,13 @@ public class WorldContactListener implements ContactListener {
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         Character chara;
+        Boss boss;
         Projectile projectile;
         Laser laser;
         Wall wall;
         DeathWall deathWall;
         Collider collider;
+        int tag;
 
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
@@ -135,8 +138,21 @@ public class WorldContactListener implements ContactListener {
                     projectile.destroy();
                 }
                 break;
+            case Tags.PROJECTILE_BIT | Tags.BOSS_BIT:
+                if (fixA.getFilterData().categoryBits == Tags.BOSS_BIT) {
+                    boss = (Boss) fixA.getUserData();
+                    projectile = (Projectile) fixB.getUserData();
+                } else {
+                    boss = (Boss) fixB.getUserData();
+                    projectile = (Projectile) fixA.getUserData();
+                }
 
-            case  Tags.LASER_BIT | Tags.PLAYER_BIT:
+                boss.hit(projectile.damage);
+
+                projectile.destroy();
+                break;
+
+            case Tags.LASER_BIT | Tags.PLAYER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     laser = (Laser) fixB.getUserData();
@@ -172,6 +188,9 @@ public class WorldContactListener implements ContactListener {
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
 
+        int tag;
+        Boss boss;
+
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
         switch (cDef) {
@@ -182,6 +201,7 @@ public class WorldContactListener implements ContactListener {
                 } else {
                     ((Character) fixB.getUserData()).grounded = false;
                 }
+                break;
         }
     }
 

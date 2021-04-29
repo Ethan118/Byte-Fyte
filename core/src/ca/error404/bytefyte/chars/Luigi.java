@@ -4,6 +4,7 @@ import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.constants.ControllerButtons;
 import ca.error404.bytefyte.constants.Keys;
 import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -16,10 +17,15 @@ public class Luigi extends Character {
 
     public Vector2 targetPos = new Vector2();
 
-    public Luigi(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, Mario parent) {
-        super(screen, spawnPoint, controller, playerNumber, parent.charname, parent.playerName, parent.spriteScale, parent.hitboxScale);
+    public Luigi(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, Mario parent) {
+        this(screen, spawnPoint, controller, playernumber, parent, 0);
+    }
+
+    public Luigi(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, Mario parent, int hp) {
+        super(screen, spawnPoint, controller, playerNumber, parent.charname, parent.playerName, parent.spriteScale, parent.hitboxScale, hp);
         manualSpriteOffset = parent.manualSpriteOffset;
         Main.players.remove(this);
+        Main.luigis.add(this);
         Main.uiToRemove.add(health);
 
         this.parent = parent;
@@ -102,6 +108,9 @@ public class Luigi extends Character {
     public void update(float delta) {
         targetPos.set(parent.followPoint.cpy());
         super.update(delta);
+        if (dead) {
+            Main.luigis.remove(this);
+        }
     }
 
     @Override
