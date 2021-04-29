@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+// Gaster blaster class
 public class GasterBlaster extends GameObject {
 
+//    Instantiating variables
     private Character parent;
     private float speed;
     private Laser laser;
@@ -31,7 +33,13 @@ public class GasterBlaster extends GameObject {
 
 
 
+    /*
+    * Constructor
+    * Pre: Inputs for parameters
+    * Post: A Gaster Blaster that can fire a laser
+    * */
     public GasterBlaster(Character parent, float speed, Laser laser) {
+//        Assigning parameters to variables
         this.parent = parent;
         this.laser = laser;
         this.speed = speed;
@@ -46,13 +54,15 @@ public class GasterBlaster extends GameObject {
         setRegion(sprite);
         setOriginCenter();
 
+//        Setting the angle
         if (parent.controller != null) {
             this.angle = parent.rStick.cpy();
         } else {
             this.angle = parent.moveVector.cpy();
         }
-
         setRotation(angle.angleDeg() + 90);
+
+//        Instantiating sound effects
         arriveSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/gasterBlasterArrive.wav"));
         arriveSFX.setLooping(false);
         arriveSFX.setVolume(5);
@@ -63,17 +73,31 @@ public class GasterBlaster extends GameObject {
 
     }
 
+    /*
+    * Pre: Delta Time
+    * Post: Updates Gaster Blaster
+    * */
     @Override
     public void update(float delta) {
+
+//        Moves the Gaster Blaster to the target position
         pos.lerp(targetPos, speed * delta);
+
+//        Updates the laser offset
         offset.y = pos.y - parent.pos.cpy().y;
         offset.x = (float) ((pos.x - parent.pos.cpy().x) + (sprite.getRegionWidth()/0.8 / Main.PPM)/4 );
 
+//        Checks if the Gaster Blaster has arrived at the target location
         if (pos.dst(targetPos) < 0.1) {
+
+//            If it has, the animation is changed and the elapsed time is counted
             animation = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("gb_fire"), Animation.PlayMode.NORMAL);
             elapsedTime += delta;
 
+//            If the laser has not already spawned
             if (!laserHasSpawned) {
+
+//                Play the sound effect and create a laser
                 fireSFX.play();
 
                 if (parent.controller != null) {
@@ -90,23 +114,31 @@ public class GasterBlaster extends GameObject {
                     }
                 }
 
+//                The laser has now been spawned
                 laserHasSpawned = true;
 
 
             }
+
+//            If the laser has been on thescreen for a second (duration), destroy the gaster blaster
             if (elapsedTime > 1) {
                 destroy();
             }
+
+//        If the arrive sound effect has not already played, play it
         } else if (!arriveHasPlayed) {
             arriveSFX.play();
             arriveHasPlayed = true;
         }
 
-
+//        If the has has spawned, remove this instance of the gaster blaster from the gameobjects list, and
+//        re-add it to change the draw order
         if (laserHasSpawned) {
             Main.gameObjects.remove(this);
             Main.gameObjects.add(this);
         }
+
+//        Set the sprite to draw, and draw it
         sprite = animation.getKeyFrame(elapsedTime, true);
 
         setBounds(pos.x - (getWidth() / 2), pos.y - (getHeight() / 2), getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
@@ -119,8 +151,14 @@ public class GasterBlaster extends GameObject {
 
     }
 
+    /*
+    * Pre: Destroy method in the game objects class
+    * Post: Destroys and disposes of all assets in this instance of Gaster Blaster
+    * */
     @Override
     public void destroy() {
+
+//        Disposes of everything in this instance of Gaster Blaster
         super.destroy();
         fireSFX.dispose();
         arriveSFX.dispose();

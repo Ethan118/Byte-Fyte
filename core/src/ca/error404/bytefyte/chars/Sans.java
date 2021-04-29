@@ -34,6 +34,7 @@ public class Sans extends Character{
     private boolean hasTeleported = false;
 
     /*
+    * Constructor
     * Pre: Inputted parameters
     * Post: A new instance of the character Sans that is playable by the user
     * */
@@ -55,7 +56,7 @@ public class Sans extends Character{
 
         walk.setFrameDuration(0.02f);
 
-//        Preparing Music
+//        Preparing sound effects
         healSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/fullRestore.wav"));
         healSFX.setLooping(false);
         healSFX.setVolume(5);
@@ -66,11 +67,17 @@ public class Sans extends Character{
      * Post: Updates character
      * */
     public void update(float deltaTime) {
+
+//        If there is a move cooldown, reduce it by the elapsed time
         if (moveCooldown > 0) {
             moveCooldown -= deltaTime;
+
+//        Otherwise, the move cooldown is 0
         } else {
             moveCooldown = 0;
         }
+
+//        If the user is in the sit animation, lock their animation
         if (sit) {
             lockAnim = true;
             if (vel.y > 0) {
@@ -78,31 +85,45 @@ public class Sans extends Character{
             }
 
             handleInput();
+
+//            If they get hit or recast the move, unlock them, take them out of the sit animation
             if (attackState == AttackState.SPECIAL && moveVector.y == 0 || hasBeenHit) {
                 sit = false;
             } else {
                 resetControls();
             }
         }
+
+//        Call the update from the character class
         super.update(deltaTime);
 
+//        If they are eliminated, dispose of the sound effects
         if (dead) {
             healSFX.dispose();
         }
 
+//        Set the animation of their up b to the beginning or end of the animation depending on situation
         if (upBStart) {
             upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_start"), Animation.PlayMode.NORMAL);
         } else {
             upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_end"), Animation.PlayMode.NORMAL);
         }
+
+//        If trying to use up b
         if (animState == AnimationState.SPECIAL_U) {
+
+//            If they arent currently using up b, use it
             if (!usingUpB) {
                 animDuration = 0.6f;
                 usingUpB = true;
             }
         }
+
+//        If using up b
         if (usingUpB) {
             animState = AnimationState.SPECIAL_U;
+
+//            If in the correct time and frame, teleport the player upwards
             if (animDuration > 0.41) {
                 upBStart = true;
                 upBEnd = false;
@@ -110,22 +131,32 @@ public class Sans extends Character{
                     b2body.setTransform(b2body.getPosition().x, b2body.getPosition().y + 0.67f, 0);
                     grounded = false;
                 }
+
+//            Otherwise, if they are still in the up b animation, play the ending animation
             } else if (animDuration > 0.01) {
                 upBStart = false;
                 upBEnd = true;
+
+//            Otherwise, end the up b
             } else if (animDuration == 0){
                 usingUpB = false;
             }
         }
 
+//        If they are trying to use their down b
         if (animState == AnimationState.SPECIAL_D) {
+
+//            If they are not currently using it, use it and play the music for it
             if (!usingDownB) {
                 animDuration = 1.75f;
                 usingDownB = true;
                 healSFX.play();
             }
 
+//            If the animation is currently playing
             if (animDuration > 0) {
+
+//                Lock the user and heal sans based on game mode
                 lockAnim = true;
                 if (!stamina) {
                     if (percent <= deltaTime) {
@@ -141,12 +172,14 @@ public class Sans extends Character{
                     }
                 }
 
+//            Otherwise, end the animation, unlock user
             } else {
                 usingDownB = false;
                 lockAnim = false;
             }
         }
 
+//        If using the neutral air, set an animation duration to play the animation longer
         if (animState == AnimationState.AIR_N) {
             if (animDuration == 0) {
                 animDuration = 0.4f;
@@ -154,13 +187,20 @@ public class Sans extends Character{
             }
         }
 
+//        If using the down tilt
         if (animState == AnimationState.BASIC_D) {
+
+//            If they aren't currently using it, allow user to use it
             if (!usingDTilt) {
                 animDuration = 0.5f;
                 usingDTilt = true;
             }
+
+//            If they are in the animation, lock them
             if (animDuration > 0) {
                 lockAnim = true;
+
+//            Otherwise, unlock them
             } else {
                 lockAnim = false;
                 usingDTilt = false;
@@ -171,9 +211,11 @@ public class Sans extends Character{
 
     }
 
-    //    All abilities.  Will add colliders or move Sans as applicable
+    //    All abilities.  Will add colliders, projectiles, or move Sans as applicable
     @Override
     void basicNeutral() {
+
+//        Creates three projectiles depending on direction
         if (facingLeft) {
             new Projectile(this, new Vector2(0, 0), new Vector2(5, 0), 0, 0f, 20, 0, 2, 0, "bone_v_top", "sprites/sans.atlas", 0, 0.9f);
             new Projectile(this, new Vector2(0.0375f, 0), new Vector2(5, 0), 0, 0f, 20, 0, 2, 0, "bone_v_mid", "sprites/sans.atlas", 0.001f, 0.9f);
@@ -189,6 +231,8 @@ public class Sans extends Character{
 
     @Override
     void basicSide() {
+
+//        Adds three projectiles based on direction
         if (!facingLeft) {
             new Projectile(this, new Vector2(0, 0), new Vector2(5, 0), 0, 0f, 20, 0, 2, 0, "bone_v_top", "sprites/sans.atlas", 0, 0.9f);
             new Projectile(this, new Vector2(0.0375f, 0), new Vector2(5, 0), 0, 0f, 20, 0, 2, 0, "bone_v_mid", "sprites/sans.atlas", 0.001f, 0.9f);
@@ -204,6 +248,8 @@ public class Sans extends Character{
 
     @Override
     void basicUp() {
+
+//        Adds projectiles to simulate "growing"
         new Projectile(this, new Vector2(0, height + 0.05f), new Vector2(0, 1), 0, 0f, 0.1f, 2, 4, 2, "bone_v_top", "sprites/sans.atlas", 0, 0.5f);
         new Projectile(this, new Vector2(0, height - 0.0375f + 0.05f), new Vector2(0, 1), 0, 0f, 0.1f, 0, 2, 0, "bone_v_mid", "sprites/sans.atlas", 0.01f, 0.5f);
         new Projectile(this, new Vector2(0, height - 0.0375f + 0.05f), new Vector2(0, 1), 0, 0f, 0.075f, 0, 0, 0, "bone_v_mid", "sprites/sans.atlas", 0.03f, 0.5f);
@@ -215,6 +261,8 @@ public class Sans extends Character{
 
     @Override
     void basicDown() {
+
+//        Adds collider
         new Collider(new Vector2(0, 0f), 75, 35, this, 2f, 5f, 0.25f, 0);
 
         resetControls();
@@ -222,12 +270,15 @@ public class Sans extends Character{
 
     @Override
     void dashAttack() {
+//        Adds collider
         new Collider(new Vector2(7.5f, 0), 15, 30, this, 3f, 9f, 0.25f, 0);
         resetControls();
     }
 
     @Override
     void smashSide() {
+
+//        Adds a cooldown and creates a Gaster Blaster
         if (moveCooldown == 0) {
             moveCooldown = 1f;
 
@@ -239,23 +290,31 @@ public class Sans extends Character{
 
     @Override
     void smashUp() {
+
+//        Same as side smash
         smashSide();
     }
 
     @Override
     void smashDown() {
+
+//        Same as side smash
         smashSide();
 
     }
 
     @Override
     void specialNeutral() {
+
+//        Makes user sit
         sit = true;
         resetControls();
     }
 
     @Override
     void specialSide() {
+
+//        Creates a new collider, adds a cooldown, and moves user
         new Collider(new Vector2(0, 5), 40, 60, this, 2f, 4f, 0.25f, 0);
         animDuration = 1f;
 
@@ -265,24 +324,12 @@ public class Sans extends Character{
 
     @Override
     void specialUp() {
-        if (animDuration > 0.2) {
-            upBStart = false;
-            upBEnd = true;
-            if (animDuration < 0.4) {
-                if (!hasTeleported) {
-                    pos.y += 10;
-                    hasTeleported = true;
-                }
-            }
-        } else {
-            upBStart = true;
-            upBEnd = false;
-        }
+//        Code in update loop
     }
 
     @Override
     void specialDown() {
-
+//        Code in update loop
         resetControls();
     }
 
@@ -292,6 +339,7 @@ public class Sans extends Character{
 
     @Override
     void airNeutral() {
+//        Adds collider
         new Collider(new Vector2(0, 7.5f), 50, 35, this, 2f, 5f, 0.25f, 0);
 
         resetControls();
@@ -299,6 +347,8 @@ public class Sans extends Character{
 
     @Override
     void airForward() {
+
+//        Adds a projectile based on direction
         if (facingLeft) {
             new Projectile(this, new Vector2(0, 0), new Vector2(-5, 0), 0, 0f, 20, 3, 4, 1, "bullet", "sprites/sans.atlas", 0, 0.9f);
         } else {
@@ -309,6 +359,7 @@ public class Sans extends Character{
 
     @Override
     void airBack() {
+//        Adds a projectile based on direction
         if (facingLeft) {
             new Projectile(this, new Vector2(0, 0), new Vector2(5, 0), 0, 0f, 20, 3, 4, 1, "bullet", "sprites/sans.atlas", 0, 0.9f);
         } else {
@@ -319,6 +370,7 @@ public class Sans extends Character{
 
     @Override
     void airUp() {
+//        Adds a projectile
         new Projectile(this, new Vector2(0, 0), new Vector2(0, 5), 0, 0f, 20, 3, 4, 1, "bullet", "sprites/sans.atlas", 0, 0.9f);
 
         resetControls();
@@ -326,6 +378,7 @@ public class Sans extends Character{
 
     @Override
     void airDown() {
+//        Adds a projectile
         new Projectile(this, new Vector2(0, 0), new Vector2(0, -5), 0, 0f, 20, 3, 4, 1, "bullet", "sprites/sans.atlas", 0, 0.9f);
 
         resetControls();
