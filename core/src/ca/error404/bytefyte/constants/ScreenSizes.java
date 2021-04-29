@@ -2,6 +2,10 @@ package ca.error404.bytefyte.constants;
 
 import java.util.ArrayList;
 
+/*
+ * Pre: delta time, screen created
+ * Post: handles screen size
+ * */
 public class ScreenSizes {
     public static final ArrayList<ArrayList<Integer>> screenSizes = new ArrayList<>();
     public static int screenSize = 3;

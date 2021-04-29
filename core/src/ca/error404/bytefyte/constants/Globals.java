@@ -4,6 +4,11 @@ import javax.sound.sampled.AudioFormat;
 import java.io.File;
 import java.util.ArrayList;
 
+
+/*
+ * Pre: delta time, sprite called
+ * Post: handles starting of the program and file directory
+ * */
 public class Globals {
     public static String workingDirectory;
     //here, we assign the name of the OS, according to Java, to a variable...

@@ -2,6 +2,11 @@ package ca.error404.bytefyte.shaders;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
+
+/*
+ * Pre: class is called
+ * Post: creates a shader
+ * */
 public class GrayscaleShader {
     static String vertexShader = "attribute vec4 a_position;\n" +
             "attribute vec4 a_color;\n" +

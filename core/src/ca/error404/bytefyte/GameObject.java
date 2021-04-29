@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 
+/*
+ * Pre: delta time, sprite called
+ * Post: creates and destroys objects
+ * */
 public abstract class GameObject extends Sprite {
 
     public boolean remove;

@@ -12,6 +12,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.video.VideoPlayer;
 import com.badlogic.gdx.video.VideoPlayerCreator;
 
+
+/*
+ * Pre: delta time, class is called
+ * Post: creates a cutscene
+ * */
 public class CutscenePlayer implements Disposable {
 
     VideoPlayer videoPlayer = VideoPlayerCreator.createVideoPlayer();
