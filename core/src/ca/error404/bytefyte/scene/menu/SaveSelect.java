@@ -30,7 +30,7 @@ public class SaveSelect extends MenuScene {
     }
 
     @Override
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles what is shown to the user
      * */

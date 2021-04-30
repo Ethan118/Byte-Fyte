@@ -54,7 +54,7 @@ public class MenuScene implements Screen {
     }
 
     @Override
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the rendering for the screen
      * */
@@ -92,7 +92,7 @@ public class MenuScene implements Screen {
         for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: creates the background
      * */
@@ -130,7 +130,7 @@ public class MenuScene implements Screen {
         }
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the update function
      * */

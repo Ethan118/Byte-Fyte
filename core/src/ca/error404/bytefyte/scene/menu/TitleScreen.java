@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.graphics.Color;
 
-/*constructor
+/*
  * Pre: game launch
  * Post: creates the title screen
  * */
@@ -34,7 +34,7 @@ public class TitleScreen extends MenuScene {
         xSpeed = 0;
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the screen updating
      * */
@@ -63,7 +63,7 @@ public class TitleScreen extends MenuScene {
         }
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the rendering for the screen
      * */

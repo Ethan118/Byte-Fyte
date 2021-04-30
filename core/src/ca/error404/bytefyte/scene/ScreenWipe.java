@@ -10,8 +10,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
+// Class to wipe the screen and replace it
 public class ScreenWipe {
+
+//    Initializing variables
     ShapeRenderer renderer = new ShapeRenderer();
     Rectangle rect;
     Viewport screen;
@@ -20,7 +22,14 @@ public class ScreenWipe {
     Main game;
     float timer = 2f;
 
+    /*
+    * Constructor
+    * Pre: Screen to switch to, game instance
+    * Post: A new screen wipe
+    * */
     public ScreenWipe(Screen newScreen, Main game) {
+
+//        Setting all variables
         Main.transitions.add(this);
         this.newScreen = newScreen;
         this.game = game;
@@ -32,12 +41,21 @@ public class ScreenWipe {
         rect = new Rectangle(-(int) (screen.getWorldWidth() * 1.2), 0, (int) (screen.getWorldWidth() * 1.2), screen.getWorldHeight());
     }
 
+    /*
+    * Pre: Delta time
+    * Post: Updates the screen wipe
+    * */
     public void update(float delta) {
+
+//        If the timer is equal to 2 or less than or equal to 0, add to the rectangle x
         if (timer == 2f || timer <= 0) {
             rect.x += delta * 4000;
         }
 
+//        If it is greater than the screen size and it hasnt switch screens
         if (rect.x > -screen.getWorldWidth() * 0.1 && !hasSwitched) {
+
+//            Adjust timer, switch screen if less than or equal to 0
             timer -= delta;
             if (timer <= 0) {
                 hasSwitched = true;

@@ -30,7 +30,7 @@ public class SettingsMenu extends MenuScene {
     }
 
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles what the screen shows to the user
      * */
@@ -318,7 +318,7 @@ public class SettingsMenu extends MenuScene {
     }
 
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the screen updating
      * */

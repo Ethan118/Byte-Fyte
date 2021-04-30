@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import java.util.Random;
 
-/*constructor
+/*
  * Pre: game instance
  * Post: handles the main menu screen
  * */
@@ -36,7 +36,7 @@ public class MainMenu extends MenuScene {
         }
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles what the menu shows to the user
      * */
@@ -87,7 +87,7 @@ public class MainMenu extends MenuScene {
                 public void click() {
 
                     //goes to the settings menu
-                    new ScreenWipe(new SettingsMenu(this.game), game);
+                    new ScreenWipe(new Vault(this.game), game);
                     for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
                 }
             };
@@ -128,7 +128,7 @@ public class MainMenu extends MenuScene {
             new Button(new Vector2(1520, 707), game, new Texture[]{new Texture("sprites/menu/vault.png"), new Texture("sprites/menu/vault_selected.png")}) {
                 public void click() {
 
-                new ScreenWipe(new SettingsMenu(this.game), game);
+                new ScreenWipe(new Vault(this.game), game);
                 for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
                 }
             };
@@ -157,7 +157,7 @@ public class MainMenu extends MenuScene {
         }
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the rendering for the screen
      * */
