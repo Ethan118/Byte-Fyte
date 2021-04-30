@@ -1,12 +1,11 @@
 package ca.error404.bytefyte.chars;
 
-import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.HairPoint;
 import ca.error404.bytefyte.objects.Laser;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Madeline extends Character {
+//    initialize variables
     Badeline badeline;
 
     Vector2 leftOffset = new Vector2(17f, 5.5f);
@@ -47,16 +47,28 @@ public class Madeline extends Character {
     private int maxDashes = 1;
     private int currentDash = maxDashes;
 
-    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+    public Madeline(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         this(screen, spawnPoint, controller, playernumber, 0);
     }
 
-    public Madeline(BattleMap screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
+    /**
+     * Constructor
+     * @param screen
+     * @param spawnPoint
+     * @param controller
+     * @param playerNumber
+     * @param stamina
+     * pre: the screen madeline is on, spawn point, controller, player number, health
+     * post: instantiates a madeline instance
+     */
+    public Madeline(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
+//        calls parent constructor
         super(screen, spawnPoint, controller, playerNumber, "madeline", "MADELINE", 0.4f, 0.5f, stamina);
         manualSpriteOffset = rightOffset;
 
         weight = 1.1f;
 
+//        reset animations
         TextureAtlas textureAtlas = Main.manager.get(String.format("sprites/%s.atlas", charname), TextureAtlas.class);
 
         sideTilt = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("neutral"), Animation.PlayMode.NORMAL);
@@ -94,18 +106,21 @@ public class Madeline extends Character {
     }
 
     public void update (float delta) {
+//        countdown cooldown counter if above 0
         if (moveCooldown > 0) {
             moveCooldown -= delta;
         } else {
             moveCooldown = 0;
         }
 
+//        if knocked off reset madeline
         if (knockedOff) {
             badelineMeter = 0;
             currentDash = 1;
             knockedOff = false;
         }
 
+//        if charging increase the meter, lock the animation and check if the user must stop charging
         if (charging) {
             badelineMeter = Math.min(badelineMeter + (delta * 2), badelineMaxMeter);
 
@@ -126,14 +141,17 @@ public class Madeline extends Character {
         super.update(delta);
         afterUpB = false;
 
+//        reset the hair
         if (resetHair) {
             resetHair();
         }
 
+//        reset the current amount of dashes
         if (grounded) {
             currentDash = maxDashes;
         }
 
+//        spawn a badeline if the meter reaches max
         if (badelineMeter == badelineMaxMeter) {
             badelineActive = true;
             charging = false;
@@ -142,6 +160,7 @@ public class Madeline extends Character {
             badelineMeter = Math.min(badelineMeter + (delta / 2), badelineMaxMeter);
         }
 
+//        if badeline is active gain an extra dash countdown dashes and check to destroy badeline
         if (badelineActive) {
             maxDashes = 2;
 
@@ -157,12 +176,14 @@ public class Madeline extends Character {
             }
         }
 
+//        set manual sprite offset based on direction facing
         if (facingLeft) {
             manualSpriteOffset = leftOffset;
         } else {
             manualSpriteOffset = rightOffset;
         }
 
+//        change hair color based on amount of dashes
         switch (currentDash) {
             case 0:
                 currentColor = emptyDashes;
@@ -175,11 +196,17 @@ public class Madeline extends Character {
                 break;
         }
 
+//        set follow points for hair
         findFollow();
 
+//        simulate hair
         simulateHair(delta);
     }
 
+    /**
+     * pre:
+     * post: sets the follow offset based on state
+     */
     void findFollow() {
         switch (animState) {
             case BASIC_N:
@@ -214,6 +241,10 @@ public class Madeline extends Character {
         }
     }
 
+    /**
+     * pre:
+     * post: creates all hair points
+     */
     void createHair() {
         for (int i = 0; i < 6; i++) {
             hairPoints.add(new HairPoint(this, Math.max(3, Math.min(6, 6 - i)), "hair", charname));
@@ -221,6 +252,11 @@ public class Madeline extends Character {
         }
     }
 
+    /**
+     * @param delta
+     * pre: the amount of time between frames
+     * post: change follow point based on facing and simulate hair
+     */
     void simulateHair(float delta) {
         if (facingLeft) {
             followPoint = pos.cpy().add(new Vector2(followOffset.x, followOffset.y));
@@ -228,6 +264,7 @@ public class Madeline extends Character {
             followPoint = pos.cpy().add(new Vector2(followOffset.x * -1, followOffset.y));
         }
 
+//        loop through all hair points and set the follow points to the hair point in front of it
         int i = 0;
         for (HairPoint h : hairPoints) {
             if (i == 0) {
@@ -241,6 +278,7 @@ public class Madeline extends Character {
             i++;
         }
 
+//        same for the hair outline
         if (facingLeft) {
             followPoint = pos.cpy().add(new Vector2(followOffset.x, followOffset.y));
         } else {
@@ -260,6 +298,11 @@ public class Madeline extends Character {
         }
     }
 
+    /**
+     * @param batch
+     * pre: the batch used to draw
+     * post: draw hair
+     */
     public void drawHair(SpriteBatch batch) {
         if (!charging) {
             for (HairPoint h : bgPoints) {
@@ -274,6 +317,10 @@ public class Madeline extends Character {
         }
     }
 
+    /**
+     * pre:
+     * post: reset hair
+     */
     public void resetHair() {
         for (HairPoint h : bgPoints) {
             h.pos = pos.cpy();
@@ -288,6 +335,7 @@ public class Madeline extends Character {
         resetHair = false;
     }
 
+//    if badeline is active spawn projectiles otherwise spawn a collider
     @Override
     void basicNeutral() {
         if (!badelineActive) {
@@ -333,6 +381,7 @@ public class Madeline extends Character {
     void dashAttack() {
     }
 
+//    if badeline is active spawn lasers
     @Override
     void smashSide() {
         if (badelineActive && moveCooldown == 0) {
@@ -366,6 +415,7 @@ public class Madeline extends Character {
         smashSide();
     }
 
+//    toggle charging
     @Override
     void specialNeutral() {
         if (!badelineActive) {
@@ -374,6 +424,7 @@ public class Madeline extends Character {
         }
     }
 
+//    dash in the move vector direction
     @Override
     void specialSide() {
         if (currentDash > 0) {
@@ -437,6 +488,7 @@ public class Madeline extends Character {
         basicNeutral();
     }
 
+//    reset hair if dies
     @Override
     public void die() {
         super.die();

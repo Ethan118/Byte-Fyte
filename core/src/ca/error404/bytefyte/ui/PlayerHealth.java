@@ -4,12 +4,9 @@ import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.Madeline;
+import ca.error404.bytefyte.chars.Mario;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -57,19 +54,19 @@ public class PlayerHealth extends GameObject {
 
         if (number == 1) {
             pos = new Vector2(25, 25);
-            this.charname = "I'M";
+            this.charname = "BOWSER";
         } else if (number == 2) {
             pos = new Vector2(525, 25);
-            this.charname = "WATCHING";
+            this.charname = "WAS";
         } else if (number == 3) {
             pos = new Vector2(1025, 25);
-            this.charname = "YOU,";
+            this.charname = "HERE,";
         } else if (number == 4) {
             pos = new Vector2(1525, 25);
-            this.charname = "NERDS";
+            this.charname = "BWAHAHA";
         }
 
-        int bill = rand.nextInt(200);
+        int chanceForBowser = rand.nextInt(200);
 
         if (CharacterSelect.characters[3] == null || nerds != 2) {
             this.charname = chara.playerName;
@@ -77,12 +74,12 @@ public class PlayerHealth extends GameObject {
 
         textureAtlas = Main.manager.get("sprites/battleUI.atlas", TextureAtlas.class);
 
-        if (bill == 2) {
-            playerHead = new TextureRegion(textureAtlas.findRegion("bill_ingame"));
-            stock = new TextureRegion(textureAtlas.findRegion("bill_stock"));
-            country = new TextureRegion(textureAtlas.findRegion("bill_country"));
+        if (chanceForBowser == 2) {
+            playerHead = new TextureRegion(textureAtlas.findRegion("bowser_ingame"));
+            stock = new TextureRegion(textureAtlas.findRegion("bowser_stock"));
+            country = new TextureRegion(textureAtlas.findRegion("bowser_country"));
             if (CharacterSelect.characters[3] == null || nerds != 2) {
-                this.charname = "BILL";
+                this.charname = "BOWSER";
             }
         } else {
             playerHead = new TextureRegion(textureAtlas.findRegion(String.format("%s_ingame", charname)));
@@ -96,7 +93,7 @@ public class PlayerHealth extends GameObject {
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
 
-        if (bill == 2) {
+        if (chanceForBowser == 2) {
             headOffset.x = (textureAtlas.findRegion("bill_ingame")).offsetX;
             headOffset.y = (textureAtlas.findRegion("bill_ingame")).offsetY;
             countryOffset.x = (textureAtlas.findRegion("bill_country")).offsetX;
@@ -168,6 +165,18 @@ public class PlayerHealth extends GameObject {
                 barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_full"), 0, 0, (int) (1530 + (1140 * (madeline.badelineMeter / madeline.badelineMaxMeter))), textureAtlas.findRegion("fs_meter_full").getRegionHeight());
             } else {
                 barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"), 0, 0, (int) (1530 + (1140 * (madeline.badelineMeter / madeline.badelineMaxMeter))), textureAtlas.findRegion("fs_meter_charge").getRegionHeight());
+            }
+            batch.draw(barClip, pos.x, pos.y, barClip.getRegionWidth() * 0.13f, barClip.getRegionHeight() * 0.13f);
+        }
+
+        if (chara.charname.equals("marioluigi")) {
+            Mario mario = (Mario) chara;
+
+            TextureRegion barClip;
+            if (mario.badgeActive) {
+                barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_full"), 0, 0, (int) (1530 + (1140 * (mario.badgeMeter / mario.badgeMaxMeter))), textureAtlas.findRegion("fs_meter_full").getRegionHeight());
+            } else {
+                barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"), 0, 0, (int) (1530 + (1140 * (mario.badgeMeter / mario.badgeMaxMeter))), textureAtlas.findRegion("fs_meter_charge").getRegionHeight());
             }
             batch.draw(barClip, pos.x, pos.y, barClip.getRegionWidth() * 0.13f, barClip.getRegionHeight() * 0.13f);
         }

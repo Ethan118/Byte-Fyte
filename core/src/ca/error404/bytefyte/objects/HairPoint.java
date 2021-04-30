@@ -2,13 +2,13 @@ package ca.error404.bytefyte.objects;
 
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class HairPoint extends Sprite {
+//    initializing variables
     private Character parent;
 
     public Vector2 pos;
@@ -20,6 +20,14 @@ public class HairPoint extends Sprite {
 
     final float speed = 35.0f;
 
+    /**
+     * @param parent
+     * @param size
+     * @param texturePath
+     * @param atlasPath
+     * pre: parent to follow, size to draw, texture to draw, and atlas to find texture
+     * post: instantiate a hair point instance
+     */
     public HairPoint(Character parent, float size, String texturePath, String atlasPath) {
         this.parent = parent;
 
@@ -34,9 +42,16 @@ public class HairPoint extends Sprite {
         setBounds(pos.x - (getWidth() / 2), pos.y - (getHeight() / 2), (getRegionWidth() / this.parent.spriteScale / Main.PPM) * size, (getRegionHeight() / this.parent.spriteScale / Main.PPM) * size);
     }
 
+    /**
+     * @param delta
+     * pre: time between frames
+     * post: update hair point
+     */
     public void update(float delta) {
+        // interpolate towards target position
         pos.lerp(targetPos, speed * delta);
 
+        // set region and bounds
         setRegion(textureRegion);
         setBounds(pos.x - (getWidth() / 2), pos.y - (getHeight() / 2), (getRegionWidth() / this.parent.spriteScale / Main.PPM) * size, (getRegionHeight() / this.parent.spriteScale / Main.PPM) * size);
     }

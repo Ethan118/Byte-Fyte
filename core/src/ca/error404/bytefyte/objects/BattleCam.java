@@ -9,10 +9,13 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
 
 public class BattleCam extends OrthographicCamera {
+//    initializing variables
     final float speed = 0.1f, ispeed = 1.0f-speed, hRatio = 0.5625f, vRatio = 1.777777778f;
     ArrayList<Vector2> sizes = new ArrayList<>();
     public Vector2 min = new Vector2(0, 0);
     public Vector2 max = new Vector2();
+
+    public float scale = 2.5f;
 
     public BattleCam() {
         super();
@@ -36,7 +39,7 @@ public class BattleCam extends OrthographicCamera {
         targetPos.scl(speed);
         cameraPosition.add(targetPos);
 
-        float width = 2.5f, height = width * hRatio;
+        float width = scale, height = width * hRatio;
 
         Vector2 max = max(pos);
         Vector2 min = min(pos);

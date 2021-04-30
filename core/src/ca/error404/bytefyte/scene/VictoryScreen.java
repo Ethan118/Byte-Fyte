@@ -1,4 +1,5 @@
 package ca.error404.bytefyte.scene;
+
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.constants.ScreenSizes;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -26,6 +26,7 @@ public class VictoryScreen extends MenuScene {
     private GlyphLayout layout = new GlyphLayout();
 
     private Texture[] characterIcons;
+    private boolean hasTransitioned = false;
 
     private Color[] colors = {new Color(255/255f, 17/255f, 35/255f, 1), new Color(0/255f, 139/255f, 255/255f, 1), new Color(255/255f, 185/255f, 21/255f, 1), new Color(11/255f, 185/255f, 52/255f, 1)};
 
@@ -58,10 +59,12 @@ public class VictoryScreen extends MenuScene {
 
     public void render(float delta) {
         super.render(delta);
-
         if (checkReady()) {
-            BattleMap.alive.clear();
-            new ScreenWipe(new CharacterSelect(game), game);
+            if (!hasTransitioned) {
+                BattleMap.alive.clear();
+                new ScreenWipe(new CharacterSelect(game), game);
+                hasTransitioned = true;
+            }
         } else {
             drawIcon();
         }

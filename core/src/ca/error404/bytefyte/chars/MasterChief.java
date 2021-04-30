@@ -2,28 +2,46 @@ package ca.error404.bytefyte.chars;
 
 import ca.error404.bytefyte.objects.Collider;
 import ca.error404.bytefyte.objects.Projectile;
-import ca.error404.bytefyte.scene.BattleMap;
+import ca.error404.bytefyte.scene.PlayRoom;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
 public class MasterChief extends Character {
+    private Sound laserSFX;
+    private Music rocketSFX;
+    private float rocketSFXDelay;
 
-    public MasterChief(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+    public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         this(screen, spawnPoint, controller, playernumber, 0);
     }
 
-    public MasterChief(BattleMap screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+    public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
         super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF", stamina);
-        weight = 1.2f;
-        walkSpeed = 0.9f;
-        runSpeed = 1.8f;
+        weight = 1.05f;
+        walkSpeed = 1f;
+        runSpeed = 2f;
         manualSpriteOffset = new Vector2(1100, 350);
 
         projectilesOnScreen = new ArrayList<>(1);
 
-        walk.setFrameDuration(1/60f);
+        walk.setFrameDuration(0.02f);
+        idle.setFrameDuration(0.02f);
+        neutralAttack.setFrameDuration(0.01f);
+        sideTilt.setFrameDuration(0.01f);
+
+
+        laserSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/laser.wav"));
+
+
+        rocketSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/rocket.wav"));
+        rocketSFX.setLooping(false);
+        rocketSFX.setVolume(5);
+
     }
 
     /*
@@ -32,6 +50,14 @@ public class MasterChief extends Character {
     * */
     public void update(float deltaTime) {
         super.update(deltaTime);
+        if (dead) {
+            rocketSFX.dispose();
+            laserSFX.dispose();
+        }
+
+        if (rocketSFXDelay > 0) {
+            rocketSFXDelay -= deltaTime;
+        }
 
         if (animState == AnimationState.SPECIAL_D ) {
             canDownB = false;
@@ -42,23 +68,27 @@ public class MasterChief extends Character {
             moveVector = new Vector2(0, 0);
         }
         if ((upB.getKeyFrameIndex(elapsedTime) >= 12 && upB.getKeyFrameIndex(elapsedTime) <= 15) && animState == AnimationState.SPECIAL_U) {
-            vel.y = 12;
+            rocketSFX.play();
+            vel.y = 9;
         }
         if (downB.getKeyFrameIndex(elapsedTime) >= 20 && downB.getKeyFrameIndex(elapsedTime) <= 23 && animState == AnimationState.SPECIAL_D && projectilesOnScreen.isEmpty()) {
-            projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0), new Vector2(0, -5), 0, 0f, 20, 3, 20, 1, "laser", "sprites/masterchief.atlas", 0));
+            if (projectilesOnScreen.isEmpty()) {
+                laserSFX.play();
+                projectilesOnScreen.add(new Projectile(this, new Vector2(0, 0), new Vector2(0, -5), 0, 0f, 20, 3, 20, 1, "laser", "sprites/masterchief.atlas", 0));
+            }
         }
     }
 
 //    All abilities.  Will add colliders or move master chief as applicable
     @Override
     void basicNeutral() {
-        new Collider(new Vector2(30, 7), 25, 17, this, 2f, 5f, 0.25f, 0.4f);
+        new Collider(new Vector2(30, 7), 25, 20, this, 2f, 5f, 0.25f, 0.2f);
         resetControls();
     }
 
     @Override
     void basicSide() {
-        new Collider(new Vector2(35, 3), 40, 17, this, 2f, 8f, 0.25f, 0.4f);
+        new Collider(new Vector2(35, 3), 40, 17, this, 2f, 8f, 0.25f, 0.2f);
 
         resetControls();
     }
@@ -105,6 +135,7 @@ public class MasterChief extends Character {
 
     @Override
     void specialNeutral() {
+        laserSFX.play();
         if (facingLeft) {
             new Projectile(this, new Vector2( -0.25f, 0.01f), new Vector2(-6, 0), 0, 0f, 20, 0.25f, 2.4f, 0, "laser", "sprites/masterchief.atlas", 0);
         } else {
@@ -117,12 +148,14 @@ public class MasterChief extends Character {
     @Override
     void specialSide() {
         if (facingLeft) {
-            new Projectile(this, new Vector2(-0.2f, 0.152f), new Vector2(-4f, 0), 0, 0f, 20, 3, 13, 1, "bazooka", "sprites/masterchief.atlas", 0.5f);
+            new Projectile(this, new Vector2(-0.2f, 0.152f), new Vector2(-4f, 0), 0, 0f, 20, 3, 13, 1, "bazooka", "sprites/masterchief.atlas", 0.5f, rocketSFX);
         } else {
-            new Projectile(this, new Vector2(0.2f, 0.15f), new Vector2(4f, 0), 0, 0f, 20, 3, 13, 1, "bazooka", "sprites/masterchief.atlas", 0.5f);
+            new Projectile(this, new Vector2(0.2f, 0.15f), new Vector2(4f, 0), 0, 0f, 20, 3, 13, 1, "bazooka", "sprites/masterchief.atlas", 0.5f, rocketSFX);
 
         }
-        resetControls();    }
+
+        resetControls();
+    }
 
     @Override
     void specialUp() {
@@ -157,16 +190,16 @@ public class MasterChief extends Character {
     @Override
     void airForward() {
         if (facingLeft) {
-            new Projectile(this, new Vector2(-0.2f, 0.1f), new Vector2(-6, 0), 0, 0f, 20, 3, 12, 1, "orb", "sprites/masterchief.atlas", 0.3f);
+            new Projectile(this, new Vector2(-0.2f, 0.1f), new Vector2(-6, 0), 0, 0f, 20, 3, 12, 1, "orb", "sprites/masterchief.atlas", 0.3f, rocketSFX);
         } else {
-            new Projectile(this, new Vector2(0.2f, 0.1f), new Vector2(6, 0), 0, 0f, 20, 3, 12, 1, "orb", "sprites/masterchief.atlas", 0.3f);
+            new Projectile(this, new Vector2(0.2f, 0.1f), new Vector2(6, 0), 0, 0f, 20, 3, 12, 1, "orb", "sprites/masterchief.atlas", 0.3f, rocketSFX);
 
         }
     }
 
     @Override
     void airBack() {
-        new Collider(new Vector2(-35, 15), 50, 20, this, 4f, 14f, 0.25f, 0.35f);
+        new Collider(new Vector2(-35, 15), 50, 20, this, 4f, 14f, 0.25f, 0.35f, rocketSFX);
         resetControls();
     }
 

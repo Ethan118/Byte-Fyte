@@ -3,70 +3,37 @@ package ca.error404.bytefyte.scene;
 import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.HUD;
 import ca.error404.bytefyte.Main;
-import ca.error404.bytefyte.chars.*;
 import ca.error404.bytefyte.chars.Character;
-import ca.error404.bytefyte.constants.Globals;
-import ca.error404.bytefyte.constants.ScreenSizes;
-import ca.error404.bytefyte.objects.BattleCam;
+import ca.error404.bytefyte.chars.*;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
-import ca.error404.bytefyte.shaders.GrayscaleShader;
 import ca.error404.bytefyte.tools.CutscenePlayer;
 import ca.error404.bytefyte.tools.WorldContactListener;
-import ca.error404.bytefyte.ui.MenuCursor;
-import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import org.ini4j.Wini;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class BattleMap implements Screen {
-    private final BattleCam gamecam;
-    private final OrthographicCamera bgCam;
+public class BattleMap extends PlayRoom {
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
-    private Vector2 scrollVector;
-    private final Viewport viewport;
     public static ArrayList<Integer> positions = new ArrayList<>();
     private int numOfPlayers = 0;
 
-    private final Main game;
     private final HUD hud;
-
-    private final TiledMap map;
-    private final OrthogonalTiledMapRenderer renderer;
-
-    private final MapProperties mProp;
-    private final World world;
-    private final Box2DDebugRenderer b2dr;
 
     private int playersAlive;
 
     private Texture background;
 
-    public static ArrayList<Character> alive = new ArrayList<>();
+    public static ArrayList<Character> alive;
 
     CutscenePlayer videoPlayer = new CutscenePlayer("delivery dance");
 
@@ -74,27 +41,13 @@ public class BattleMap implements Screen {
     private CharacterSelect characterSelect;
 
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
-        this.game = game;
-        game.batch = new SpriteBatch();
-        Random rand = new Random();
-
-        PlayerHealth.nerds = rand.nextInt(100);
-
-        gamecam = new BattleCam();
-        bgCam = new OrthographicCamera(1920, 1080);
-        this.scrollVector = scrollVector;
+        super(game, map, scrollVector, background);
         this.background = background;
 
-        viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
-
-        this.map = map;
-        renderer = new OrthogonalTiledMapRenderer(map, 1/Main.PPM);
-
-        mProp = map.getProperties();
-
-
-        world = new World(new Vector2(0, 0), true);
-        b2dr = new Box2DDebugRenderer();
+        alive = new ArrayList<>(4);
+        for (int i = 0; i < 4; i++) {
+            alive.add(null);
+        }
 
         Vector2 pos = Vector2.Zero;
 
@@ -120,6 +73,7 @@ public class BattleMap implements Screen {
         for (MapObject object: map.getLayers().get("Spawn Points").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             int i = (int) object.getProperties().get("player");
+
             Character chara;
             if (CharacterSelect.characters[i-1] != null) {
                 if (CharacterSelect.characters[i-1].equalsIgnoreCase("masterchief")) {
@@ -146,6 +100,12 @@ public class BattleMap implements Screen {
                     } catch (Exception e) {
                         chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
+                }else if (CharacterSelect.characters[i-1].equalsIgnoreCase("sans")){
+                    try {
+                        chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i);
+                    } catch (Exception e) {
+                        chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                    }
                 } else {
                     try {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
@@ -153,6 +113,7 @@ public class BattleMap implements Screen {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
                     }
                 }
+                alive.set(i - 1, chara);
                 chara.facingLeft = (boolean) object.getProperties().get("left");
                 chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
 
@@ -178,10 +139,7 @@ public class BattleMap implements Screen {
         for (int i = 0; i < numOfPlayers; i++) {
             positions.add(9);
         }
-        System.out.println(positions.size());
-        alive.addAll(Main.players);
-        System.out.println(Main.players.size());
-        System.out.println(BattleMap.alive.size());
+
     }
 
     @Override
@@ -190,6 +148,11 @@ public class BattleMap implements Screen {
     }
 
     public void update(float deltaTime) {
+
+//        for (int l = 0; l < Main.players.size(); l ++) {
+//            System.out.println(Main.players.get(l));
+//        }
+
         int i = -1;
         playersAlive = 0;
         for (int k = 0; k < Main.players.size(); k++) {
@@ -235,14 +198,14 @@ public class BattleMap implements Screen {
 
         // update all objects and physics objects
         world.step(1 / 60f, 6, 2);
-        for (GameObject obj : Main.gameObjects) {
-            if (obj.remove) {
+        for (int j = 0; j < Main.gameObjects.size(); j++) {
+            if (Main.gameObjects.get(j).remove) {
                 try {
-                    world.destroyBody(obj.b2body);
+                    world.destroyBody(Main.gameObjects.get(j).b2body);
                 } catch (Exception ignored) {}
-                Main.objectsToRemove.add(obj);
+                Main.objectsToRemove.add(Main.gameObjects.get(j));
             } else {
-                obj.update(deltaTime);
+                Main.gameObjects.get(j).update(deltaTime);
             }
         }
 
@@ -271,14 +234,14 @@ public class BattleMap implements Screen {
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.setShader(GrayscaleShader.grayscaleShader);
-        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
+//        game.batch.setShader(GrayscaleShader.grayscaleShader);
+//        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
 
         drawBackground();
 
         renderer.render();
-        game.batch.setShader(null);
-        renderer.getBatch().setShader(null);
+//        game.batch.setShader(null);
+//        renderer.getBatch().setShader(null);
 
         game.batch.begin();
         game.batch.setProjectionMatrix(gamecam.combined);
@@ -385,11 +348,6 @@ public class BattleMap implements Screen {
         map.dispose();
 
 
-    }
-
-//  Gets the world
-    public World getWorld() {
-        return world;
     }
 
 }
