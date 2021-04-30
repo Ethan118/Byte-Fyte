@@ -45,6 +45,10 @@ public class Mario extends Character {
     public final float badgeMaxMeter = 100;
     public boolean badgeActive = false;
 
+    public Mario(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
+
     /**
      * Constructor
      * @param screen
@@ -54,16 +58,16 @@ public class Mario extends Character {
      * pre: the screen mario is in, the spawn point, the controller, the player's number (1-4)
      * post: instantiates Mario instance
      */
-    public Mario(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber) {
+    public Mario(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
 //        calls parent class constructor
-        super(screen, spawnPoint, controller, playerNumber, "marioluigi", "MARIO & LUIGI", 1, 1);
+        super(screen, spawnPoint, controller, playerNumber, "marioluigi", "MARIO & LUIGI", 1, 1, stamina);
 
 //        initialize variables
         savedWalk = walkSpeed;
         savedRun = runSpeed;
         savedJump = jumpPower;
 
-        manualSpriteOffset = new Vector2(250, 250);
+        manualSpriteOffset = new Vector2(250, 252);
         projectilesOnScreen = new ArrayList<>(1);
 
 //        setting frame durations

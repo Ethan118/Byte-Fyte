@@ -79,7 +79,7 @@ public class ShyGuy extends Character {
         if (animState == AnimationState.SPECIAL_D) {
             if (animDuration <= 0.1) {
                 if (!soundIsPlaying) {
-                    healSFX.play();
+                    healSFX.play(Main.sfxVolume / 10f);
                     soundIsPlaying = true;
                 }
                 if (stamina) {

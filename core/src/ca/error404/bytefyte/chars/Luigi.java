@@ -29,11 +29,15 @@ public class Luigi extends Character {
 
     public int damageMultiplier = 1;
 
+    public float maxRange = 0.2f;
+
     public float savedWalk;
     public float savedRun;
     public float savedJump;
 
-    public float maxRange = 0.2f;
+    public Luigi(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, Mario parent) {
+        this(screen, spawnPoint, controller, playernumber, parent, 0);
+    }
 
     /**
      * Constructor
@@ -45,12 +49,13 @@ public class Luigi extends Character {
      * pre: the screen luigi is on, the point to spawn, the controller that controls, player number, the parent attached
      * post: instantiates luigi instance
      */
-    public Luigi(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, Mario parent) {
+    public Luigi(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, Mario parent, int hp) {
 //        call parent constructor
-        super(screen, spawnPoint, controller, playerNumber, parent.charname, parent.playerName, parent.spriteScale, parent.hitboxScale);
+        super(screen, spawnPoint, controller, playerNumber, parent.charname, parent.playerName, parent.spriteScale, parent.hitboxScale, hp);
 //        defining variables
         manualSpriteOffset = parent.manualSpriteOffset;
         Main.players.remove(this);
+        Main.luigis.add(this);
         Main.uiToRemove.add(health);
 
         savedWalk = walkSpeed;
@@ -174,6 +179,9 @@ public class Luigi extends Character {
         targetPos.set(parent.followPoint.cpy());
 
         super.update(delta);
+        if (dead) {
+            Main.luigis.remove(this);
+        }
     }
 
     @Override

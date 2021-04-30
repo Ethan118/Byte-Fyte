@@ -93,52 +93,68 @@ public class BossRoom extends PlayRoom {
             new Wall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
-//        for (MapObject object: map.getLayers().get("Death Barrier").getObjects().getByType(RectangleMapObject.class)) {
-//            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-//
-//            new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
-//        }
+        for (MapObject object: map.getLayers().get("Death Barrier").getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
+        }
 
         for (MapObject object: map.getLayers().get("Boss Point").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             switch ((String) object.getProperties().get("boss name")) {
                 case "Petey":
                 default:
-                    new Petey(this, new Vector2(rect.getX(), rect.getY()));
+                    new Petey(this, new Vector2(rect.getX(), rect.getY()), game);
             }
         }
 
         for (MapObject object: map.getLayers().get("Spawn Point").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            int i = 1;
+
             Character chara;
-            if (CharacterSelect.characters[0].equalsIgnoreCase("masterchief")) {
-                try {
-                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
-                } catch (Exception e) {
-                    chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
+            if (CharacterSelect.characters[i-1] != null) {
+                if (CharacterSelect.characters[i - 1].equalsIgnoreCase("masterchief")) {
+                    try {
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                    } catch (Exception e) {
+                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                    }
+                } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("shyguy")) {
+                    try {
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                    } catch (Exception e) {
+                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                    }
+                } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("madeline")) {
+                    try {
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                    } catch (Exception e) {
+                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                    }
+                } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("sans")) {
+                    try {
+                        chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                    } catch (Exception e) {
+                        chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                    }
+                } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("marioluigi")) {
+                    try {
+                        chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                    } catch (Exception e) {
+                        chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                    }
+                } else {
+                    try {
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                    } catch (Exception e) {
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                    }
                 }
-            } else if (CharacterSelect.characters[0].equalsIgnoreCase("shyguy")) {
-                try {
-                    chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
-                } catch (Exception e) {
-                    chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
-                }
-            } else if (CharacterSelect.characters[0].equalsIgnoreCase("madeline")) {
-                try {
-                    chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
-                } catch (Exception e) {
-                    chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
-                }
-            } else {
-                try {
-                    chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[0], 1, 300);
-                } catch (Exception e) {
-                    chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, 1, 300);
-                }
+
+                chara.facingLeft = false;
+                chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
             }
-            chara.facingLeft = true;
-            chara.respawnPos = new Vector2(-500, -500);
-            chara.stockCount = 1;
         }
 
         float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
@@ -151,8 +167,6 @@ public class BossRoom extends PlayRoom {
         hud = new HUD();
         gamecam.scale = gamecam.scale * 2.5f;
         alive.addAll(Main.players);
-        System.out.println(Main.players.size());
-        System.out.println(BattleMap.alive.size());
     }
 
     @Override
@@ -178,14 +192,14 @@ public class BossRoom extends PlayRoom {
 
         // update all objects and physics objects
         world.step(1 / 60f, 6, 2);
-        for (GameObject obj : Main.gameObjects) {
-            if (obj.remove) {
+        for (int j = 0; j < Main.gameObjects.size(); j++) {
+            if (Main.gameObjects.get(j).remove) {
                 try {
-                    world.destroyBody(obj.b2body);
+                    world.destroyBody(Main.gameObjects.get(j).b2body);
                 } catch (Exception ignored) {}
-                Main.objectsToRemove.add(obj);
+                Main.objectsToRemove.add(Main.gameObjects.get(j));
             } else {
-                obj.update(deltaTime);
+                Main.gameObjects.get(j).update(deltaTime);
             }
         }
 
@@ -200,6 +214,22 @@ public class BossRoom extends PlayRoom {
         }
 
         hud.update(deltaTime);
+
+        for (Character chara : Main.players) {
+            if (chara.pos.x < -(chara.getWidth())) {
+                chara.b2body.setTransform(chara.pos.x + (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM, chara.b2body.getPosition().y, chara.b2body.getTransform().getRotation());
+            } else if (chara.pos.x > (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM) {
+                chara.b2body.setTransform(chara.pos.x - (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM, chara.b2body.getPosition().y, chara.b2body.getTransform().getRotation());
+            }
+        }
+
+        for (Luigi chara : Main.luigis) {
+            if (chara.pos.x < -(chara.getWidth())) {
+                chara.b2body.setTransform(chara.pos.x + (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM, chara.b2body.getPosition().y, chara.b2body.getTransform().getRotation());
+            } else if (chara.pos.x > (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM) {
+                chara.b2body.setTransform(chara.pos.x - (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM, chara.b2body.getPosition().y, chara.b2body.getTransform().getRotation());
+            }
+        }
 
         // clear all controller inputs
         Set<Controller> keys = Main.recentButtons.keySet();

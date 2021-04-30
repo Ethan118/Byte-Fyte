@@ -38,10 +38,12 @@ public class Sans extends Character{
     * Post: A new instance of the character Sans that is playable by the user
     * */
     public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+        this(screen, spawnPoint, controller, playernumber, 0);
+    }
 
+    public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {
 //        Calling the character constructor
-        super(screen, spawnPoint, controller, playernumber, "sans", "SANS", 0.8f, 0.9f);
-
+        super(screen, spawnPoint, controller, playerNumber, "sans", "SANS", 0.8f, 0.9f, stamina);
 //        Assigning variables values
         upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_start"), Animation.PlayMode.NORMAL);
 

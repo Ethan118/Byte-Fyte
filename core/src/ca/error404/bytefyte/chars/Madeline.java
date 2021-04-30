@@ -172,6 +172,7 @@ public class Madeline extends Character {
             if (badelineMeter <= 0) {
                 maxDashes = 1;
                 badelineActive = false;
+                Main.badeline.remove(badeline);
                 badeline.destroy();
             }
         }

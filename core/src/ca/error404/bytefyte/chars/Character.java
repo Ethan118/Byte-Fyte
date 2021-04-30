@@ -321,7 +321,7 @@ public abstract class Character extends GameObject {
 
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
-        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT | Tags.LASER_BIT;
+        fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT | Tags.LASER_BIT | Tags.BOSS_BIT | Tags.BOSS_FEET_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -946,7 +946,7 @@ public abstract class Character extends GameObject {
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
         if (respawnTimer <= 0 && !invinsible) {
-            hitSFX.play();
+            hitSFX.play(Main.sfxVolume / 10f);
             hasBeenHit = true;
             animState = AnimationState.HIT;
 

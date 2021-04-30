@@ -76,25 +76,26 @@ public class BattleMap extends PlayRoom {
 
             Character chara;
             if (CharacterSelect.characters[i-1] != null) {
-                if (CharacterSelect.characters[i-1].equalsIgnoreCase("masterchief")) {
-                    try {
-                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
-                    } catch (Exception e) {
-                        chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
-                    }
-                } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("shyguy")) {
-                    try {
-                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
-                    } catch (Exception e) {
-                        chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
-                    }
-                } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("madeline")) {
-                    try {
-                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
-                    } catch (Exception e) {
-                        chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i);
-                    }
-                } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("marioluigi")) {
+                if (!Main.stamina) {
+                    if (CharacterSelect.characters[i - 1].equalsIgnoreCase("masterchief")) {
+                        try {
+                            chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i);
+                        } catch (Exception e) {
+                            chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        }
+                    } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("shyguy")) {
+                        try {
+                            chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i);
+                        } catch (Exception e) {
+                            chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        }
+                    } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("madeline")) {
+                        try {
+                            chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i);
+                        } catch (Exception e) {
+                            chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        }
+                    } else if (CharacterSelect.characters[i-1].equalsIgnoreCase("marioluigi")) {
                     try {
                         chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
@@ -105,18 +106,56 @@ public class BattleMap extends PlayRoom {
                         chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i);
                     } catch (Exception e) {
                         chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), null, i);
-                    }
+                        }
                 } else {
                     try {
                         chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i-1], i);
                     } catch (Exception e) {
-                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
+                        chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);}
+                    }
+                } else {
+                    if (CharacterSelect.characters[i - 1].equalsIgnoreCase("masterchief")) {
+                        try {
+                            chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                        } catch (Exception e) {
+                            chara = new MasterChief(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        }
+                    } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("shyguy")) {
+                        try {
+                            chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                        } catch (Exception e) {
+                            chara = new ShyGuy(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        }
+                    } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("madeline")) {
+                        try {
+                            chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                        } catch (Exception e) {
+                            chara = new Madeline(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        }
+                    } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("sans")) {
+                        try {
+                            chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                        } catch (Exception e) {
+                            chara = new Sans(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        }
+                    } else if (CharacterSelect.characters[i - 1].equalsIgnoreCase("marioluigi")) {
+                        try {
+                            chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                        } catch (Exception e) {
+                            chara = new Mario(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        }
+                    } else {
+                        try {
+                            chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), Main.controllers[i - 1], i, 300);
+                        } catch (Exception e) {
+                            chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i, 300);
+                        }
                     }
                 }
+
                 alive.set(i - 1, chara);
                 chara.facingLeft = (boolean) object.getProperties().get("left");
                 chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
-
             }
         }
 
@@ -148,11 +187,6 @@ public class BattleMap extends PlayRoom {
     }
 
     public void update(float deltaTime) {
-
-//        for (int l = 0; l < Main.players.size(); l ++) {
-//            System.out.println(Main.players.get(l));
-//        }
-
         int i = -1;
         playersAlive = 0;
         for (int k = 0; k < Main.players.size(); k++) {
