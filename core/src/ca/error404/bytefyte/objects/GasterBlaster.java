@@ -76,19 +76,7 @@ public class GasterBlaster extends GameObject {
             if (!laserHasSpawned) {
                 fireSFX.play();
 
-                if (parent.controller != null) {
-                    if (parent.facingLeft) {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
-                    } else {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
-                    }
-                } else {
-                    if (parent.facingLeft) {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
-                    } else {
-                        laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
-                    }
-                }
+                laser = new Laser(parent, offset, angle, 100, 2.5f, 4, 0.5f, 0.1f, 1f, "gb_laser", "sprites/sans.atlas", 0.8f);
 
                 laserHasSpawned = true;
 

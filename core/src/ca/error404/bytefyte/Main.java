@@ -93,16 +93,23 @@ public class Main extends Game {
 
 	public static boolean bill = false;
 
+	/**
+	 * Pre: N/A
+	 * Post: Loads save data and creates global variables
+	 */
 	@Override
 	public void create () {
 		File save = new File(Globals.workingDirectory + "settings.ini");
 
+		// Checks for save data
 		try {
+			// Reads from save data
 			Wini ini = new Wini(save);
 
 			bill = Boolean.parseBoolean(ini.get("Menu", "bill"));
 			stamina = Boolean.parseBoolean(ini.get("Menu", "stamina"));
 		} catch (Exception e) {
+			// Writes default save data
 			try {
 				Wini ini = new Wini(save);
 
@@ -113,6 +120,16 @@ public class Main extends Game {
 			}
 		}
 
+		// if the save data doesn't say otherwise, have a 1:1000 chance of loading the funky menu
+		if (!bill) {
+			Random rand = new Random();
+			int funky = rand.nextInt(1000);
+			if (funky == 2) {
+				bill = true;
+			}
+		}
+
+		// Loads shy guy songs
 		for (int i=0; i < 24; i++) {
 			try {
 				String fileName = String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1);
@@ -134,41 +151,41 @@ public class Main extends Game {
 			}
 		}
 
+		// Creates visual and auditory capability
 		batch = new SpriteBatch();
 		audioManager = new AssetManager();
 		manager = new AssetManager();
 
+		// Loads all fonts to be used
 		loadFonts();
 
+		// Gets all active controllers
 		reloadControllers();
 
-//		The Pile™
-
-//		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
-		CharacterSelect.characters = new String[] {"shyguy", null, null, null};
-//		CharacterSelect.characters = new String[] {"shyguy", "masterchief", null, null};
-//		CharacterSelect.characters = new String[] {"madeline", "masterchief", "shyguy", "kirby"};
-//		setScreen(new LoadBattleMap("Forsaken City", this, new Vector2(0.5f, 0), "celeste"));
-//		setScreen(new LoadBattleMap("Russia", this, new Vector2(0.5f, 0), "russia"));
-//		setScreen(new LoadBattleMap("Halberd", this, new Vector2(-350, 0), "kirby"));
-//		setScreen(new LoadBattleMap("Training Room", this, new Vector2(0, 0), null));
-//		setScreen(new LoadBattleMap("Fawful's Castle", this, new Vector2(0, 0), "mal"));
-//		setScreen(new LoadBattleMap("Castle Bleck", this, new Vector2(20, 0), "paper mario"));
-//		setScreen(new LoadBattleMap("Flowchart", this, new Vector2(50, -3000), null));
-//		setScreen(new LoadBossRoom("dimble wood/Dimble Wood Boss", "dimble wood/Dimble Wood Tileset", "dimble wood/Dimble Wood Boss_background", this, new Vector2(0, 0), "boss theme"));
 		setScreen(new TitleScreen(this));
 	}
 
+	/**
+	 * Pre: N/A
+	 * Post: Gets list of all active controllers
+	 */
 	public void reloadControllers() {
+		// makes sure that there are controllers plugged in
 		if (Controllers.getControllers().size > 0) {
 			int currentController = 0;
+
+			// loops through all controllers
 			for (int i=0; i < Controllers.getControllers().size; i++) {
 				Controller cont = Controllers.getControllers().get(i);
+
+				// Checks for Xbox controllers
 				if (ControllerButtons.isXboxController(cont)) {
 					if (currentController < 4) {
 						controllers[currentController] = cont;
 						currentController += 1;
 						recentButtons.put(cont, new Array<Integer>());
+
+						// Creates controller
 						cont.addListener(new ControllerAdapter() {
 							public boolean buttonDown(Controller controller, int buttonIndex) {
 								recentButtons.get(controller).add(buttonIndex);
@@ -177,6 +194,7 @@ public class Main extends Game {
 						});
 					}
 
+					// Add controller to controller array
 					allControllers.add(cont);
 					recentButtons.put(cont, new Array<Integer>());
 					cont.addListener(new ControllerAdapter() {
@@ -190,10 +208,16 @@ public class Main extends Game {
 		}
 	}
 
+	/**
+	 * Pre: N/A
+	 * Post: Loads all fonts to be used
+	 */
 	public void loadFonts() {
+		// Var Init
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/fighterNames.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
+		// Set font settings
 		fontParameter.size = 20;
 		fontParameter.color = Color.WHITE;
 
@@ -229,6 +253,10 @@ public class Main extends Game {
 		fontGenerator.dispose();
 	}
 
+	/**
+	 * Pre: Song Title
+	 * Post: Loads the song to be played
+	 */
 	public Music newSong(String song) {
 		// Locate file
 		String fileName = "songdata.tsv";
@@ -274,6 +302,10 @@ public class Main extends Game {
 		return music;
 	}
 
+	/**
+	 * Pre: Game Series
+	 * Post: Loads random song in series
+	 */
 	public Music songFromSeries(String series) {
 		// Locate file
 		String fileName = "songdata.tsv";
@@ -332,6 +364,10 @@ public class Main extends Game {
 		return music;
 	}
 
+	/**
+	 * Pre: N/A
+	 * Post: Loads Random song from entire OST
+	 */
 	public Music newSong() {
 		// Locate file
 		String fileName = "songdata.tsv";

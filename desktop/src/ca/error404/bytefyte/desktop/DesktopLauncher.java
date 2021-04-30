@@ -21,7 +21,9 @@ public class DesktopLauncher {
 
 		File settings = new File(Globals.workingDirectory + "settings.ini");
 
+		// Checks for active save data
 		if (!settings.exists()) {
+			// Creates save file and writes default save data
 			File file = new File(Globals.workingDirectory);
 			file.mkdirs();
 
@@ -39,6 +41,7 @@ public class DesktopLauncher {
 			ini.store();
 		} else {
 			Wini ini = new Wini(settings);
+			// loads save data and assigns variables
 			try {
 				ScreenSizes.screenSize = Integer.parseInt(ini.get("Settings", "screen size"));
 				Main.musicVolume = Integer.parseInt(ini.get("Settings", "music volume"));
@@ -53,16 +56,21 @@ public class DesktopLauncher {
 			}
 		}
 
+		// Sets screen size
 		config.width = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(0);
 		config.height = ScreenSizes.screenSizes.get(ScreenSizes.screenSize).get(1);
 
+		// toggles fullscreen
 		config.fullscreen = ScreenSizes.fullScreen;
 
+		// window title and window icon
 		config.title = "Byte Fyte";
 		config.resizable = false;
 		config.addIcon("icons/windows + linux.png", Files.FileType.Internal);
 		config.addIcon("icons/windows old.png", Files.FileType.Internal);
 		config.addIcon("icons/mac.png", Files.FileType.Internal);
+
+		// Starts app
 		new LwjglApplication(new Main(), config);
 	}
 }
