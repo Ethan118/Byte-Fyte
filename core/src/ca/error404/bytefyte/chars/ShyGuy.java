@@ -16,7 +16,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
+// Class for Shy Guy
 public class ShyGuy extends Character {
+
+//    Initializing variables
     private ArrayList<Sound> healSongs;
     private static ArrayList<Float> healSongLengths;
     private long currentSongPlaying;
@@ -29,29 +32,46 @@ public class ShyGuy extends Character {
     private Sound healSFX;
     private boolean soundIsPlaying = false;
 
+    /*
+     * Constructor
+     * Pre: Inputs for parameters
+     * Post: Creates a new shy guy
+     * */
     public ShyGuy(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
+
+//        Calls the other constructor, setting stamina to 0
         this(screen, spawnPoint, controller, playernumber, 0);
     }
 
     /*
     * Constructor
-    * Pre:
-    * Post:
+    * Pre: Inputs for the parameters
+    * Post: A new shy guy
     * */
     public ShyGuy(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
+
+//        Calls the super() method
         super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY", stamina);
+
+//        Sets offset
         manualSpriteOffset = new Vector2(2200, 300);
         projectilesOnScreen = new ArrayList<>(1);
 
+//        If there are no heal songs
         if (healSongs == null) {
+
+//            Instantiating the arraylists
             healSongs = new ArrayList<>();
             healSongLengths = new ArrayList<>();
 
             for (int i=0; i < 24; i++) {
 //            Load all songs
                 try {
+
+//                    Add this song to the healsong list
                     healSongs.add(Main.audioManager.get(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1), Sound.class));
 
+//                    Get info about the song
                     File file = Globals.healSongWAV2.get(i);
                     AudioFormat format = Globals.healSongWAV1.get(i);
 
@@ -61,11 +81,15 @@ public class ShyGuy extends Character {
                     float durationInSeconds = (audioFileLength / (frameSize * frameRate));
 
                     healSongLengths.add(durationInSeconds);
+
+//                 if there are any exceptions, print the error (for developer help only)
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+
+//        Initializing the heal sound effect
         healSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/fullRestore.wav"));
     }
 
@@ -76,28 +100,37 @@ public class ShyGuy extends Character {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+//        If shy guy is dead, dispose of his song
         if (dead) {
             healSFX.dispose();
         }
 
-//        Heals shy guy for song duration
+//        If in down b
         if (animState == AnimationState.SPECIAL_D) {
+
+//            If the animation is still playing
             if (animDuration <= 0.1) {
+
+//                If the sound isn't playing, play it
                 if (!soundIsPlaying) {
                     healSFX.play(Main.sfxVolume / 10f);
                     soundIsPlaying = true;
                 }
+
+//                Heal shy guy depending on game mode
                 if (stamina) {
                     percent = Math.min(percent + (currentSongLength), 999.9f);
                 } else {
                     percent = Math.max(percent - (currentSongLength), 0);
                 }
+
+//            Otherwise, the sound is not playing
             } else {
                 soundIsPlaying = false;
             }
         }
 
-//        Ensuring shy guy's song stop if dead
+//        Ensuring shy guy's song stops if dead
         if (dead || knockedOff || animState == AnimationState.HIT) {
 
             animDuration = 0;
@@ -233,6 +266,8 @@ public class ShyGuy extends Character {
 
     @Override
     void specialDown() {
+
+//        Generates a random song from his heal song list
         int i = rand.nextInt(healSongs.size() - 1);
         currentSongPlaying = healSongs.get(i).play(Main.sfxVolume / 10f);
 

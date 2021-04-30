@@ -33,7 +33,14 @@ public class Laser extends GameObject {
 
     private float spriteScale;
 
+    /*
+    * Constructor
+    * Pre: Inputs for parameters
+    * Post: A new laser
+    * */
     public Laser(Character parent, Vector2 offset, Vector2 dir, float range, float power, float damage, float hitStun, float delay, float duration, String animPath, String atlasPath, float spriteScale) {
+
+//        Setting variables
         this.parent = parent;
         world = parent.world;
 
@@ -68,30 +75,53 @@ public class Laser extends GameObject {
         setRotation(dir.angleDeg());
     }
 
+    /*
+    * Pre: None
+    * Post: A mathematical ray that returns intersects
+    * */
     private void castRay() {
+
+//        Callback for collision
         RayCastCallback callback = new RayCastCallback() {
+
+            /*
+            * Pre: A ray
+            * Post: Instructs ray on what to do if colliding
+            * */
             @Override
             public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+//                If colliding with the death barrier, copy point of collision
                 if (fixture.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
                     collision = point.cpy();
+
+//                    Cut ray there
                     return fraction;
+
+//                Otherwise extend the ray
                 } else {
                     return -1;
                 }
             }
         };
 
+//        Casts the ray
         world.rayCast(callback, p1, p2);
     }
 
+    /*
+    * Pre: None
+    * Post: A defined ray body
+    * */
     private void define() {
-        // creates a new body definition and sets the position, and type
+//        Creates a new body definition and sets the position, and type
         BodyDef bdef = new BodyDef();
+
+//        Defines the ray position with two points on it (for direction)
         bdef.position.set(p1.x, p1.y);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
-        // defines the shape of the body
+//         defines the shape of the body
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
 
@@ -99,42 +129,63 @@ public class Laser extends GameObject {
 
         fdef.shape = shape;
 
-        // sets the body as a sensor (no collision physics)
+//         sets the body as a sensor (no collision physics)
         fdef.isSensor = true;
 
-        // sets tags to define the body
+//         sets tags to define the body
         fdef.filter.categoryBits = Tags.LASER_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
         b2body.setTransform(p1, (float) Math.toRadians(dir.angleDeg()));
     }
 
+    /*
+    * Pre: Delta time
+    * Post: Updates the laser
+    * */
     @Override
     public void update(float delta) {
+
+//        If there is a delay still, reduce it by the elapsed time
         if (delay > 0) {
             delay -= delta;
+
+//        Otherwise, define the laser if not already defined
         } else {
             if (b2body == null) {
                 define();
             }
         }
 
+//        If the laser duration is still above 0
         if (dur > 0) {
+
+//            Set the texture, region, position, and origin
             setRegion(getFrame(delta));
             setBounds(p1.x, p1.y - (getRegionHeight() / spriteScale / Main.PPM / 2), length, (float) getRegionHeight() / spriteScale / Main.PPM);
             setOrigin(getOriginX(), getHeight() / 2);
             setRotation(dir.angleDeg());
+
+//            Counts down the duration
             dur -= delta;
+
+//        Otherwise, destroy the laser
         } else {
             destroy();
         }
     }
 
+    /*
+    * Pre: Delta time
+    * Post: The frame of the animation
+    * */
     private TextureRegion getFrame(float delta) {
         TextureRegion region;
 
+//        Updates the elapsed time
         elapsedTime += delta;
 
+//        Gets and returns the frame of the animation
         region = anim.getKeyFrame(elapsedTime, false);
         return region;
     }
