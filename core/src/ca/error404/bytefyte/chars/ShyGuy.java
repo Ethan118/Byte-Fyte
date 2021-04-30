@@ -33,6 +33,11 @@ public class ShyGuy extends Character {
         this(screen, spawnPoint, controller, playernumber, 0);
     }
 
+    /*
+    * Constructor
+    * Pre:
+    * Post:
+    * */
     public ShyGuy(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
         super(screen, spawnPoint, controller, playernumber, "shyguy", "SHY GUY", stamina);
         manualSpriteOffset = new Vector2(2200, 300);

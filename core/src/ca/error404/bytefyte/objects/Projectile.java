@@ -11,7 +11,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
+// Class to create projectiles
 public class Projectile extends GameObject {
+
+//    Initializing variables
     public Vector2 startPos;
     public Vector2 pos;
     public Vector2 vel;
@@ -133,6 +136,8 @@ public class Projectile extends GameObject {
     public void update(float delta) {
         // checks if the body has been removed or the delay is still active
         if (!remove && (delay <= 0)) {
+
+//            Plays sound effect
             if (sfx != null) {
                 sfx.play();
             }
@@ -170,6 +175,8 @@ public class Projectile extends GameObject {
 
             // resets the rotational origin and rotates the sprite
             setOriginCenter();
+
+//            Adjusts sprite for master chief orb
             if (animPath.equals("orb")) {
                 if (!disableEditing) {
                     spriteScale = 20f;
@@ -177,38 +184,64 @@ public class Projectile extends GameObject {
                 }
             }
 
+//            Adjusts sprite for master chief rocket or laser
             if (animPath.equals("laser") || animPath.equals("bazooka")) {
+
+//                Adjusts once based on left direction
                 if (parent.facingLeft && !disableEditing) {
                     setRotation(0);
                     spriteScale = 20f;
                     disableEditing = true;
+
+//                Adjusts once based on right direction
                 } else if (!parent.facingLeft && !disableEditing){
                     setRotation(180);
                     spriteScale = 20f;
                     disableEditing = true;
+
+//                Adjusts for only vertical motion
                 } else if (vel.x == 0) {
                     setRotation(90);
                 }
+
+//            Adjusts for red or green shell
             } else if (animPath.equals("red-shell") || animPath.equals("green-shell")) {
                 setRotation(0);
                 disableEditing = true;
+
+//            Otherwise set the rotation to the body direction
             } else {
-                    setRotation((float) Math.toDegrees(b2body.getAngle()));
+                setRotation((float) Math.toDegrees(b2body.getAngle()));
             }
+
+//        Reduce delay
         } else {
             delay -= delta;
         }
     }
 
+    /*
+    * Pre: Delta time
+    * Post: Returns the animation frame
+    * */
     private TextureRegion getFrame(float delta) {
+
+//        Sets a new texture region
         TextureRegion region;
 
+//        Updates elapsed time
         elapsedTime += delta;
 
+//        Set the animation region
         region = anim.getKeyFrame(elapsedTime, true);
         return region;
     }
 
+
+    /*
+    * Pre: None
+    * Post: Destroys this instance of projectile
+    * */
     @Override
     public void destroy() {
         remove = true;
@@ -220,6 +253,7 @@ public class Projectile extends GameObject {
 
         }
 
+//        Disposes of the sound effect if it exists
         if (sfx != null) {
             sfx.dispose();
         }

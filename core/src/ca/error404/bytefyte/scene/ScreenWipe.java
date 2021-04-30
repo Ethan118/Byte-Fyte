@@ -52,7 +52,7 @@ public class ScreenWipe {
             rect.x += delta * 4000;
         }
 
-//        If it is greater than the screen size and it hasnt switch screens
+//        If it is greater than the screen size times 0.1 and it hasnt switch screens
         if (rect.x > -screen.getWorldWidth() * 0.1 && !hasSwitched) {
 
 //            Adjust timer, switch screen if less than or equal to 0
@@ -62,15 +62,25 @@ public class ScreenWipe {
                 Main.gameObjects.clear();
                 game.setScreen(newScreen);
             }
+
+//        Otherwise, if the x is greater than the screen width, dispose of the renderer, remove this transition
         } else if (rect.x > screen.getWorldWidth()) {
             renderer.dispose();
             Main.transitions.remove(this);
         }
     }
 
+    /*
+    * Pre: None
+    * Post: Draws the transition
+    * */
     public void draw() {
+
+//        Sets renderer up
         renderer.setProjectionMatrix(screen.getCamera().combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
+
+//        Draws the rectangle for the transition
         renderer.setColor(Color.BLACK);
         renderer.rect(-5, -5, 10, 10);
         renderer.rect(rect.x, rect.y, rect.getWidth(), rect.getHeight());
