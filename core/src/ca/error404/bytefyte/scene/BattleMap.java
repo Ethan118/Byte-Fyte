@@ -22,7 +22,10 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Set;
 
+// Battlemap class to create a map to fight on
 public class BattleMap extends PlayRoom {
+
+//    Initializing variables
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
     public static ArrayList<Integer> positions = new ArrayList<>();
     private int numOfPlayers = 0;
@@ -40,7 +43,15 @@ public class BattleMap extends PlayRoom {
     private String[] characters;
     private CharacterSelect characterSelect;
 
+
+    /*
+    * Constructor
+    * Pre: Values for parameters
+    * Post: A new battlemap
+    * */
     public BattleMap(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
+
+//        Calling the super() method and setting variables
         super(game, map, scrollVector, background);
         this.background = background;
 
@@ -51,6 +62,7 @@ public class BattleMap extends PlayRoom {
 
         Vector2 pos = Vector2.Zero;
 
+//        Respawn points
         for (MapObject object: map.getLayers().get("Respawn Point").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             pos = new Vector2(rect.getX(), rect.getY());
@@ -58,24 +70,30 @@ public class BattleMap extends PlayRoom {
 
         gamecam.position.set(pos.x / Main.PPM, pos.y / Main.PPM, 0);
 
+//        Ground objects
         for (MapObject object: map.getLayers().get("Ground").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new Wall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
+//        Barrier objects
         for (MapObject object: map.getLayers().get("Death Barrier").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
+//        Spawn points
         for (MapObject object: map.getLayers().get("Spawn Points").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             int i = (int) object.getProperties().get("player");
 
+//            Detects characters to be added based on character list and spawns them
             Character chara;
             if (CharacterSelect.characters[i-1] != null) {
+
+//                For regular fighting
                 if (!Main.stamina) {
                     if (CharacterSelect.characters[i - 1].equalsIgnoreCase("masterchief")) {
                         try {
@@ -114,6 +132,8 @@ public class BattleMap extends PlayRoom {
                             chara = new Kirby(this, new Vector2(rect.getX(), rect.getY()), null, i);
                         }
                     }
+
+//                In stamina mode
                 } else {
                     if (CharacterSelect.characters[i - 1].equalsIgnoreCase("masterchief")) {
                         try {
@@ -154,12 +174,14 @@ public class BattleMap extends PlayRoom {
                     }
                 }
 
+//                Sets the character index of the list of characters to that character, initialize them
                 alive.set(i - 1, chara);
                 chara.facingLeft = (boolean) object.getProperties().get("left");
                 chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
             }
         }
 
+//        Initialize more variables
         float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
         float height = (mProp.get("height", Integer.class) * mProp.get("tileheight", Integer.class)) / Main.PPM;
 
@@ -187,7 +209,13 @@ public class BattleMap extends PlayRoom {
 
     }
 
+    /*
+    * Pre: Delta Time
+    * Post: Updates the map
+    * */
     public void update(float deltaTime) {
+
+//        Checks if players are dead, if they are, set them to null, count number of players, update rank
         int i = -1;
         playersAlive = 0;
         for (int k = 0; k < Main.players.size(); k++) {
@@ -202,6 +230,7 @@ public class BattleMap extends PlayRoom {
             }
         }
 
+//        What to do if there is only one player left
         if (playersAlive == 1) {
             for (Character character : Main.players) {
                 i++;
@@ -209,6 +238,8 @@ public class BattleMap extends PlayRoom {
                     character.rank = 1;
                 }
             }
+
+//            Remove all assets, switch screen
             Main.uiToAdd.clear();
             Main.ui.clear();
             Main.uiToRemove.clear();
@@ -216,12 +247,14 @@ public class BattleMap extends PlayRoom {
             new ScreenWipe(new VictoryScreen(game), game);
         }
 
+//        Update camera and background
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;
 
         gamecam.update();
         renderer.setView(gamecam);
 
+//        Loops song
         if (game.music.getPosition() >= game.songLoopEnd) {
             game.music.setPosition((float) (game.music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
         }
@@ -265,28 +298,35 @@ public class BattleMap extends PlayRoom {
         for (int j=0; j < Main.transitions.size(); j++) Main.transitions.get(j).update(deltaTime);
     }
 
+
+    /*
+    * Pre: Delta Time
+    * Post: Renders all components
+    * */
     public void render(float delta) {
+
+//        Clears screen and renders
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//        game.batch.setShader(GrayscaleShader.grayscaleShader);
-//        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
+
 
         drawBackground();
 
         renderer.render();
-//        game.batch.setShader(null);
-//        renderer.getBatch().setShader(null);
+
 
         game.batch.begin();
         game.batch.setProjectionMatrix(gamecam.combined);
 
+//        Plays video
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
 
         viewport.apply();
 
+//        Draws madeline hair
         for (GameObject obj : Main.gameObjects) {
             try {
                 Madeline madeline = (Madeline) obj;
@@ -300,21 +340,28 @@ public class BattleMap extends PlayRoom {
 
         game.batch.end();
 
+//        Debug renderer
         if (Main.debug) {
             b2dr.render(world, gamecam.combined);
         }
 
+//        Draw hud and transitions
         hud.draw();
 
         for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
+    /*
+    * Pre: None
+    * Post: Draws the background
+    * */
     public void drawBackground() {
         game.batch.begin();
         game.batch.setProjectionMatrix(bgCam.combined);
         float h;
         float w;
 
+//        Sets width and height
         if (background.getHeight() <= background.getWidth()) {
             h = bgCam.viewportHeight;
             w = (bgCam.viewportHeight / background.getHeight()) * background.getWidth();
@@ -323,24 +370,28 @@ public class BattleMap extends PlayRoom {
             w = bgCam.viewportWidth;
         }
 
+//        Sets x
         if (bgPos.x <= -(w + (1920 / 2f))) {
             bgPos.x += w;
         } else if (bgPos.x >= (w + (1920 / 2f))) {
             bgPos.x -= w;
         }
 
+//        Sets y
         if (bgPos.y <= -(h - (-1080 / 2f))) {
             bgPos.y += h;
         } else if (bgPos.y >= (h - (-1080 / 2f))) {
             bgPos.y -= h;
         }
 
+//        Adjusts x
         float x = bgPos.x;
 
         while (x > -(bgCam.viewportWidth)) {
             x -= w;
         }
 
+//        Draws background
         while (x < bgCam.viewportWidth) {
             game.batch.draw(background, x, bgPos.y, w, h);
             game.batch.draw(background, x, bgPos.y + h, w, h);
@@ -352,28 +403,49 @@ public class BattleMap extends PlayRoom {
         game.batch.end();
     }
 
-    // updates screen size
+    /*
+    * Pre: Width and height
+    * Post: Updates screen size
+    * */
     @Override
     public void resize(int width, int height) {
+
+//        Update screen size
         viewport.update(width, height);
         gamecam.update();
     }
 
+    /*
+     * Pre: None
+     * Post: Pauses music
+     * */
     @Override
     public void pause() {
         game.music.pause();
     }
 
+    /*
+     * Pre: None
+     * Post: Resumes music
+     * */
     @Override
     public void resume() {
         game.music.play();
     }
 
+    /*
+     * Pre: None
+     * Post: Hides screen
+     * */
     @Override
     public void hide() {
 
     }
 
+    /*
+     * Pre: None
+     * Post: Disposes of all assets
+     * */
     @Override
     public void dispose() {
         world.dispose();

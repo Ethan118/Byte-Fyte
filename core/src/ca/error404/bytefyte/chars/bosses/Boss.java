@@ -18,7 +18,13 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.Random;
 
+/*
+ * Pre: game launch, single player called
+ * Post: creates the boss class
+ * */
 public class Boss extends GameObject {
+
+    //declaring variables
     float deltaTime;
     public StateMachine state;
     public float hp = 300f;
@@ -30,10 +36,8 @@ public class Boss extends GameObject {
     public Vector2 goToPos;
     public Vector2 prevGoToPos = Vector2.Zero;
     public float speed = 1;
-
     public float width;
     public float height;
-
     public Vector2 pos = new Vector2();
     public Vector2 prevPos = Vector2.Zero;
 
@@ -50,6 +54,10 @@ public class Boss extends GameObject {
     public float damage = 10f;
     public float hitStun = 0.25f;
 
+    /*constructor
+     * Pre: single player mode entered, stage created
+     * Post: creates the Boss
+     * */
     public Boss(PlayRoom screen, Vector2 spawnPoint) {
         this.screen = screen;
         this.spawnPoint = spawnPoint;
@@ -60,6 +68,10 @@ public class Boss extends GameObject {
         hitSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/playerHit.wav"));
     }
 
+    /*
+     * Pre: None
+     * Post: Defines a character
+     * */
     public void defineChar() {
         // loads collision box
         BodyDef bdef = new BodyDef();
@@ -95,6 +107,7 @@ public class Boss extends GameObject {
         fdef.filter.categoryBits = Tags.BOSS_HEAD_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
+        //loads left triggers
         EdgeShape left = new EdgeShape();
         left.set(new Vector2((float) -getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) -getRegionHeight() / hitboxScale / 2.2f / Main.PPM), new Vector2((float) -getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) getRegionHeight() / hitboxScale / 2.2f / Main.PPM));
         fdef.isSensor = true;
@@ -102,6 +115,7 @@ public class Boss extends GameObject {
         fdef.filter.categoryBits = Tags.BOSS_SIDE_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
+        //loads right trigger
         EdgeShape right = new EdgeShape();
         right.set(new Vector2((float) getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) -getRegionHeight() / hitboxScale / 2.2f / Main.PPM), new Vector2((float) getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) getRegionHeight() / hitboxScale / 2.2f / Main.PPM));
         fdef.isSensor = true;
@@ -110,6 +124,7 @@ public class Boss extends GameObject {
         b2body.createFixture(fdef).setUserData(this);
     }
 
+//    The following methods perform what is specified in the children classes
     @Override
     public void update(float delta) {}
 

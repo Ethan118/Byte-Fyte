@@ -9,6 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
+
+/*
+ * Pre: kirby selected
+ * Post: creates the kirby class
+ * */
 public class Kirby extends Character {
     private float yOffset = 12f;
 
@@ -27,6 +32,10 @@ public class Kirby extends Character {
         this(screen, spawnPoint, controller, playernumber, 0);
     }
 
+    /*constructor
+     * Pre: kirby selected
+     * Post: initializes the kirby variables
+     * */
     public Kirby(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
         super(screen, spawnPoint, controller, playernumber, "kirby", "KIRBY", 0.7f, 0.8f, stamina);
         weight = 0.8f;
@@ -54,6 +63,7 @@ public class Kirby extends Character {
                 vel.y = 0;
             }
 
+            //handle's input for rock state
             handleInput();
             if (attackState == AttackState.SPECIAL && moveVector.y < 0 || hasBeenHit) {
                 rock = false;
@@ -66,10 +76,6 @@ public class Kirby extends Character {
         }
 
         super.update(deltaTime);
-
-        if (knockedOff) {
-            rock = false;
-        }
 
         friction = defaultFriction;
 
@@ -98,6 +104,8 @@ public class Kirby extends Character {
     }
 
     public TextureRegion checkFacing(TextureRegion region) {
+
+
         // Decide which direction to face
         if (grounded && attackAnimation == null) {
             if ((vel.x > 0) && !region.isFlipX()) {
@@ -139,9 +147,10 @@ public class Kirby extends Character {
         return region;
     }
 
-//    All abilities.  Will add colliders or move shy guy as applicable
+//    All abilities.  Will add colliders or move kirby as applicable
     @Override
     void basicNeutral() {
+
         new Collider(new Vector2(25, 0), 20, 35, this, 2f, 4f, 0.25f, 0);
 
         resetControls();
@@ -285,5 +294,9 @@ public class Kirby extends Character {
         resetControls();
     }
 
-
+    @Override
+    public void die() {
+        super.die();
+        rock = false;
+    }
 }

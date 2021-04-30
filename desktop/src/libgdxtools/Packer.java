@@ -4,6 +4,10 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 
 import java.util.Scanner;
 
+/*
+ * Pre: desktop launcher
+ * Post: allows and handles player input
+ * */
 public class Packer {
     public static void main (String[] args) {
         Scanner scanner = new Scanner(System.in);

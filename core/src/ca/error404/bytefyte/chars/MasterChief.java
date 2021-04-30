@@ -11,15 +11,27 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
+/*
+ * Pre: master chief chosen in character select, game started
+ * Post: creates master chief
+ * */
 public class MasterChief extends Character {
     private Sound laserSFX;
     private Music rocketSFX;
     private float rocketSFXDelay;
 
+    /*constructor
+     * Pre: game launch
+     * Post: declares variables pertaining to Master Chief
+     * */
     public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         this(screen, spawnPoint, controller, playernumber, 0);
     }
 
+    /*constructor
+     * Pre: game launch
+     * Post: declares variables pertaining to Master Chief
+     * */
     public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber, int stamina) {
         super(screen, spawnPoint, controller, playernumber, "masterchief", "MASTER CHIEF", stamina);
         weight = 1.05f;
@@ -31,10 +43,9 @@ public class MasterChief extends Character {
 
         walk.setFrameDuration(0.02f);
         idle.setFrameDuration(0.02f);
-
+        neutralAttack.setFrameDuration(0.01f);
+        sideTilt.setFrameDuration(0.01f);
         laserSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/laser.wav"));
-
-
         rocketSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/rocket.wav"));
         rocketSFX.setLooping(false);
         rocketSFX.setVolume(5);
@@ -79,13 +90,13 @@ public class MasterChief extends Character {
 //    All abilities.  Will add colliders or move master chief as applicable
     @Override
     void basicNeutral() {
-        new Collider(new Vector2(30, 7), 25, 17, this, 2f, 5f, 0.25f, 0.4f);
+        new Collider(new Vector2(30, 7), 25, 20, this, 2f, 5f, 0.25f, 0.2f);
         resetControls();
     }
 
     @Override
     void basicSide() {
-        new Collider(new Vector2(35, 3), 40, 17, this, 2f, 8f, 0.25f, 0.4f);
+        new Collider(new Vector2(35, 3), 40, 17, this, 2f, 8f, 0.25f, 0.2f);
 
         resetControls();
     }
@@ -133,6 +144,8 @@ public class MasterChief extends Character {
     @Override
     void specialNeutral() {
         laserSFX.play();
+
+        //creates a projectile in the direction the player is facing
         if (facingLeft) {
             new Projectile(this, new Vector2( -0.25f, 0.01f), new Vector2(-6, 0), 0, 0f, 20, 0.25f, 2.4f, 0, "laser", "sprites/masterchief.atlas", 0);
         } else {
@@ -144,6 +157,8 @@ public class MasterChief extends Character {
 
     @Override
     void specialSide() {
+
+        //creates a perjectile in the direction the player is facing
         if (facingLeft) {
             new Projectile(this, new Vector2(-0.2f, 0.152f), new Vector2(-4f, 0), 0, 0f, 20, 3, 13, 1, "bazooka", "sprites/masterchief.atlas", 0.5f, rocketSFX);
         } else {
@@ -187,6 +202,8 @@ public class MasterChief extends Character {
     @Override
     void airForward() {
         if (facingLeft) {
+
+            // creates a projectile in the direction the player is facing
             new Projectile(this, new Vector2(-0.2f, 0.1f), new Vector2(-6, 0), 0, 0f, 20, 3, 12, 1, "orb", "sprites/masterchief.atlas", 0.3f, rocketSFX);
         } else {
             new Projectile(this, new Vector2(0.2f, 0.1f), new Vector2(6, 0), 0, 0f, 20, 3, 12, 1, "orb", "sprites/masterchief.atlas", 0.3f, rocketSFX);

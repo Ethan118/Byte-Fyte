@@ -32,7 +32,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.Set;
 
+// Bossroom class
 public class BossRoom extends PlayRoom {
+
+//    Initializing variables
     private final BattleCam gamecam;
     private final OrthographicCamera bgCam;
     private Vector2 bgPos = new Vector2(-1920 / 2f, -1080 / 2f);
@@ -62,8 +65,17 @@ public class BossRoom extends PlayRoom {
     private String[] characters;
     private CharacterSelect characterSelect;
 
+    /*
+    * Constructor
+    * Pre: Inputs for parameters
+    * Post: A new boss room
+    * */
     public BossRoom(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
+
+//        Calling the super() method
         super(game, map, scrollVector, background);
+
+//        Setting variables
         this.game = game;
         game.batch = new SpriteBatch();
 
@@ -87,18 +99,21 @@ public class BossRoom extends PlayRoom {
 
         gamecam.position.set(pos.x / Main.PPM, pos.y / Main.PPM, 0);
 
+//        Setting ground
         for (MapObject object: map.getLayers().get("Ground").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new Wall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
+//        Setting death barrier
         for (MapObject object: map.getLayers().get("Death Barrier").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new DeathWall((int)(rect.getX() + rect.getWidth()/2), (int)(rect.getY() + rect.getHeight()/2),rect.getWidth() / 2f, rect.getHeight() / 2f, this);
         }
 
+//        Setting boss point
         for (MapObject object: map.getLayers().get("Boss Point").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             switch ((String) object.getProperties().get("boss name")) {
@@ -108,10 +123,12 @@ public class BossRoom extends PlayRoom {
             }
         }
 
+//        Setting spawn points
         for (MapObject object: map.getLayers().get("Spawn Point").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             int i = 1;
 
+//            Cycling through all characters selected and spawning the appropriate characters
             Character chara;
             if (CharacterSelect.characters[i-1] != null) {
                 if (CharacterSelect.characters[i - 1].equalsIgnoreCase("masterchief")) {
@@ -152,11 +169,13 @@ public class BossRoom extends PlayRoom {
                     }
                 }
 
+//                Initializing character variables
                 chara.facingLeft = false;
                 chara.respawnPos = new Vector2(pos.x / Main.PPM, pos.y / Main.PPM);
             }
         }
 
+//        Initializing variables
         float width = (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM;
         float height = (mProp.get("height", Integer.class) * mProp.get("tileheight", Integer.class)) / Main.PPM;
 
@@ -169,28 +188,40 @@ public class BossRoom extends PlayRoom {
         alive.addAll(Main.players);
     }
 
+    /*
+    * Pre: None
+    * Post: Shows the screen
+    * */
     @Override
     public void show() {
 
     }
 
+    /*
+    * Pre: Delta time
+    * Post: Updates the room
+    * */
     public void update(float deltaTime) {
+
+//        Updates the background position
         bgPos.x += scrollVector.x * deltaTime;
         bgPos.y += scrollVector.y * deltaTime;
 
+//        Updates camera and renderer
         gamecam.update();
         renderer.setView(gamecam);
 
+//        If the song has ended, loop it
         if (game.music.getPosition() >= game.songLoopEnd) {
             game.music.setPosition((float) (game.music.getPosition() - (game.songLoopEnd - game.songLoopStart)));
         }
 
-        // stop video if playing
+//         stop video if playing
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             videoPlayer.stop();
         }
 
-        // update all objects and physics objects
+//         update all objects and physics objects
         world.step(1 / 60f, 6, 2);
         for (int j = 0; j < Main.gameObjects.size(); j++) {
             if (Main.gameObjects.get(j).remove) {
@@ -203,18 +234,22 @@ public class BossRoom extends PlayRoom {
             }
         }
 
-        // Manage which game objects are active
+//         Manage which game objects are active
         Main.gameObjects.addAll(Main.objectsToAdd);
         Main.gameObjects.removeAll(Main.objectsToRemove);
         Main.objectsToAdd.clear();
         Main.objectsToRemove.clear();
 
+//        Plays music if not already playing
         if (!game.music.isPlaying()) {
             game.music.play();
         }
 
+//        Updates hud
         hud.update(deltaTime);
 
+
+//        Sets position of players
         for (Character chara : Main.players) {
             if (chara.pos.x < -(chara.getWidth())) {
                 chara.b2body.setTransform(chara.pos.x + (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM, chara.b2body.getPosition().y, chara.b2body.getTransform().getRotation());
@@ -223,6 +258,7 @@ public class BossRoom extends PlayRoom {
             }
         }
 
+//        Sets Luigi position
         for (Luigi chara : Main.luigis) {
             if (chara.pos.x < -(chara.getWidth())) {
                 chara.b2body.setTransform(chara.pos.x + (mProp.get("width", Integer.class) * mProp.get("tilewidth", Integer.class)) / Main.PPM, chara.b2body.getPosition().y, chara.b2body.getTransform().getRotation());
@@ -231,37 +267,45 @@ public class BossRoom extends PlayRoom {
             }
         }
 
-        // clear all controller inputs
+//         clear all controller inputs
         Set<Controller> keys = Main.recentButtons.keySet();
         for (Controller key : keys) {
             Main.recentButtons.get(key).clear();
         }
 
+//        Updates transitions
         for (int j=0; j < Main.transitions.size(); j++) Main.transitions.get(j).update(deltaTime);
     }
 
+    /*
+    * Pre: Delta time
+    * Post: Renders all images
+    * */
     public void render(float delta) {
+
+//        Update, clear, and render screen
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//        game.batch.setShader(GrayscaleShader.grayscaleShader);
-//        renderer.getBatch().setShader(GrayscaleShader.grayscaleShader);
+
 
         drawBackground();
 
         renderer.render();
-//        game.batch.setShader(null);
-//        renderer.getBatch().setShader(null);
+
 
         game.batch.begin();
         game.batch.setProjectionMatrix(gamecam.combined);
 
+//        Plays video player if it is meant to
         if (videoPlayer.isPlaying()) {
             videoPlayer.draw(game.batch);
         }
 
+//        Applies viewport
         viewport.apply();
 
+//        Draws madeline hair if applicable
         for (GameObject obj : Main.gameObjects) {
             try {
                 Madeline madeline = (Madeline) obj;
@@ -270,40 +314,56 @@ public class BossRoom extends PlayRoom {
 
             }
 
+//            Draws each object in the game objects list
             obj.draw(game.batch);
         }
 
         game.batch.end();
 
+//        Activate the debug renderer if applicable
         if (Main.debug) {
             b2dr.render(world, gamecam.combined);
         }
 
+//        Draw hud
         hud.draw();
 
+//        Update transitions
         for (int i=0; i < Main.transitions.size(); i++) Main.transitions.get(i).draw();
     }
 
+
+    /*
+    * Pre: None
+    * Post: Draws the background image
+    * */
     public void drawBackground() {
+
+//        Initializes variables and batch
         game.batch.begin();
         game.batch.setProjectionMatrix(bgCam.combined);
         float h;
         float w;
 
+//        Sets width and height if it is less than the screen size
         if (background.getHeight() <= background.getWidth()) {
             h = bgCam.viewportHeight;
             w = (bgCam.viewportHeight / background.getHeight()) * background.getWidth();
+
+//        Sets width and height if it is not less than the screen size
         } else {
             h = (bgCam.viewportWidth / background.getWidth()) * background.getHeight();
             w = bgCam.viewportWidth;
         }
 
+//        Sets x position for background
         if (bgPos.x <= -(w + (1920 / 2f))) {
             bgPos.x += w;
         } else if (bgPos.x >= (w + (1920 / 2f))) {
             bgPos.x -= w;
         }
 
+//        Sets y position for background
         if (bgPos.y <= -(h - (-1080 / 2f))) {
             bgPos.y += h;
         } else if (bgPos.y >= (h - (-1080 / 2f))) {
@@ -312,10 +372,12 @@ public class BossRoom extends PlayRoom {
 
         float x = bgPos.x;
 
+//        Updates x to match the size of the viewport
         while (x > -(bgCam.viewportWidth)) {
             x -= w;
         }
 
+//        Draws the background in the appropriate spot
         while (x < bgCam.viewportWidth) {
             game.batch.draw(background, x, bgPos.y, w, h);
             game.batch.draw(background, x, bgPos.y + h, w, h);
@@ -327,28 +389,48 @@ public class BossRoom extends PlayRoom {
         game.batch.end();
     }
 
-    // updates screen size
+    /*
+    * Pre: Width and height
+    * Post: Resizes screen
+    * */
     @Override
     public void resize(int width, int height) {
+//        Update the cam and viewport to match the new size
         viewport.update(width, height);
         gamecam.update();
     }
 
+    /*
+     * Pre: None
+     * Post: Pauses music
+     * */
     @Override
     public void pause() {
         game.music.pause();
     }
 
+    /*
+    * Pre: None
+    * Post: Resumes music
+    * */
     @Override
     public void resume() {
         game.music.play();
     }
 
+    /*
+    * Pre: None
+    * Post: Hides screen
+    * */
     @Override
     public void hide() {
 
     }
 
+    /*
+    * Pre: None
+    * Post: Disposes of all applicable assets
+    * */
     @Override
     public void dispose() {
         world.dispose();
@@ -360,7 +442,10 @@ public class BossRoom extends PlayRoom {
 
     }
 
-    //  Gets the world
+    /*
+     * Pre: A world
+     * Post: Returns the world
+     * */
     public World getWorld() {
         return world;
     }

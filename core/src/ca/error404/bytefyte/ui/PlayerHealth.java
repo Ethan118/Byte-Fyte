@@ -55,25 +55,25 @@ public class PlayerHealth extends GameObject {
         this.chara = chara;
         Random rand = new Random();
 
-        // Sets position as well as spoopy threat
+        // Sets position as well as spooky treat
         if (number == 1) {
             pos = new Vector2(25, 25);
-            this.charname = "I'M";
+            this.charname = "BOWSER";
         } else if (number == 2) {
             pos = new Vector2(525, 25);
-            this.charname = "WATCHING";
+            this.charname = "WAS";
         } else if (number == 3) {
             pos = new Vector2(1025, 25);
-            this.charname = "YOU,";
+            this.charname = "HERE,";
         } else if (number == 4) {
             pos = new Vector2(1525, 25);
-            this.charname = "NERDS";
+            this.charname = "HAHAHA";
         }
 
         // Sets the random chance for Bill Cipher and Bowser to make a cameo in the player's place
-        int chanceForBowser = rand.nextInt(500);
+        int chanceForBowser = rand.nextInt(500000);
 
-        // Overrides the spoopy message if there are less than 4 players, or the random number was incorrect
+        // Overrides the spooky message if there are less than 4 players, or the random number was incorrect
         if (CharacterSelect.characters[3] == null || nerds != 2) {
             this.charname = chara.playerName;
         }
@@ -109,13 +109,13 @@ public class PlayerHealth extends GameObject {
         baseOffset.x = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetX;
         baseOffset.y = (textureAtlas.findRegion(String.format("player_%d_ingame", number))).offsetY;
 
-        // Sets offset to bowser's
+        // Sets offset to bill's
         if (chanceForBowser == 3) {
             headOffset.x = (textureAtlas.findRegion("bill_ingame")).offsetX;
             headOffset.y = (textureAtlas.findRegion("bill_ingame")).offsetY;
             countryOffset.x = (textureAtlas.findRegion("bill_country")).offsetX;
             countryOffset.y = (textureAtlas.findRegion("bill_country")).offsetY;
-        // Sets offset to bill's
+        // Sets offset to bowser's
         } else if (chanceForBowser == 2) {
             headOffset.x = (textureAtlas.findRegion("bowser_ingame")).offsetX;
             headOffset.y = (textureAtlas.findRegion("bowser_ingame")).offsetY;

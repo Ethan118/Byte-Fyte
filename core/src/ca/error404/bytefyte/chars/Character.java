@@ -10,7 +10,6 @@ import ca.error404.bytefyte.objects.Projectile;
 import ca.error404.bytefyte.scene.PlayRoom;
 import ca.error404.bytefyte.ui.PlayerHealth;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -21,7 +20,10 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.ArrayList;
 
+// Abstract parent class to create characters
 public abstract class Character extends GameObject {
+
+//    Initializing variables
     public World world;
 
     public Controller controller;
@@ -182,6 +184,7 @@ public abstract class Character extends GameObject {
         ULTIMATE
     }
 
+//    Initializing more variables
     protected float animDuration;
 
     private final float ultMeter = 0;
@@ -204,12 +207,14 @@ public abstract class Character extends GameObject {
     public int defaultStamina = 0;
     public PlayerHealth health;
 
-    /**
+    /*
      * pre: reference to the scene, position to spawn, controller, player number
      * post: instantiates a character with the parameters
      */
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale, int hp) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, spriteScale, hitboxScale);
+
+//        Setting all variables
         this.percent = hp;
         defaultStamina = hp;
         if (hp != 0) {
@@ -219,8 +224,13 @@ public abstract class Character extends GameObject {
 
     }
 
+    /*
+     * pre: reference to the scene, position to spawn, controller, player number
+     * post: instantiates a character with the parameters
+     */
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, int hp) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
+//        Setting all variables
         this.percent = hp;
         defaultStamina = hp;
         if (hp != 0) {
@@ -230,13 +240,23 @@ public abstract class Character extends GameObject {
 
     }
 
+    /*
+     * pre: reference to the scene, position to spawn, controller, player number
+     * post: instantiates a character with the parameters
+     */
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName) {
         this(screen, spawnPoint, controller, playerNumber, charname, playerName, 15, 18);
 
     }
 
+    /*
+     * pre: reference to the scene, position to spawn, controller, player number
+     * post: instantiates a character with the parameters
+     */
     public Character(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, String charname, String playerName, float spriteScale, float hitboxScale) {
         super();
+
+//        Setting all variables
         this.spriteScale = spriteScale;
         this.hitboxScale = hitboxScale;
         Main.players.add(this);
@@ -300,17 +320,24 @@ public abstract class Character extends GameObject {
 
         defineChar();
 
+//        Setting character position
         setBounds(b2body.getPosition().x - getWidth() / 2, (b2body.getPosition().y - getHeight() / 2), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
         setRegion(sprite);
     }
 
+
+    /*
+    * Pre: None
+    * Post: A new character and body is defined
+    * */
     public void defineChar() {
-        // loads collision box
+//         loads collision box
         BodyDef bdef = new BodyDef();
         bdef.position.set(goToPos.x, goToPos.y);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
+//        Loads a fixture for collision
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
 
@@ -318,13 +345,14 @@ public abstract class Character extends GameObject {
         width = getRegionWidth() / hitboxScale / 2 / Main.PPM;
         height = getRegionHeight() / hitboxScale / 2 / Main.PPM;
 
+//        Sets the shape of the hitbox
         fdef.shape = shape;
         fdef.filter.categoryBits = Tags.PLAYER_BIT;
         fdef.filter.maskBits = Tags.GROUND_BIT | Tags.DEATH_BARRIER_BIT | Tags.ATTACK_BIT | Tags.PROJECTILE_BIT | Tags.LASER_BIT | Tags.BOSS_BIT | Tags.BOSS_FEET_BIT;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
 
-        // loads feet trigger
+//         loads feet trigger
         EdgeShape feet = new EdgeShape();
         feet.set(new Vector2((float) -getRegionWidth() / hitboxScale / 2.2f / Main.PPM, -getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM), new Vector2((float) getRegionWidth() / hitboxScale / 2.2f / Main.PPM, -getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM));
         fdef.isSensor = true;
@@ -332,7 +360,7 @@ public abstract class Character extends GameObject {
         fdef.filter.categoryBits = Tags.PLAYER_FEET_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
-        // loads head trigger
+//         loads head trigger
         EdgeShape head = new EdgeShape();
         head.set(new Vector2((float) -getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM), new Vector2((float) getRegionWidth() / hitboxScale / 2.2f / Main.PPM, getRegionHeight() / (hitboxScale * 1.9f) / Main.PPM));
         fdef.isSensor = true;
@@ -340,6 +368,7 @@ public abstract class Character extends GameObject {
         fdef.filter.categoryBits = Tags.PLAYER_HEAD_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
+//        Loads the left side trigger
         EdgeShape left = new EdgeShape();
         left.set(new Vector2((float) -getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) -getRegionHeight() / hitboxScale / 2.2f / Main.PPM), new Vector2((float) -getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) getRegionHeight() / hitboxScale / 2.2f / Main.PPM));
         fdef.isSensor = true;
@@ -347,6 +376,7 @@ public abstract class Character extends GameObject {
         fdef.filter.categoryBits = Tags.PLAYER_SIDE_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
+//        Loads the right side trigger
         EdgeShape right = new EdgeShape();
         right.set(new Vector2((float) getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) -getRegionHeight() / hitboxScale / 2.2f / Main.PPM), new Vector2((float) getRegionWidth() / (hitboxScale * 1.9f) / Main.PPM, (float) getRegionHeight() / hitboxScale / 2.2f / Main.PPM));
         fdef.isSensor = true;
@@ -355,15 +385,19 @@ public abstract class Character extends GameObject {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    // grounds the player
+    /*
+    * Pre: None
+    * Post: Player is grounded
+    * */
     public void ground() {
+//        Sets the player to be grounded with no velocity
         vel.y = 0;
         jumpsLeft = maxJumps;
         grounded = true;
     }
 
 
-    /**
+    /*
     * pre: None
     * post: Handles any and all controller or keyboard inputs for a specific player
     */
@@ -467,92 +501,105 @@ public abstract class Character extends GameObject {
         }
     }
 
-    /**
+    /*
      * pre: deltaTime, the time between frames
      * post: updates the players state, including physics and rendering
      */
     public void update(float deltaTime) {
+
+//        If the user has no health left in stamina mode, run the die() method
         if (stamina && percent <= 0) {
             die();
         }
 
         hasBeenHit = false;
+
+//        If the user is dead, remove them and their song, destroy them
         if (dead) {
             Main.players.remove(this);
             destroy();
             hitSFX.dispose();
         }
 
-        // counts the animation duration down to zero
+//         Counts the animation duration down to zero
         if (animDuration > 0) {
             animDuration -= deltaTime;
         } else {
             animDuration = 0;
         }
 
-        // checks if the player is on the ground
+//         Checks if the player is on the ground
         if (grounded) {
             afterUpB = false;
         }
 
-        // checks if the player is currently using up special
+//         Checks if the player is currently using up special
         if (animState == AnimationState.SPECIAL_U) {
             afterUpB = true;
         }
 
-        // counts down move timer
+//         Counts down move timer
         if (moveTimer >= 0) {
             moveTimer -= deltaTime;
         }
 
-        // Teleport Player
+//         Teleport Player
         if (prevGoToPos != goToPos) {
             b2body.setTransform(goToPos, 0f);
             prevGoToPos = goToPos;
         }
 
-        // set variables
+//         Set variables
         prevVel = vel;
         prevPos.set(pos);
         pos.set(b2body.getPosition());
 
-        // counts down stun timer
+//         Counts down stun timer
         if (stunTimer > 0) {
             stunTimer -= deltaTime;
         }
 
-        // locks the player control if the character is stunned or playing an attack animation
+//         Locks the player control if the character is stunned or playing an attack animation
         if (!lockAnim && stunTimer <= 0) {
             handleInput();
         }
 
+//        Count down respawn timer
         respawnTimer -= deltaTime;
 
+//        If the respawn timer is above 0
         if (respawnTimer > 0 && !respawned) {
+
+//            Set the states to idle
             moveState = MovementState.IDLE;
             animState = AnimationState.IDLE;
 
+//            If the user is moving, they have respawned
             if (!moveVector.isZero() || jumping) {
                 respawned = true;
+
+//            If the respawn timer is up, respawn the user
             } else if (respawnTimer <= 0) {
                 respawned = true;
             }
+
+//        If not respawned and the timer is below 0, respawn the player
         } else if (!respawned) {
             respawned = true;
         }
 
-        // checks if the player is on the ground
+//         checks if the player is on the ground
         if (grounded) {
 
-            // sets the player's max speed to the run speed if running and the walk speed otherwise
+//             sets the player's max speed to the run speed if running and the walk speed otherwise
             maxSpeed = running ? runSpeed : walkSpeed;
         } else {
 
-            // sets the player's max speed to the air speed
+//             sets the player's max speed to the air speed
             maxSpeed = airSpeed;
         }
 
-        // updates the players velocity up to the maximum speed
+//         updates the players velocity up to the maximum speed
         if (Math.abs(vel.x) <= maxSpeed) {
             if (grounded) {
                 if (!(moveVector.x < 0 && vel.x > 0) && !(moveVector.x > 0 && vel.x < 0)) {
@@ -565,34 +612,34 @@ public abstract class Character extends GameObject {
 
         applyFriction(deltaTime);
 
-        // checks if the player is pressing down
+//         checks if the player is pressing down
         if (moveVector.y < -deadzone) {
 
-            // player falls at the fast fall speed
+//             player falls at the fast fall speed
             maxFallSpeed = fastFallSpeed * weight;
             if (vel.y > 0) {
                 vel.y = 0;
             }
         } else {
 
-            // player falls at normal speed
+//             player falls at normal speed
             maxFallSpeed = fallSpeed * weight;
         }
 
         if (respawned) {
-            // checks if the player is moving up or down
+//             checks if the player is moving up or down
             if (vel.y > 0 && !grounded) {
 
-                // up gravity accelerates player down
+//                 up gravity accelerates player down
                 vel.y -= upGravity * weight * deltaTime;
             } else if (vel.y > maxFallSpeed && !grounded) {
 
-                // down gravity accelerates player down
+//                 down gravity accelerates player down
                 vel.y -= downGravity * weight * deltaTime;
             }
         }
 
-        // jumping
+//         jumping
         if (jumping && jumpsLeft > 0) {
             if (vel.y <= 0) {
                 vel.y = jumpPower;
@@ -600,20 +647,21 @@ public abstract class Character extends GameObject {
                 vel.y += jumpPower;
             }
 
+//            If they are not able to jump, and they are not grounded
             if (!grounded) jumpsLeft -= 1;
             grounded = false;
             jumping = false;
         }
 
-        // grounds player if y position hasn't changed in a while because sometimes
-        // the game doesn't register the player landing on the ground
+//         grounds player if y position hasn't changed in a while because sometimes
+//         the game doesn't register the player landing on the ground
         if (pos.y == prevPos.y && vel.y < fastFallSpeed && !grounded) {
             ground();
         }
 
         prevAnimState = animState;
 
-        // locks animation state if the player is stunned or an attack animation is playing
+//         locks animation state if the player is stunned or an attack animation is playing
         if (!lockAnim && stunTimer <= 0 && respawned) {
             if (animDuration <= 0) {
                 getState();
@@ -622,26 +670,35 @@ public abstract class Character extends GameObject {
             }
         }
 
-        // sets the physics body's velocity
+//         sets the physics body's velocity
         b2body.setLinearVelocity(vel);
 
-        // updates character graphics
+//         updates character graphics
         setRegion(getFrame(deltaTime));
         setBounds(b2body.getPosition().x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), b2body.getPosition().y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
     }
 
 
-    // friction + gravity
+    /*
+    * Pre: Delta time
+    * Post: Applies friction
+    * */
     public void applyFriction(float deltaTime) {
+
+//        If the x velocity is above 0.1
         if (Math.abs(vel.x) > 0.1f) {
+
+//            Move the user
             vel.x += Math.signum(vel.x) * friction * deltaTime;
+
+//        Otherwise, set velocity to 0 (in the x direction)
         } else {
             vel.x = 0;
         }
     }
 
-    /**
-     * pre:
+    /*
+     * pre: None
      * post: gets the current state of the player
      */
     public void getState() {
@@ -779,18 +836,20 @@ public abstract class Character extends GameObject {
         }
     }
 
-    /**
-     * pre:
+    /*
+     * pre: None
      * post: resets player state and control
      */
     public void resetControls() {
+
+//        Resets all necessary player variables
         moveVector = new Vector2(0, 0);
         rStick = new Vector2(0, 0);
         jumping = false;
         running = false;
     }
 
-    /**
+    /*
      * pre: deltaTime, the time between frames
      * post: sets the animation based on the player's animation state
      */
@@ -800,7 +859,8 @@ public abstract class Character extends GameObject {
         // sets elapsedTime
         elapsedTime = animState == prevAnimState ? elapsedTime + deltaTime : 0;
 
-        // switch case to set the animation
+//        Switch case to set the animation.  Cycles through all scenarios and assigns the animation
+//        accordingly.
         switch (animState) {
             case WALK:
                 region = walk.getKeyFrame(elapsedTime, true);
@@ -912,15 +972,25 @@ public abstract class Character extends GameObject {
         return region;
     }
 
+    /*
+    * Pre: A texture region
+    * Post: Checks which direction is being faced and gives a texture region
+    * */
     public TextureRegion checkFacing(TextureRegion region) {
-        // Decide which direction to face
+//         Decide which direction to face
         if (grounded && attackAnimation == null) {
+
+//            Facing right
             if ((vel.x > 0) && !region.isFlipX()) {
                 region.flip(true, false);
                 facingLeft = false;
+
+//            Facing left
             } else if ((vel.x < 0) && region.isFlipX()) {
                 region.flip(true, false);
                 facingLeft = true;
+
+//            Checks if they are facing the correct direction, flips them if they arent
             } else {
                 if (!facingLeft && !region.isFlipX()) {
                     region.flip(true, false);
@@ -928,6 +998,8 @@ public abstract class Character extends GameObject {
                     region.flip(true, false);
                 }
             }
+
+//        Checks if they are facing the correct direction, flips them if they arent
         } else {
             if (!facingLeft && !region.isFlipX()) {
                 region.flip(true, false);
@@ -939,16 +1011,24 @@ public abstract class Character extends GameObject {
         return region;
     }
 
-    /**
+    /*
      * pre: damage to deal, force to apply, amount to stun
      * post: sets animation to hit, deals damage, applies knock-back, sets stun timer
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
-        hitSFX.play(Main.sfxVolume / 10f);
+
+
+//        If the respawn timer is 0 or lower
         if (respawnTimer <= 0) {
+
+//        Plays the hit sound effect
+            hitSFX.play(Main.sfxVolume / 10f);
+
+//            The user has been hit, and animation state is set accordingly
             hasBeenHit = true;
             animState = AnimationState.HIT;
 
+//            Loses hp or gains percent based on game mode
             if (stamina) {
                 percent = Math.max(percent - damage, 0f);
                 vel.set(force.scl(1.2f / weight));
@@ -957,18 +1037,20 @@ public abstract class Character extends GameObject {
                 vel.set(force.scl(((percent / 100) + 1) / weight));
             }
 
+//            Sets stun timer
             stunTimer = hitStun;
 
+//            Removes their move vector
             moveVector.x = 0;
         }
     }
 
-    /**
+    /*
      * pre: x position, y position
-     * post: reset player, set position
+     * post: resets player, sets position
      */
     public void die() {
-//        Resets player for a potential respawn
+//        Resets player for a potential respawn by resetting all variables
         if (!stamina) {
             percent = 0;
         } else {
@@ -1004,6 +1086,12 @@ public abstract class Character extends GameObject {
 
 //    The following are abstract methods meant to be overwritten for each character, and replaced with
 //    their specific abilities and attacks.
+
+    /*
+ FOR ALL BELOW METHODS
+     * Pre: A call to the method
+     * Post: Performs an action as specified
+     * */
 
     //    Basic Attacks
     abstract void basicNeutral();

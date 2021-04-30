@@ -4,7 +4,10 @@ import com.badlogic.gdx.controllers.Controller;
 
 import java.util.Locale;
 
-// default xbox 360 controller buttons
+/*
+ * Pre: controller detected
+ * Post: pairs controller buttons with keys
+ * */
 public class ControllerButtons
 {
     // Buttons

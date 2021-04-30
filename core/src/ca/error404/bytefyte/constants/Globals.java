@@ -4,6 +4,8 @@ import javax.sound.sampled.AudioFormat;
 import java.io.File;
 import java.util.ArrayList;
 
+
+// Globals class
 public class Globals {
     public static String workingDirectory;
     //here, we assign the name of the OS, according to Java, to a variable...
@@ -14,6 +16,11 @@ public class Globals {
     public static ArrayList<AudioFormat> healSongWAV1 = new ArrayList<>();
     public static ArrayList<File> healSongWAV2 = new ArrayList<>();
 
+    /*
+    * Constructor
+    * Pre: None
+    * Post: Finds appdata folder
+    * */
     public Globals() {
 
         if (OS.contains("WIN"))

@@ -114,6 +114,10 @@ public class MultiHit extends GameObject {
 
     }
 
+    /*
+     * Pre: A method in the game object class which destroys assets
+     * Post: This instance of multihit is destroyed
+     * */
     @Override
     public void destroy() {
         Main.objectsToRemove.add(this);

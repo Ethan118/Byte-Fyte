@@ -2,6 +2,7 @@ package ca.error404.bytefyte.constants;
 
 import java.util.ArrayList;
 
+// Screen sizes class
 public class ScreenSizes {
     public static final ArrayList<ArrayList<Integer>> screenSizes = new ArrayList<>();
     public static int screenSize = 3;
