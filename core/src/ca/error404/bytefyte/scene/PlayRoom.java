@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class PlayRoom implements Screen {
+//    initializing variables
     protected final BattleCam gamecam;
     protected final OrthographicCamera bgCam;
     protected final Texture background;
@@ -39,12 +40,21 @@ public class PlayRoom implements Screen {
     protected final Box2DDebugRenderer b2dr;
     protected Random rand = new Random();
 
+    /**
+     * @param game
+     * @param map
+     * @param scrollVector
+     * @param background
+     * pre: reference to a game, map reference, scroll vector, background
+     * post: instantiates a instance of play room
+     */
     public PlayRoom(Main game, TiledMap map, Vector2 scrollVector, Texture background) {
         this.game = game;
         game.batch = new SpriteBatch();
 
         PlayerHealth.nerds = rand.nextInt(100);
 
+//        creates necessary cameras
         gamecam = new BattleCam();
         bgCam = new OrthographicCamera(1920, 1080);
         this.scrollVector = scrollVector;
@@ -52,12 +62,13 @@ public class PlayRoom implements Screen {
 
         viewport = new FitViewport(Main.WIDTH / Main.PPM, Main.HEIGHT / Main.PPM, gamecam);
 
+//        creates a new tile map renderer
         this.map = map;
         renderer = new OrthogonalTiledMapRenderer(map, 1/Main.PPM);
 
         mProp = map.getProperties();
 
-
+//        creates a new physics world
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
     }
