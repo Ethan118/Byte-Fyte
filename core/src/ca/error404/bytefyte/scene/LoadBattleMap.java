@@ -20,6 +20,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
+/*constructor
+ * Pre: screen called
+ * Post: creates the Loadbattlemap screen
+ * */
 public class LoadBattleMap implements Screen {
     OrthographicCamera cam;
     Main game;
@@ -38,6 +42,10 @@ public class LoadBattleMap implements Screen {
 
     private float minLoadTime = 10f;
 
+    /*constructor
+     * Pre: scene called
+     * Post: initializes the Loadbattlemap scene
+     * */
     public LoadBattleMap(String tmap, Main game, Vector2 scrollVector, String series) {
         this.game = game;
         this.scrollVector = scrollVector;
@@ -49,11 +57,17 @@ public class LoadBattleMap implements Screen {
     }
 
     @Override
+
+    /*
+     * Pre: scene
+     * Post: show the user the Loadbattlemap scene
+     * */
     public void show() {
         Main.buttons.clear();
         cam = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080, cam);
 
+        //loading pngs
         Main.manager.load(String.format("sprites/maps/%s.png", tmap), Texture.class);
         Main.manager.finishLoading();
         Main.manager.load(String.format("sprites/maps/%s_background.png", tmap), Texture.class);
@@ -71,6 +85,7 @@ public class LoadBattleMap implements Screen {
             characters.add(charname);
         }
 
+        //plays a song
         if (characters.contains("shyguy")) {
             for (int i = 0; i < 24; i++) {
                 Main.audioManager.load(String.format("audio/sound effects/shysongs/shyguy_song_%d.wav", i + 1), Sound.class);
@@ -84,7 +99,7 @@ public class LoadBattleMap implements Screen {
         mapLoader.loadAsync(Main.manager, tmap, Gdx.files.internal(tmap), null);
         map = mapLoader.loadSync(Main.manager, tmap, Gdx.files.internal(tmap), null);
 
-        // plays a song so I can hear things
+        // plays a song
         if (game.music != null) {
             game.music.stop();
         }
@@ -101,6 +116,10 @@ public class LoadBattleMap implements Screen {
     }
 
     @Override
+    /*
+     * Pre: scene called
+     * Post: renders the Loadbattlemap scene
+     * */
     public void render(float delta) {
         minLoadTime -= delta;
         if (Main.manager.update() && minLoadTime <= 0) {

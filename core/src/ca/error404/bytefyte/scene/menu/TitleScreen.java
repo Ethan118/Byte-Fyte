@@ -57,6 +57,7 @@ public class TitleScreen extends MenuScene {
             new ScreenWipe(new MainMenu(game), game);
         }
 
+
         alpha += deltaTime * 4;
         if (alpha > 180) {
             alpha = 4;
