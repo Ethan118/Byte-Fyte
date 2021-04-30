@@ -122,7 +122,6 @@ public class GasterBlaster extends GameObject {
     @Override
     public void destroy() {
         super.destroy();
-        fireSFX.dispose();
         arriveSFX.dispose();
     }
 }
