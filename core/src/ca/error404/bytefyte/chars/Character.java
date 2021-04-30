@@ -29,6 +29,7 @@ public abstract class Character extends GameObject {
     public Controller controller;
     public float deadzone = Main.deadZone;
     public boolean hasBeenHit = false;
+    public boolean invinsible = false;
 
     private Sound hitSFX;
 
@@ -501,7 +502,7 @@ public abstract class Character extends GameObject {
         }
     }
 
-    /*
+    /**
      * pre: deltaTime, the time between frames
      * post: updates the players state, including physics and rendering
      */
@@ -612,7 +613,7 @@ public abstract class Character extends GameObject {
 
         applyFriction(deltaTime);
 
-//         checks if the player is pressing down
+//             checks if the player is pressing down
         if (moveVector.y < -deadzone) {
 
 //             player falls at the fast fall speed
@@ -697,7 +698,7 @@ public abstract class Character extends GameObject {
         }
     }
 
-    /*
+    /**
      * pre: None
      * post: gets the current state of the player
      */
@@ -836,7 +837,7 @@ public abstract class Character extends GameObject {
         }
     }
 
-    /*
+    /**
      * pre: None
      * post: resets player state and control
      */
@@ -849,7 +850,7 @@ public abstract class Character extends GameObject {
         running = false;
     }
 
-    /*
+    /**
      * pre: deltaTime, the time between frames
      * post: sets the animation based on the player's animation state
      */
@@ -1016,11 +1017,8 @@ public abstract class Character extends GameObject {
      * post: sets animation to hit, deals damage, applies knock-back, sets stun timer
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
-
-
-//        If the respawn timer is 0 or lower
-        if (respawnTimer <= 0) {
-
+//        If the respawn timer is 0 or lower and not invincible
+        if (respawnTimer <= 0 && !invinsible) {
 //        Plays the hit sound effect
             hitSFX.play(Main.sfxVolume / 10f);
 
@@ -1045,7 +1043,7 @@ public abstract class Character extends GameObject {
         }
     }
 
-    /*
+    /**
      * pre: x position, y position
      * post: resets player, sets position
      */

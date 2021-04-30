@@ -132,11 +132,6 @@ public class GasterBlaster extends GameObject {
         setBounds(pos.x - (getWidth() / 2), pos.y - (getHeight() / 2), getRegionWidth() / spriteScale / Main.PPM, getRegionHeight() / spriteScale / Main.PPM);
         setRegion(sprite);
         setOriginCenter();
-
-
-
-
-
     }
 
     /*

@@ -4,6 +4,7 @@ import ca.error404.bytefyte.GameObject;
 import ca.error404.bytefyte.Main;
 import ca.error404.bytefyte.chars.Character;
 import ca.error404.bytefyte.chars.Madeline;
+import ca.error404.bytefyte.chars.Mario;
 import ca.error404.bytefyte.scene.menu.CharacterSelect;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -202,6 +203,18 @@ public class PlayerHealth extends GameObject {
                 barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_full"), 0, 0, (int) (1530 + (1140 * (madeline.badelineMeter / madeline.badelineMaxMeter))), textureAtlas.findRegion("fs_meter_full").getRegionHeight());
             } else {
                 barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"), 0, 0, (int) (1530 + (1140 * (madeline.badelineMeter / madeline.badelineMaxMeter))), textureAtlas.findRegion("fs_meter_charge").getRegionHeight());
+            }
+            batch.draw(barClip, pos.x, pos.y, barClip.getRegionWidth() * 0.13f, barClip.getRegionHeight() * 0.13f);
+        }
+
+        if (chara.charname.equals("marioluigi")) {
+            Mario mario = (Mario) chara;
+
+            TextureRegion barClip;
+            if (mario.badgeActive) {
+                barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_full"), 0, 0, (int) (1530 + (1140 * (mario.badgeMeter / mario.badgeMaxMeter))), textureAtlas.findRegion("fs_meter_full").getRegionHeight());
+            } else {
+                barClip = new TextureRegion(textureAtlas.findRegion("fs_meter_charge"), 0, 0, (int) (1530 + (1140 * (mario.badgeMeter / mario.badgeMaxMeter))), textureAtlas.findRegion("fs_meter_charge").getRegionHeight());
             }
             batch.draw(barClip, pos.x, pos.y, barClip.getRegionWidth() * 0.13f, barClip.getRegionHeight() * 0.13f);
         }

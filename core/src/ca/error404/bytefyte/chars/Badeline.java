@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
 public class Badeline extends GameObject {
+//    initializing variables
     private Character parent;
 
     public Vector2 pos;
@@ -49,7 +50,13 @@ public class Badeline extends GameObject {
 
     final float speed = 0.05f, ispeed = 1.0f-speed;
 
+    /**
+     * @param parent
+     * pre: parent to follow
+     * post: instantiates an instance of badeline
+     */
     public Badeline(Character parent) {
+//        define variables
         super();
         Main.badeline.add(this);
 
@@ -88,8 +95,14 @@ public class Badeline extends GameObject {
         height = getRegionHeight();
     }
 
+    /**
+     * @param delta
+     * pre: time between frames
+     * post: updates badeline
+     */
     @Override
     public void update(float delta) {
+//        sets target position to the parent position
         targetPos = parent.pos.cpy();
 
         prevState = state;
@@ -98,21 +111,28 @@ public class Badeline extends GameObject {
             getState();
         }
 
+//        adds offset
         if (parent.facingLeft) {
             targetPos.add(leftOffset);
         } else {
             targetPos.add(rightOffset);
         }
 
+//        interpolate towards target position
         pos.scl(ispeed);
         targetPos.scl(speed);
         pos.add(targetPos);
 
+//        set image and position
         setRegion(getFrame(delta));
         setBounds(pos.x + (spriteOffset.x / spriteScale / Main.PPM) - (manualSpriteOffset.x / spriteScale / Main.PPM), pos.y - (manualSpriteOffset.y / spriteScale / Main.PPM) + (spriteOffset.y / spriteScale / Main.PPM), (float) getRegionWidth() / spriteScale / Main.PPM, (float) getRegionHeight() / spriteScale / Main.PPM);
         b2body.setTransform(pos, 0);
     }
 
+    /**
+     * pre:
+     * post: gets the state of badeline
+     */
     private void getState() {
         if (parent.attackState == Character.AttackState.BASIC) {
             state = STATE.PROJECTILE;
@@ -125,9 +145,16 @@ public class Badeline extends GameObject {
         }
     }
 
+    /**
+     * @param delta
+     * @return
+     * pre: time between frames
+     * post: finds the frame of the animation based on state
+     */
     private TextureRegion getFrame(float delta) {
         TextureRegion region;
 
+//        increments elapsed time as long as the state is the same
         elapsedTime = state == prevState ? elapsedTime + delta : 0;
 
         switch (state) {
@@ -142,6 +169,7 @@ public class Badeline extends GameObject {
                 break;
         }
 
+//        orients sprite
         if (!parent.facingLeft && !region.isFlipX()) {
             region.flip(true, false);
         } else if (parent.facingLeft && region.isFlipX()) {
