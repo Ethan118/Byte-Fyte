@@ -7,7 +7,7 @@ import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
-/*constructor
+/*
  * Pre: game instance
  * Post: new character select screen
  * */
@@ -37,7 +37,7 @@ public class CharacterSelect extends MenuScene {
         charsSelected = new boolean[]{false, false, false, false};
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the images that appear on screen
      * */
@@ -131,11 +131,14 @@ public class CharacterSelect extends MenuScene {
         };
     }
 
-    // checks characters
+    /*
+     * Pre: None
+     * Post: Checks if all characters have been selected
+     * */
     private boolean checkChars() {
         check();
         for (int i = 0; i < Main.cursors.size(); i++) {
-            System.out.println(charsSelected[i]);
+
             if (!charsSelected[i]) {
                 return false;
             }
@@ -143,7 +146,10 @@ public class CharacterSelect extends MenuScene {
         return true;
     }
 
-    // checks for multiple characters
+    /*
+     * Pre: None
+     * Post: Checks if a character has been selected
+     * */
     public void check() {
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] != null) {
@@ -154,7 +160,10 @@ public class CharacterSelect extends MenuScene {
         }
     }
 
-    // actually creates the buttons
+    /*
+     * Pre: None
+     * Post: Creates menu button
+     * */
     private void createButton() {
         if (checkChars()) {
 
@@ -170,16 +179,12 @@ public class CharacterSelect extends MenuScene {
         }
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: renders the images that appear on screen
      * */
     public void render(float delta) {
         super.render(delta);
-        System.out.println(Main.cursors.size());
-        for (MenuCursor cursor: Main.cursors) {
-            System.out.println(cursor);
-        }
     }
 }
 

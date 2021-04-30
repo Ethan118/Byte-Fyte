@@ -18,13 +18,13 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import java.util.Random;
 
-/*constructor
+/*
  * Pre: game launch, single player called
  * Post: creates the boss class
  * */
 public class Boss extends GameObject {
 
-    //delairing variables
+    //declaring variables
     float deltaTime;
     public StateMachine state;
     public float hp = 300f;
@@ -68,6 +68,10 @@ public class Boss extends GameObject {
         hitSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/playerHit.wav"));
     }
 
+    /*
+     * Pre: None
+     * Post: Defines a character
+     * */
     public void defineChar() {
         // loads collision box
         BodyDef bdef = new BodyDef();
@@ -120,6 +124,7 @@ public class Boss extends GameObject {
         b2body.createFixture(fdef).setUserData(this);
     }
 
+//    The following methods perform what is specified in the children classes
     @Override
     public void update(float delta) {}
 

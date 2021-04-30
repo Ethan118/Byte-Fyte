@@ -15,7 +15,7 @@ import org.ini4j.Wini;
 import java.io.File;
 import java.io.IOException;
 
-/*constructor
+/*
  * Pre: game instance
  * Post: creates the settingsMenu screen
  * */
@@ -25,6 +25,12 @@ public class SettingsMenu extends MenuScene {
     public MenuCursor pointer;
     public static boolean toRefresh = false;
     public static float timer;
+
+    /*
+    * Constructor
+    * Pre: A game instance
+    * Post: A new Settings menu
+    * */
     public SettingsMenu(Main game) {
         super(game);
     }

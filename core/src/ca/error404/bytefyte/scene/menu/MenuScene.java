@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Set;
 
-/*constructor
+/*
  * Pre: game instance
  * Post: creates the menuscene screen
  * */
@@ -35,11 +35,20 @@ public class MenuScene implements Screen {
     protected Viewport viewport;
     protected Camera cam;
 
-    // menuscene function
+    /*
+    * Constructor
+    * Pre: Game instance
+    * Post: New MenuScene
+    * */
     public MenuScene(Main game) {
         this.game = game;
     }
 
+
+    /*
+     * Pre: None
+     * Post: Initializes variables
+     * */
     @Override
     public void show() {
         Main.cursors.clear();
@@ -178,6 +187,10 @@ public class MenuScene implements Screen {
 
     }
 
+    /*
+    * Pre: None
+    * Post: Disposes of all applicable assets
+    * */
     @Override
     public void dispose() {
         game.batch.dispose();

@@ -34,7 +34,6 @@ public class WorldContactListener implements ContactListener {
         int tag;
 
         switch (cDef) {
-            // if a player is contacting the ground, call the grounded function
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
                     chara = ((Character) fixA.getUserData());
@@ -42,7 +41,6 @@ public class WorldContactListener implements ContactListener {
                     chara = ((Character) fixB.getUserData());
                 }
 
-                // handles friction
                 if ((Math.abs(chara.vel.x) >= 3 || Math.abs(chara.vel.y) >= 3) && chara.stunTimer > 0) {
                     chara.vel.y *= -0.5;
                 } else if (chara.vel.y <= 0) {

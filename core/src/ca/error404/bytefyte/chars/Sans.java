@@ -40,24 +40,8 @@ public class Sans extends Character{
     * */
     public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
 
-//        Calling the character constructor
-        super(screen, spawnPoint, controller, playernumber, "sans", "SANS", 0.8f, 0.9f);
-        upB = new Animation<TextureRegion>(1f/60f, textureAtlas.findRegions("up_b_start"), Animation.PlayMode.NORMAL);
-
-        weight = 0.9f;
-        walkSpeed = 1.1f;
-        runSpeed = 2.2f;
-        manualSpriteOffset = new Vector2(50, 15f);
-
-        projectilesOnScreen = new ArrayList<>(1);
-
-
-        walk.setFrameDuration(0.02f);
-
-//        Preparing sound effects
-        healSFX = Gdx.audio.newMusic(Gdx.files.internal("audio/sound effects/fullRestore.wav"));
-        healSFX.setLooping(false);
-        healSFX.setVolume(5);
+//        Calling the other constructor
+        this(screen, spawnPoint, controller, playernumber, 0);
     }
 
     public Sans(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playerNumber, int stamina) {

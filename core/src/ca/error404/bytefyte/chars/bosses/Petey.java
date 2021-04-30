@@ -65,6 +65,10 @@ public class Petey extends Boss {
         setRegion(sprite);
     }
 
+    /*
+    * Pre: Delta time
+    * Post: Updates the boss
+    * */
     @Override
     public void update(float delta) {
         deltaTime = delta;
@@ -87,8 +91,10 @@ public class Petey extends Boss {
             hasTransitioned = true;
         }
     }
-
-    //sets idle animations
+    /*
+     * Pre: none
+     * Post: sets idle animations
+     * */
     public void idle() {
         sprite = checkFacing(idle.getKeyFrame(elapsedTime, true));
 
@@ -96,7 +102,10 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
-    //sets walking animations
+    /*
+     * Pre: None
+     * Post:sets walking animation
+     * */
     public void walk() {
         sprite = checkFacing(walk.getKeyFrame(elapsedTime, true));
 
@@ -104,7 +113,10 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
-    //sets flight animations
+    /*
+     * Pre: None
+     * Post: sets flight animations
+     * */
     public void fly() {
         sprite = checkFacing(fly.getKeyFrame(elapsedTime, true));
 
@@ -112,7 +124,10 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
-    //sets falling animations
+    /*
+     * Pre:
+     * Post: sets falling animations
+     * */
     public void fall() {
         sprite = checkFacing(fall.getKeyFrame(elapsedTime, true));
 
@@ -120,7 +135,10 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
-    //sets spinning animations
+    /*
+     * Pre: None
+     * Post: sets spinning animations
+     * */
     public void spin() {
         sprite = checkFacing(spin.getKeyFrame(elapsedTime, true));
 
@@ -128,7 +146,10 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
-    //creates hitstate
+    /*
+     * Pre: None
+     * Post: creates hitstate
+     * */
     public void hitState() {
         sprite = checkFacing(hit.getKeyFrame(elapsedTime, true));
 
@@ -137,6 +158,10 @@ public class Petey extends Boss {
     }
 
 
+    /*
+     * Pre: Texture region
+     * Post: Gets a direction to face
+     * */
     public TextureRegion checkFacing(TextureRegion region) {
         // Decide which direction to face
         if (!facingLeft && !region.isFlipX()) {
@@ -147,7 +172,11 @@ public class Petey extends Boss {
 
         return region;
     }
-    
+
+    /*
+     * Pre: A bit
+     * Post: Performs Petey's actions after hitting a wall
+     * */
     @Override
     public void hitWall(int bit) {
 
@@ -166,9 +195,12 @@ public class Petey extends Boss {
         }
     }
 
-    @Override
 
-    // damage code
+    /*
+     * Pre: None
+     * Post: damage code
+     * */
+    @Override
     public void hit(float damage) {
         if (state.getCurrentState() != PeteyState.HIT) {
             hitSFX.play(Main.sfxVolume / 10f);

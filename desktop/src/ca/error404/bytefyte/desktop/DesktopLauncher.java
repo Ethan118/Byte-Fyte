@@ -12,13 +12,13 @@ import java.io.File;
 import java.io.IOException;
 
 
-/*
- * Pre: game launched button clicked
- * Post: launches the game with its settings
- * */
+
 public class DesktopLauncher {
 
-	//setting
+	/*
+	 * Pre: None
+	 * Post: launches the game with its settings
+	 * */
 	public static void main (String[] arg) throws IOException {
 		new Globals();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

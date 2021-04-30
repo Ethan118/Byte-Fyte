@@ -16,10 +16,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 
-/*
- * Pre: delta time, HUD is called
- * Post: creates and updates a heads up display for the screen
- * */
 public class HUD implements Disposable {
     public Stage stage;
     private final Viewport viewport;
@@ -35,7 +31,8 @@ public class HUD implements Disposable {
     private final BitmapFont font;
 
     /*
-     * Pre: delta time, class is called
+     * Constructor
+     * Pre: None
      * Post: creates a hud
      * */
     public HUD() {

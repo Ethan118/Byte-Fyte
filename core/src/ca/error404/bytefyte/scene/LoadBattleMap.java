@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
-/*constructor
+/*
  * Pre: screen called
  * Post: creates the Loadbattlemap screen
  * */
@@ -149,6 +149,10 @@ public class LoadBattleMap implements Screen {
         game.batch.end();
     }
 
+    /*
+    * Pre: Width and height
+    * Post: Updates viewport to match new screen size
+    * */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
@@ -174,6 +178,4 @@ public class LoadBattleMap implements Screen {
 
     }
 
-    private class Filter {
-    }
 }

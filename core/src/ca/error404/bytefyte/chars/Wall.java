@@ -6,7 +6,7 @@ import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.physics.box2d.*;
 
 
-/*constructor
+/*
  * Pre: stage created
  * Post: creates the wall class
  * */

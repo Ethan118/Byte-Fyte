@@ -121,6 +121,10 @@ public class Collider extends GameObject {
         this.dir = dir;
     }
 
+    /**
+     * pre: offset, width, height, parent Character, force applied on hit, damage on hit, duration of stun on hit, duration before instantiating
+     * post: instantiates a new collided with the parameters
+     */
     public Collider(Vector2 offset, float width, float height, Character parent, float power, float damage, float hitStun, float delay, Music sfx) {
         this(offset, width, height, parent, power, damage, hitStun, delay);
         this.sfx = sfx;
@@ -145,6 +149,10 @@ public class Collider extends GameObject {
         this.dir = dir;
     }
 
+    /*
+    * Pre: None
+    * Post: Defines a collider body
+    * */
     private void define() {
         // creates a new body definition and sets the position, and type
         BodyDef bdef = new BodyDef();

@@ -1017,11 +1017,12 @@ public abstract class Character extends GameObject {
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
 
-//        Plays the hit sound effect
-        hitSFX.play(Main.sfxVolume / 10f);
 
 //        If the respawn timer is 0 or lower
         if (respawnTimer <= 0) {
+
+//        Plays the hit sound effect
+            hitSFX.play(Main.sfxVolume / 10f);
 
 //            The user has been hit, and animation state is set accordingly
             hasBeenHit = true;
@@ -1085,6 +1086,12 @@ public abstract class Character extends GameObject {
 
 //    The following are abstract methods meant to be overwritten for each character, and replaced with
 //    their specific abilities and attacks.
+
+    /*
+ FOR ALL BELOW METHODS
+     * Pre: A call to the method
+     * Post: Performs an action as specified
+     * */
 
     //    Basic Attacks
     abstract void basicNeutral();

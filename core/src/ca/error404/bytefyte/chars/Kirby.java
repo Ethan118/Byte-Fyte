@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 
-/*constructor
+/*
  * Pre: kirby selected
  * Post: creates the kirby class
  * */

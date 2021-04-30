@@ -9,13 +9,13 @@ import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
-/*constructor
- * Pre: game instance
- * Post: handles the map select screen
- * */
+
 public class MapSelect extends MenuScene {
 
-    // menuscene function
+    /*
+     * Pre: game instance
+     * Post: handles the map select screen
+     * */
     public MapSelect(Main game) {
         super(game);
 
@@ -24,6 +24,10 @@ public class MapSelect extends MenuScene {
         }
     }
 
+    /*
+    * Pre: None
+    * Post: Initializes variables
+    * */
     public void show() {
         super.show();
 

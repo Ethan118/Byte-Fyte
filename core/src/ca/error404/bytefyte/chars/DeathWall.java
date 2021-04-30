@@ -5,7 +5,7 @@ import ca.error404.bytefyte.scene.PlayRoom;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 
-/*constructor
+/*
  * Pre: stage created
  * Post: creates the deathwall class
  * */
@@ -22,7 +22,7 @@ public class DeathWall extends Wall {
         fix.setFilterData(filter);
     }
 
-    /*constructor
+    /*
      * Pre: character collides with deathwall
      * Post: kills the character
      * */

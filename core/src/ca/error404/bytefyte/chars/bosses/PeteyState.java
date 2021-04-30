@@ -149,9 +149,13 @@ public enum PeteyState implements State<Petey> {
         }
     };
 
+    /*
+     * Pre: Petey
+     * Post:
+     * */
     @Override
     public void enter(Petey entity) {
-        System.out.println("a");
+
     }
 
     @Override

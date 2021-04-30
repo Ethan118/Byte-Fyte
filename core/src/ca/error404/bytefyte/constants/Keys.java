@@ -3,7 +3,7 @@ package ca.error404.bytefyte.constants;
 import com.badlogic.gdx.Input;
 
 /*
- * Pre: delta time
+ * Pre: None
  * Post: handles the input of keys to actions
  * */
 public class Keys {

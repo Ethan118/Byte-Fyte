@@ -8,7 +8,7 @@ import ca.error404.bytefyte.ui.MenuCursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
-/*constructor
+/*
  * Pre: game instance
  * Post: handles the character select screen for one player
  * */
@@ -36,7 +36,7 @@ public class CharacterSelectSingle extends MenuScene {
         charsSelected = new boolean[] {false, false, false, false};
     }
 
-    /*constructor
+    /*
      * Pre: game instance
      * Post: handles the images that appear on screen
      * */
