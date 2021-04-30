@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
-/*constructor
+/*
  * Pre: master chief chosen in character select, game started
  * Post: creates master chief
  * */
@@ -20,6 +20,10 @@ public class MasterChief extends Character {
     private Music rocketSFX;
     private float rocketSFXDelay;
 
+    /*constructor
+     * Pre: game launch
+     * Post: declares variables pertaining to Master Chief
+     * */
     public MasterChief(PlayRoom screen, Vector2 spawnPoint, Controller controller, int playernumber) {
         this(screen, spawnPoint, controller, playernumber, 0);
     }
