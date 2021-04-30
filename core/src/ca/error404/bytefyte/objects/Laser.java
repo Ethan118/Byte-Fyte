@@ -12,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.*;
 
 // Class to create a laser
 public class Laser extends GameObject {
+
+//    Initializing variables
     private Vector2 p1, p2, collision, dir;
     private float length;
 
