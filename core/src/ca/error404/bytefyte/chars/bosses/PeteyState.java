@@ -5,15 +5,21 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
 
+/*
+ * Pre: game launch, single player started, loading finished
+ * Post: sets Petey's state for other use
+ * */
 public enum PeteyState implements State<Petey> {
 
 
+    //Idle state code
     IDLE() {
         public void enter(Petey petey) {
             petey.elapsedTime = 0;
             petey.b2body.setLinearVelocity(new Vector2(0, -petey.flySpeed * 10));
         }
 
+        // update state for Petey
         public void update(Petey petey) {
             int i = petey.rand.nextInt(500);
 
@@ -29,11 +35,13 @@ public enum PeteyState implements State<Petey> {
         }
     },
 
+    // walking state
     WALK() {
         public void enter(Petey petey) {
             petey.elapsedTime = 0;
             petey.facingLeft = petey.rand.nextBoolean();
 
+            //code for walking in the direction Petey is facing
             if (petey.facingLeft) {
                 petey.b2body.setLinearVelocity(new Vector2(-petey.speed, petey.b2body.getLinearVelocity().y));
             } else {
@@ -46,6 +54,7 @@ public enum PeteyState implements State<Petey> {
         public void update(Petey petey) {
             int i = petey.rand.nextInt(350);
 
+            // change Petey's state
             if (i == 2) {
                 petey.state.changeState(IDLE);
             } else if (i == 3) {
@@ -62,6 +71,8 @@ public enum PeteyState implements State<Petey> {
         }
     },
 
+
+    //flight state
     FLY() {
         public void enter(Petey petey) {
             petey.elapsedTime = 0;
@@ -71,15 +82,20 @@ public enum PeteyState implements State<Petey> {
         public void update(Petey petey) {
             petey.fly();
 
+            // makes Petey in the fall state if he flies off the screen
             if (petey.b2body.getPosition().y >= (petey.screen.mProp.get("height", Integer.class) * petey.screen.mProp.get("tileheight", Integer.class)) / Main.PPM + petey.getHeight()) {
                 petey.state.changeState(FALL);
             }
         }
     },
 
+
+    // fall state
     FALL() {
         public void enter(Petey petey) {
             petey.elapsedTime = 0;
+
+            //sets petey's vertical speed
             petey.b2body.setLinearVelocity(new Vector2(petey.b2body.getLinearVelocity().x, -petey.flySpeed * 10));
             petey.b2body.setTransform(Main.players.get(0).b2body.getPosition().x, (petey.screen.mProp.get("height", Integer.class) * petey.screen.mProp.get("tileheight", Integer.class)) / Main.PPM + petey.getHeight(), petey.b2body.getTransform().getRotation());
         }
@@ -93,6 +109,7 @@ public enum PeteyState implements State<Petey> {
         }
     },
 
+    //puts Petey in Spin state
     SPIN() {
         public void enter(Petey petey) {
             petey.elapsedTime = 0;
@@ -104,17 +121,17 @@ public enum PeteyState implements State<Petey> {
             }
         }
 
+        //updates Pety's spin state if he runs out of time
         public void update(Petey petey) {
             petey.spin();
-
             petey.spinTimer -= petey.deltaTime;
-
             if (petey.spinTimer <= 0) {
                petey.state.changeState(FALL);
             }
         }
     },
 
+    //hit state
     HIT() {
         public void enter(Petey petey) {
             petey.elapsedTime = 0;
@@ -122,6 +139,7 @@ public enum PeteyState implements State<Petey> {
             petey.b2body.setLinearVelocity(new Vector2(0, -petey.flySpeed * 10));
         }
 
+        //ends the state if it runs out of time
         public void update(Petey petey) {
             petey.hitState();
             petey.hitTime -= petey.deltaTime;
