@@ -160,7 +160,6 @@ public class GasterBlaster extends GameObject {
 
 //        Disposes of everything in this instance of Gaster Blaster
         super.destroy();
-        fireSFX.dispose();
         arriveSFX.dispose();
     }
 }
