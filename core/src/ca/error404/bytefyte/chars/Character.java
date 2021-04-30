@@ -248,7 +248,6 @@ public abstract class Character extends GameObject {
 
         hitSFX = Gdx.audio.newSound(Gdx.files.internal("audio/sound effects/playerHit.wav"));
 
-
         health = new PlayerHealth(playerNumber, charname, this);
 
         attackState = AttackState.NONE;
@@ -945,7 +944,7 @@ public abstract class Character extends GameObject {
      * post: sets animation to hit, deals damage, applies knock-back, sets stun timer
      */
     public void Hit(float damage, Vector2 force, float hitStun) {
-        hitSFX.play();
+        hitSFX.play(Main.sfxVolume / 10f);
         if (respawnTimer <= 0) {
             hasBeenHit = true;
             animState = AnimationState.HIT;

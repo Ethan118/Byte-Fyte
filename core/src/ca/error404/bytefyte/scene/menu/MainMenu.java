@@ -82,7 +82,6 @@ public class MainMenu extends MenuScene {
                 }
             };
 
-            // creates a button for the vault screen
             new Button(new Vector2(1520, 707), game, new Texture[]{new Texture("sprites/menu/vault.png"), new Texture("sprites/menu/vault_selected.png")}) {
                 public void click() {
 
@@ -127,9 +126,8 @@ public class MainMenu extends MenuScene {
             //creates a button that goes to the vault
             new Button(new Vector2(1520, 707), game, new Texture[]{new Texture("sprites/menu/vault.png"), new Texture("sprites/menu/vault_selected.png")}) {
                 public void click() {
-
-                new ScreenWipe(new SettingsMenu(this.game), game);
-                for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
+                    new ScreenWipe(new SettingsMenu(this.game), game);
+                    for (MenuCursor cursor : Main.cursors) { cursor.canMove = false; }
                 }
             };
         }

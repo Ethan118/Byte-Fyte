@@ -153,7 +153,7 @@ public class PlayerHealth extends GameObject {
     }
 
     /* Pre: a sprite batch
-    Post: the image is drawn to the screen
+       Post: the image is drawn to the screen
      */
     @Override
     public void draw(SpriteBatch batch) {
@@ -212,7 +212,8 @@ public class PlayerHealth extends GameObject {
         return (double) Math.round(value * scale) / scale;
     }
 
-    // set the color of the percent text in normal gameplay
+    // Pre: N/A
+    // Post: set the color of the percent text in normal gameplay
     private void setColor() {
         if (chara.percent <= 19) {
             color = new Color(255, 255, 255, 1);
@@ -241,7 +242,8 @@ public class PlayerHealth extends GameObject {
         }
     }
 
-    // set the color of the percent text in stamina mode
+    // Pre: N/A
+    // Post: set the color of the percent text in stamina mode
     private void setColorStamina() {
         if (chara.percent >= 300 - 19) {
             color = new Color(255, 255, 255, 1);
@@ -270,7 +272,8 @@ public class PlayerHealth extends GameObject {
         }
     }
 
-    // sets the color of the series icon in the corner
+    // Pre: The player number
+    // Post: sets the color of the series icon in the corner
     private Color setPlayerColor(int num) {
         if (num == 1) {
             return new Color(255/255f, 17/255f, 35/255f, 1);
