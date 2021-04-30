@@ -13,6 +13,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+/*constructor
+ * Pre: single player mode entered, stage created
+ * Post: creates Petey
+ * */
 public class Petey extends Boss {
     private TextureRegion sprite;
     public Main game;
@@ -21,7 +25,6 @@ public class Petey extends Boss {
     public float flySpeed;
 
     private boolean hasTransitioned = false;
-
     private Animation<TextureRegion> idle;
     private Animation<TextureRegion> fall;
     private Animation<TextureRegion> fly;
@@ -29,6 +32,11 @@ public class Petey extends Boss {
     private Animation<TextureRegion> walk;
     private Animation<TextureRegion> hit;
 
+
+    /*constructor
+     * Pre: stage loaded, in single player mode
+     * Post: creates the character
+     * */
     public Petey(PlayRoom screen, Vector2 spawnPoint, Main game) {
         super(screen, spawnPoint);
         hitboxScale = 1.5f;
@@ -80,6 +88,7 @@ public class Petey extends Boss {
         }
     }
 
+    //sets idle animations
     public void idle() {
         sprite = checkFacing(idle.getKeyFrame(elapsedTime, true));
 
@@ -87,13 +96,15 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
+    //sets walking animations
     public void walk() {
         sprite = checkFacing(walk.getKeyFrame(elapsedTime, true));
 
         spriteOffset.x = ((TextureAtlas.AtlasRegion) sprite).offsetX;
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
-    
+
+    //sets flight animations
     public void fly() {
         sprite = checkFacing(fly.getKeyFrame(elapsedTime, true));
 
@@ -101,6 +112,7 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
+    //sets falling animations
     public void fall() {
         sprite = checkFacing(fall.getKeyFrame(elapsedTime, true));
 
@@ -108,6 +120,7 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
+    //sets spinning animations
     public void spin() {
         sprite = checkFacing(spin.getKeyFrame(elapsedTime, true));
 
@@ -115,12 +128,14 @@ public class Petey extends Boss {
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
 
+    //creates hitstate
     public void hitState() {
         sprite = checkFacing(hit.getKeyFrame(elapsedTime, true));
 
         spriteOffset.x = ((TextureAtlas.AtlasRegion) sprite).offsetX;
         spriteOffset.y = ((TextureAtlas.AtlasRegion) sprite).offsetY;
     }
+
 
     public TextureRegion checkFacing(TextureRegion region) {
         // Decide which direction to face
@@ -135,7 +150,8 @@ public class Petey extends Boss {
     
     @Override
     public void hitWall(int bit) {
-        //he hit the whale now he must do something
+
+        //if petey hits the wall this sets new actions
         if (state.getCurrentState() == PeteyState.FALL && bit == Tags.BOSS_FEET_BIT) {
             state.changeState(PeteyState.IDLE);
         } if (state.getCurrentState() == PeteyState.SPIN) {
@@ -151,6 +167,8 @@ public class Petey extends Boss {
     }
 
     @Override
+
+    // damage code
     public void hit(float damage) {
         if (state.getCurrentState() != PeteyState.HIT) {
             hitSFX.play(Main.sfxVolume / 10f);
