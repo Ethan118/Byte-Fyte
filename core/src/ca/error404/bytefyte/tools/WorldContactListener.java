@@ -13,8 +13,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class WorldContactListener implements ContactListener {
+    /**
+     * @param contact
+     * pre: the object representing the contact
+     * post: controls logic on contact
+     */
     @Override
     public void beginContact(Contact contact) {
+//        define variabels
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
 
@@ -31,6 +37,7 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             // if a player is contacting the ground, call the grounded function
             case Tags.GROUND_BIT | Tags.PLAYER_FEET_BIT:
+//                find character fixture
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_FEET_BIT) {
                     chara = ((Character) fixA.getUserData());
                 } else {
@@ -45,7 +52,9 @@ public class WorldContactListener implements ContactListener {
                     chara.ground();
                 }
                 break;
+//                if a player contacts a roof, bounce character back
             case Tags.PLAYER_HEAD_BIT | Tags.GROUND_BIT:
+//                find character fixture
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_HEAD_BIT) {
                     chara = ((Character) fixA.getUserData());
                 } else {
@@ -58,7 +67,9 @@ public class WorldContactListener implements ContactListener {
                     chara.vel.y = 0;
                 }
                 break;
+//                if a player contact a wall from the side, bounce character back
             case Tags.GROUND_BIT | Tags.PLAYER_SIDE_BIT:
+//                find character fixture
                 if (fixA.getFilterData().categoryBits == Tags.WALL_TRIGGER_BIT) {
                     chara = (Character) fixB.getUserData();
                 } else {
@@ -69,6 +80,7 @@ public class WorldContactListener implements ContactListener {
                     chara.vel.x *= -0.5;
                 }
                 break;
+//                if a player contacts a death barrier call the death wall's contact function passing character
             case Tags.PLAYER_BIT | Tags.DEATH_BARRIER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.DEATH_BARRIER_BIT) {
                     deathWall = ((DeathWall) fixA.getUserData());
@@ -80,7 +92,9 @@ public class WorldContactListener implements ContactListener {
 
                 deathWall.contact(chara);
                 break;
+//                if an attack bit contacts a player deal damage and calculate force applied
             case Tags.ATTACK_BIT | Tags.PLAYER_BIT:
+//                find character and collider
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     collider = (Collider) fixB.getUserData();
@@ -90,9 +104,11 @@ public class WorldContactListener implements ContactListener {
                     collider = (Collider) fixA.getUserData();
                 }
 
+//                only hit if the character is not the colliders parent
                 if (!(collider.parent == chara)) {
                     Vector2 force;
 
+//                    find direction of force if the direction is null
                     if (collider.dir == null) {
                         Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (collider.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (collider.parent.pos.y)) * 100.0f) / 100.0f);
                         direction.x = Math.signum(direction.x);
@@ -104,6 +120,7 @@ public class WorldContactListener implements ContactListener {
                     }
                     chara.Hit(collider.damage, force, collider.hitStun);
 
+//                    heal if the collider has lifesteal
                     if (collider.lifeSteal) {
                         if (!chara.stamina) {
                             if (collider.parent.percent >= collider.damage) {
@@ -118,7 +135,9 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
 
+//                if a player contacts a projectile
             case Tags.PROJECTILE_BIT | Tags.PLAYER_BIT:
+//                find character and projectile
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     projectile = (Projectile) fixB.getUserData();
@@ -127,6 +146,7 @@ public class WorldContactListener implements ContactListener {
                     projectile = (Projectile) fixA.getUserData();
                 }
 
+//                calculate force applied and call hit function on character
                 if (!(projectile.parent == chara)) {
                     Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (projectile.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (projectile.parent.pos.y)) * 100.0f) / 100.0f);
                     direction.x = Math.signum(direction.x);
@@ -138,7 +158,10 @@ public class WorldContactListener implements ContactListener {
                     projectile.destroy();
                 }
                 break;
+
+//                if projectile contacts a boss
             case Tags.PROJECTILE_BIT | Tags.BOSS_BIT:
+//                find boss and projectile
                 if (fixA.getFilterData().categoryBits == Tags.BOSS_BIT) {
                     boss = (Boss) fixA.getUserData();
                     projectile = (Projectile) fixB.getUserData();
@@ -147,12 +170,15 @@ public class WorldContactListener implements ContactListener {
                     projectile = (Projectile) fixA.getUserData();
                 }
 
+//                call hit function
                 boss.hit(projectile.damage);
 
                 projectile.destroy();
                 break;
 
+//                if laser contacts player
             case Tags.LASER_BIT | Tags.PLAYER_BIT:
+//                find character and laser
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
                     laser = (Laser) fixB.getUserData();
@@ -161,6 +187,7 @@ public class WorldContactListener implements ContactListener {
                     laser = (Laser) fixA.getUserData();
                 }
 
+//                if the character is not the laser's parent calculate force applied and call hit
                 if (!(laser.parent == chara)) {
                     Vector2 direction = new Vector2(Math.round(((chara.pos.x) - (laser.parent.pos.x)) * 100.0f) / 100.0f, Math.round(((chara.pos.y) - (laser.parent.pos.y)) * 100.0f) / 100.0f);
                     direction.x = Math.signum(direction.x);
@@ -170,6 +197,8 @@ public class WorldContactListener implements ContactListener {
                     chara.Hit(laser.damage, force, laser.hitStun);
                 }
                 break;
+
+//                if projectile contacts death barrier or ground bit destroy it
             case Tags.PROJECTILE_BIT | Tags.GROUND_BIT:
             case Tags.PROJECTILE_BIT | Tags.DEATH_BARRIER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PROJECTILE_BIT) {
@@ -180,6 +209,8 @@ public class WorldContactListener implements ContactListener {
 
                 projectile.destroy();
                 break;
+
+//                if the boss contacts the ground, death barrier or player call hitWall
             case Tags.GROUND_BIT | Tags.BOSS_SIDE_BIT:
             case Tags.GROUND_BIT | Tags.BOSS_HEAD_BIT:
             case Tags.GROUND_BIT | Tags.BOSS_FEET_BIT:
@@ -197,6 +228,8 @@ public class WorldContactListener implements ContactListener {
 
                 boss.hitWall(tag);
                 break;
+
+//                if an attack contacts a boss call the boss' hit function
             case Tags.ATTACK_BIT | Tags.BOSS_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.BOSS_BIT) {
                     boss = (Boss) fixA.getUserData();
@@ -208,6 +241,8 @@ public class WorldContactListener implements ContactListener {
 
                 boss.hit(collider.damage);
                 break;
+
+//                if a laser contacts a boss call the boss' hit function
             case  Tags.LASER_BIT | Tags.BOSS_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.BOSS_BIT) {
                     boss = (Boss) fixA.getUserData();
@@ -219,6 +254,8 @@ public class WorldContactListener implements ContactListener {
 
                 boss.hit(laser.damage);
                 break;
+
+//                if a boss contacts a player apply the force and damage character
             case  Tags.BOSS_BIT | Tags.PLAYER_BIT:
                 if (fixA.getFilterData().categoryBits == Tags.PLAYER_BIT) {
                     chara = (Character) fixA.getUserData();
@@ -238,6 +275,11 @@ public class WorldContactListener implements ContactListener {
         }
     }
 
+    /**
+     * @param contact
+     * pre: class containing information of contact
+     * post: controls logic after contact
+     */
     @Override
     public void endContact(Contact contact) {
         Fixture fixA = contact.getFixtureA();
