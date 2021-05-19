@@ -1,7 +1,7 @@
 # Byte-Fyte
 ***
 The application that we have decided to create is a video game called _**Byte Fyte**_. _**Byte Fyte**_ 
-is a platformer-style fighting game intended for audiences of all ages.
+is a platformer-style fighting game intended for audiences of all ages. It's literally just Smash Bros.
 
 - Action
 - Adventure
@@ -25,15 +25,17 @@ One other significant feature we plan to incorporate into our game is online lea
 
 **AD** - Move Horizontal
 
+**Shift** - Run
+
 **S (In Air)** - Fast Fall
 
 **SPACE** - Jump
 
-**T** - Toggle Fullscreen
+**J** - Basic Attack
 
-**Up and Down Arrow Keys** - Change Volume Level
+**K** - Smash Attack
 
-**P** - Playback Test Video
+**L** - Special Attack
 
 ## Set-up
 ***
