@@ -59,16 +59,16 @@ public class PlayerHealth extends GameObject {
         // Sets position as well as spooky treat
         if (number == 1) {
             pos = new Vector2(25, 25);
-            this.charname = "BOWSER";
+            this.charname = "I'M";
         } else if (number == 2) {
             pos = new Vector2(525, 25);
-            this.charname = "WAS";
+            this.charname = "WATCHING";
         } else if (number == 3) {
             pos = new Vector2(1025, 25);
-            this.charname = "HERE,";
+            this.charname = "YOU,";
         } else if (number == 4) {
             pos = new Vector2(1525, 25);
-            this.charname = "HAHAHA";
+            this.charname = "NERDS";
         }
 
         // Sets the random chance for Bill Cipher and Bowser to make a cameo in the player's place
