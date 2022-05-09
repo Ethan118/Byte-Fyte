@@ -150,6 +150,7 @@ public class MainMenu extends MenuScene {
                     game.music = game.newSong("menu");
                 }
             }
+            //game.music = game.newSong("fawful's castle");
             game.music.setVolume(Main.musicVolume / 10f);
             game.music.play();
         }
