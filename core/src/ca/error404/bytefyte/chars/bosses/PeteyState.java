@@ -71,7 +71,6 @@ public enum PeteyState implements State<Petey> {
         }
     },
 
-
     //flight state
     FLY() {
         public void enter(Petey petey) {
@@ -88,7 +87,6 @@ public enum PeteyState implements State<Petey> {
             }
         }
     },
-
 
     // fall state
     FALL() {
