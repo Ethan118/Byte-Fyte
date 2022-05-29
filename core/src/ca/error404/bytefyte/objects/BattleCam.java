@@ -79,6 +79,10 @@ public class BattleCam extends OrthographicCamera {
         targetPos.scl(speed);
         cameraPosition.add(targetPos);
 
+        if (sizes.size() == 1) {
+            scale = 5;
+        }
+
         float width = scale, height = width * hRatio;
 
         Vector2 max = max(pos);

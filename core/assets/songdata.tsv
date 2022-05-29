@@ -1,20 +1,20 @@
 Internal Title	Display Title	Intro Point	Loop Point	Internal Series	Game Title	Weight
 sammer kingdom	Sammer's Kingdom	12.566	74.783	paper mario	Super Paper Mario	1
 badeline fight	Confronting Myself	16.306	132.701	celeste	Celeste	1
-MEGALOVANIA	MEGALOVANIA	0	-1	paper mario	UNDERTALE	1
-spear of justice	Spear of Justice	0	-1	paper mario	UNDERTALE	1
+MEGALOVANIA	MEGALOVANIA	0	-1	other	UNDERTALE	1
+spear of justice	Spear of Justice	0	-1	other	UNDERTALE	1
 sephiroth	One-Winged Angel Rebirth	11.108	611.591	other	Final Fantasy VII Remake	1
 zomboss	Brainiac Maniac	0	-1	other	Plants VS Zombies	1
 dadbattle	Dad Battle	10.673	74.682	other	Friday Night Funkin'	1
 kamek battle	Malevolent Magikoopa	11.882	91.903	paper mario	Paper Mario: Sticker Star	1
 zen	Zen Ball Master	0	-1	other	Kung Fu Panda 2	1
-cornered anime	Pursuit ~ Cornered (TV Series)	6.396	44.81	pwaa	Ace Attorney (TV Series)	1
+cornered anime	Pursuit ~ Cornered (TV Series)	6.396	44.81	other	Ace Attorney (TV Series)	1
 grand finale	The Grand Finale DX	9.232	92.306	mal	Mario & Luigi: Bowser's Inside Story	1
 pikmin 2 boss	Boss Battle (Pikmin 2)	7.406	117.0	kirby	Pikmin 2	1
 arstozka	Papers, Please	1.297	102.721	russia	Papers, Please	1
 cornered marvel	Pursuit ~ Cornered (Marvel VS Capcom 3)	6.447	83.659	other	Marvel VS Capcom 3	1
 crowned	C-R-O-W-N-E-D	15.204	147.191	kirby	Kirby's Return to Dream Land	1
-fury 1	Bowser's Fury	17.931	111.417	mario	Bowser's Fury	1
+fury 1	Bowser's Fury	17.931	111.417	mal	Bowser's Fury	1
 vs fawful	Fawful & Cackletta Battle! DX	1.199	47.586	mal	Mario & Luigi: Superstar Saga	1
 popple	The Marvelous Duo! DX	0	-1	mal	Mario & Luigi: Superstar Saga	1
 asgore orchestra	ASGORE (Orchestral)	23.996	183.844	paper mario	UNDERTALE	1
@@ -77,9 +77,9 @@ megalo piglin	MEGALOVANIA (Pigstep)	23.566	153.449	celeste	Drunken Sailor	1
 pigstep	Pigstep	22.628	112.974	celeste	Minecraft	1
 celeste summit	Reach for the Summit	0	-1	celeste	Celeste	1
 celeste library b	Celestial Resort (Good Karma Mix)	6.89	205.745	celeste	Celeste	1
-linebeck techno	Linebeck's Theme (Noteblock)	7.619	155.343	halo	Noteblock	1
+linebeck techno	Linebeck's Theme (Noteblock)	7.619	155.343	kirby	Noteblock	1
 menu	Let The Fyte Begin!	19.128	67.134	n/a	Byte Fyte	1
-new soup final boss	Final Bowser (NSMB Wii)	14.220	98.220	mario	The Noble Demon	1
+new soup final boss	Final Bowser (NSMB Wii)	14.220	98.220	paper mario	The Noble Demon	1
 thorns penguin	Thorns (B-Side)	0	-1	other	SiIvaGunner	1
 tetris 99	50 Players Remaining!	0	-1	russia	Tetris 99	1
 rush b	Rush B	3	132.07	russia	Sheet Music Boss	1
@@ -87,7 +87,7 @@ fawful's castle	Deep Castle DX (Outside + Inside)	9.806	215.534	mal	Mario & Luig
 castle bleck	Castle Bleck	6.296	108.991	paper mario	Super Paper Mario	1
 megalo grand finale	In The Judgement Hall	9.937	93.017	mal	LiterallyNoOne	1
 ugh	Ugh	5.628	77.627	other	Friday Night Funkin'	1
-old shroob	Elder Shroob Battle (Orchestral)	7.371	186.524	mal	The Noble Demon	1
+old shroob	Another's Requiem (Orchestral)	7.371	186.524	mal	The Noble Demon	1
 antasma	The Final Antasma Battle	1.394	80.937	mal	Mario & Luigi: Dream Team	1
 thwomp	Thwomp Caverns	35.043	115.054	mal	Mario & Luigi: Partners in Time	1
 pit battle	Battle! (Partners in Time)	4.603	78.449	mal	Mario & Luigi: Partners in Time	1

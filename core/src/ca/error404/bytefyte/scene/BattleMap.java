@@ -11,6 +11,7 @@ import ca.error404.bytefyte.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
@@ -230,7 +231,7 @@ public class BattleMap extends PlayRoom {
         }
 
 //        What to do if there is only one player left
-        if (playersAlive == 1) {
+        if ((playersAlive == 1 && Controllers.getControllers().size > 0) || (playersAlive == 0)) {
             for (Character character : Main.players) {
                 i++;
                 if (character != null) {
